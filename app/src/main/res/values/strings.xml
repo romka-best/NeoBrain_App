@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">NeoBrain</string>
+    <string name="description">Социальная сеть для саморазвития</string>
+    <string name="slogan">Изменишь себя - изменишь мир</string>
+    <string name="textswipe">Свайп в бок
+для входа/регистрации
+в приложение</string>
+    <string name="neobrain_superapp">NeoBrain - SuperApp приложение\n
+В нём присутствуют много  мини-приложений</string>
+    <string name="textreg">РЕГИСТРАЦИЯ</string>
+    <string name="textauth">АВТОРИЗАЦИЯ</string>
+</resources>
