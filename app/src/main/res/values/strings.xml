@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">NeoBrain</string>
-    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="textAuth">Авторизация</string>
+    <string name="textAuthLoginNumberEmail">Логин/Номер телефона/Эл. почта</string>
+    <string name="textAuthPassword">Пароль</string>
+    <string name="textAuthEntry">Войти</string>
+    <string name="textReg">Регистрация</string>
+    <string name="textReg2">Зарегистрироваться</string>
+    <string name="textName">Имя</string>
+    <string name="textSurname">Фамилия</string>
+    <string name="textNickname">Никнейм</string>
+    <string name="textPassword">Пароль</string>
+    <string name="textPasswordRepeat">Повторение пароля</string>
+    <string name="textNumber">Номер телефона</string>
 </resources>

@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity{
         ViewGroup container = (ViewGroup) findViewById(R.id.controller_container);
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(new HomeController()));
+            router.setRoot(RouterTransaction.with(new AuthController()));
         }
     }
 
