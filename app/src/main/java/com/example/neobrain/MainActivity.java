@@ -1,10 +1,9 @@
 package com.example.neobrain;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
