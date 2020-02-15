@@ -16,8 +16,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class RegController extends Controller implements View.OnClickListener{
+public class RegController extends Controller{
 
     private static final String PASSWORD_PATTERN = "((?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
     private Pattern pattern;
@@ -31,8 +32,7 @@ public class RegController extends Controller implements View.OnClickListener{
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick({R.id.regButton}) void launchReg() {
 
     }
 
@@ -40,16 +40,14 @@ public class RegController extends Controller implements View.OnClickListener{
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public boolean validate(String password) {
+    public boolean passwordValidate(String password) {
+        pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
 
     public boolean isPasswordSame(String password1, String password2){
-        if (password1.equals(password2)) {
-            return false;
-        }
-        return true;
+        return password1.equals(password2);
     }
 
     /*
