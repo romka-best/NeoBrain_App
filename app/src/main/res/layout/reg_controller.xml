@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:ems="10"
-        android:hint="Имя"
+        android:hint="@string/textName"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,12 +87,12 @@
 
     <Button
         android:id="@+id/regButton"
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="33dp"
         android:background="@drawable/auth_button"
         android:text="@string/textReg2"
-        android:textColor="@color/white"
+        android:textColor="@color/colorText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/number" />
