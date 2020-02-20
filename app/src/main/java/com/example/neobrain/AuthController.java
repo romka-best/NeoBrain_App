@@ -16,6 +16,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.SimpleSwapChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 public class AuthController extends Controller {
     private boolean isAuth = false;
@@ -33,8 +35,8 @@ public class AuthController extends Controller {
 
     @OnClick({R.id.regButton}) void launchReg() {
         getRouter().pushController(RouterTransaction.with(new RegController())
-                .popChangeHandler(new FadeChangeHandler())
-                .pushChangeHandler(new FadeChangeHandler()));
+                .popChangeHandler(new Animator())
+                .pushChangeHandler(new Animator()));
     }
 
     @OnClick(R.id.authButton) void launchAuth() {
