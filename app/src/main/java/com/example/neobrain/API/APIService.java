@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface APIService {
 
     @GET("/{nickname}{format}")
-    Call<List<UserModel>> getUser(
+    Call<UserModel> getUser(
             @Path("nickname") String nickname,
             @Path("format") String format);
 

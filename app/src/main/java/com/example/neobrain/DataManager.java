@@ -23,7 +23,7 @@ public class DataManager {
         return instance;
     }
 
-    public Call<List<UserModel>> getUser(String nickname){
+    public Call<UserModel> getUser(String nickname){
         return mAPIService.getUser(
                 nickname,
                 APIConfig.FORMAT
