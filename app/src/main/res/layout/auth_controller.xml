@@ -5,72 +5,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/square"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
+        android:background="@drawable/square"
+        android:rotation="-45"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textAuth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:layout_marginBottom="39dp"
-        android:text="@string/textAuth"
+        android:layout_marginTop="20dp"
+        android:text="@string/auth"
         android:textAppearance="@style/textAuth"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/login"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.543"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/square" />
 
     <EditText
         android:id="@+id/login"
-        android:layout_width="305dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="219dp"
-        android:layout_marginBottom="102dp"
-        android:autofillHints="@string/textAuthLoginNumberEmail"
         android:ems="10"
-        android:hint="@string/textAuthLoginNumberEmail"
+        android:hint="@string/hint_username"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/authButton"
+        android:textColor="@color/colorText"
+        android:textColorHint="#80F6F6F6"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="305dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="389dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="@string/textAuthPassword"
+        android:hint="@string/hint_password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/colorText"
+        android:textColorHint="#80F6F6F6"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textAuth" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel_button"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="150dp"
+        android:layout_height="41dp"
+        android:text="Забыли пароль?"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/authButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.626"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/authButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="296dp"
-        android:text="@string/textAuthEntry"
+        android:layout_marginBottom="36dp"
+        android:text="@string/entry"
         android:textColor="@color/colorText"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/square"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.626"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/regButton"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="12dp"
 
-        android:text="@string/textReg2"
+        android:text="@string/reg2"
         android:textColor="@color/colorText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/authButton" />
 

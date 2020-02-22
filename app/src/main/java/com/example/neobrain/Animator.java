@@ -38,7 +38,7 @@ public class Animator extends AnimatorChangeHandler {
                 1, 0);
         allAnim.playTogether(hideFromViewAnim,
                 regAnim);
-        allAnim.setDuration(1000);
+        allAnim.setDuration(300);
         allAnim.setInterpolator(new FastOutSlowInInterpolator());
 
         allAnim.start();
