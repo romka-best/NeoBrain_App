@@ -1,14 +1,11 @@
-package com.example.neobrain;
+package com.example.neobrain.Controllers;
 
-import android.os.Bundle;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
@@ -21,6 +18,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.UserModel;
+import com.example.neobrain.DataManager;
+import com.example.neobrain.R;
 
 public class AuthController extends Controller {
     private boolean isAuth = false;

@@ -1,4 +1,4 @@
-package com.example.neobrain;
+package com.example.neobrain.Controllers;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.UserModel;
+import com.example.neobrain.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
