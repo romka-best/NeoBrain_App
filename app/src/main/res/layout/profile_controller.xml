@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/gradientCircle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="330dp"
+        android:layout_marginTop="151dp"
+        android:background="@drawable/circle_darkblue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.941"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/circleDarkblueWithoutCenter"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/circle_darkblue_without_center"
+        app:layout_constraintStart_toStartOf="@+id/gradientCircle"
+        app:layout_constraintTop_toTopOf="@+id/gradientCircle" />
+
+    <View
+        android:id="@+id/circleWithAlpha"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="104dp"
+        android:background="@drawable/circle_darkblue_without_center_with_alpha"
+        app:layout_constraintEnd_toStartOf="@+id/circleDarkblueWithoutCenter"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bigGradientCircle"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="148dp"
+        android:background="@drawable/circle_darkblue"
+        app:layout_constraintEnd_toStartOf="@+id/gradientCircle"
+        app:layout_constraintHorizontal_bias="0.059"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/blueCircleWithoutCenter"
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="140dp"
+        android:background="@drawable/circle_blue_without_center"
+        app:layout_constraintEnd_toStartOf="@+id/gradientCircle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/background_profile"
+        android:layout_width="341dp"
+        android:layout_height="249dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="61dp"
+        android:background="@drawable/background_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,23 +32,33 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.gms:play-services-ads:18.3.0'
 
+    // Room
+    def room_version = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    testImplementation "android.arch.persistence.room:testing:$room_version"
+
     // ButterKnife
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    def butterKnife_version = "10.2.1"
+    implementation "com.jakewharton:butterknife:$butterKnife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnife_version"
 
     // Материал Дизайн
-    implementation 'com.google.android.material:material:1.2.0-alpha04'
+    def materialDesign_version = "1.2.0-alpha04"
+    implementation "com.google.android.material:material:$materialDesign_version"
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-    implementation 'com.squareup.retrofit2:converter-jackson:2.7.1'
+    def retrofit_version = "2.7.1"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
 
     // Conductor
-    implementation 'com.bluelinelabs:conductor:3.0.0-rc1'
-    implementation 'com.bluelinelabs:conductor-support:3.0.0-rc1'
-    implementation 'com.bluelinelabs:conductor-rxlifecycle:3.0.0-rc1'
-    implementation 'com.bluelinelabs:conductor-rxlifecycle2:3.0.0-rc1'
-    implementation 'com.bluelinelabs:conductor-autodispose:3.0.0-rc1'
-    implementation 'com.bluelinelabs:conductor-archlifecycle:3.0.0-rc1'
+    def conductor_version = "3.0.0-rc1"
+    implementation "com.bluelinelabs:conductor:$conductor_version"
+    implementation "com.bluelinelabs:conductor-support:$conductor_version"
+    implementation "com.bluelinelabs:conductor-rxlifecycle:$conductor_version"
+    implementation "com.bluelinelabs:conductor-rxlifecycle2:$conductor_version"
+    implementation "com.bluelinelabs:conductor-autodispose:$conductor_version"
+    implementation "com.bluelinelabs:conductor-archlifecycle:$conductor_version"
 }

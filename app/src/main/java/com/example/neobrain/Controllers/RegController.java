@@ -90,7 +90,7 @@ public class RegController extends Controller {
         if (isPhonenumberValid(number)) {
             Toast.makeText(getApplicationContext(), "С телефоном всё ок", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getApplicationContext(), "С никнеймом всё ок", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "С телефоном чёт не то", Toast.LENGTH_SHORT).show();
             error = true;
         }
         /*
@@ -113,17 +113,17 @@ public class RegController extends Controller {
             */
     }
 
-    public boolean isEmailValid(String email) {
+    private boolean isEmailValid(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public boolean passwordValidate(String password) {
+    private boolean passwordValidate(String password) {
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
 
-    public boolean isPasswordSame(String password1, String password2) {
+    private boolean isPasswordSame(String password1, String password2) {
         return password1.equals(password2);
     }
 
@@ -139,7 +139,7 @@ public class RegController extends Controller {
         6) номер не содержит букв
         7) номер заканчивается на цифру
     */
-    public boolean isPhonenumberValid(String phone) {
+    private boolean isPhonenumberValid(String phone) {
         if (phone != null) {
             String reg = "(\\+?\\d+\\(?\\d{3}\\)?\\d{2}\\-?\\d{2}\\-?\\d{2,3})";
             Pattern p = Pattern.compile(reg);
@@ -150,7 +150,7 @@ public class RegController extends Controller {
         }
     }
 
-    public boolean isNicknameFree(String nick) {
+    private boolean isNicknameFree(String nick) {
         return true;
     }
 }
