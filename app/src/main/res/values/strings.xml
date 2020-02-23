@@ -11,4 +11,5 @@
     <string name="hint_nickname">Никнейм</string>
     <string name="hint_password_repeat">Повторение пароля</string>
     <string name="hint_number">Номер телефона</string>
+    <string name="password_forget">Забыли пароль?</string>
 </resources>

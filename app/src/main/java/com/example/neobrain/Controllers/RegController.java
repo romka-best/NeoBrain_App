@@ -113,6 +113,12 @@ public class RegController extends Controller {
             */
     }
 
+    @OnClick({R.id.authButton})
+    void launchAuth() {
+        getRouter().popController(this);
+    }
+
+
     private boolean isEmailValid(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }

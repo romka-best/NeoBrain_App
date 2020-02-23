@@ -12,4 +12,5 @@
     <string name="hint_number">Number phone</string>
     <string name="hint_password_repeat">Password repeat</string>
     <string name="hint_surname">Surname</string>
+    <string name="password_forget">Forgot your password?</string>
 </resources>

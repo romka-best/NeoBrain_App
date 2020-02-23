@@ -4,5 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    />
+    android:background="@android:color/white">
+
+    <FrameLayout
+        android:id="@+id/child_container_1"
+        android:layout_width="205dp"
+        android:layout_height="730dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/child_container_2"
+        android:layout_width="205dp"
+        android:layout_height="730dp"
+        app:layout_constraintStart_toEndOf="@+id/child_container_1"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
