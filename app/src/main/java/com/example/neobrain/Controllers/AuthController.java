@@ -34,7 +34,7 @@ public class AuthController extends Controller {
         View view = inflater.inflate(R.layout.auth_controller, container, false);
         ButterKnife.bind(this, view);
         textLogin = view.findViewById(R.id.login);
-        textPassword = view.findViewById(R.id.password);
+        textPassword = view.findViewById(R.id.login);
         return view;
     }
 
