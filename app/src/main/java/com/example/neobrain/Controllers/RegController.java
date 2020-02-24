@@ -26,7 +26,6 @@ import retrofit2.Response;
 
 public class RegController extends Controller {
 
-    private static final String PASSWORD_PATTERN = "((?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
     private Pattern pattern;
     private Matcher matcher;
     private TextView textName;
@@ -87,7 +86,7 @@ public class RegController extends Controller {
             Toast.makeText(getApplicationContext(), "Пароли не похожи", Toast.LENGTH_SHORT).show();
             error = true;
         }
-        if (isPhonenumberValid(number)) {
+        if (isPhoneNumberValid(number)) {
             Toast.makeText(getApplicationContext(), "С телефоном всё ок", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "С телефоном чёт не то", Toast.LENGTH_SHORT).show();
@@ -124,36 +123,33 @@ public class RegController extends Controller {
     }
 
     private boolean passwordValidate(String password) {
-        pattern = Pattern.compile(PASSWORD_PATTERN);
-        matcher = pattern.matcher(password);
-        return matcher.matches();
+        // Пароль должен содержать латинксие буквы,
+        // знаки @#_&, цифры, и быть от 6 до 20 символов длинной
+        final String regex1 = "(.*)(\\d{1,})(.*)";
+        final String regex2 = "(.*)([a-zA-Z]{1,})(.*)";
+        final String regex3 = "(.*)([@#_&]{1,})(.*)";
+        final String regex4 = ".{6,20}";
+
+        if (Pattern.matches(regex1, password) &
+            Pattern.matches(regex2,password) &
+            Pattern.matches(regex3,password) &
+            Pattern.matches(regex4,password)) {
+            return true;
+        } return false;
     }
 
     private boolean isPasswordSame(String password1, String password2) {
         return password1.equals(password2);
     }
 
-    /*
-        Проверка номера телефона
-        Метод должен проверять, является ли аргумент валидным номером телефона.
-        Критерии валидности:
-        1) если номер начинается с '+', то он содержит 12 цифр
-        2) если номер начинается с цифры или открывающей скобки, то он содержит 10 цифр
-        3) может содержать 0-2 знаков '-', которые не могут идти подряд
-        4) может содержать 1 пару скобок '(' и ')' , причем если она есть, то она расположена левее знаков '-'
-        5) скобки внутри содержат четко 3 цифры
-        6) номер не содержит букв
-        7) номер заканчивается на цифру
-    */
-    private boolean isPhonenumberValid(String phone) {
-        if (phone != null) {
-            String reg = "(\\+?\\d+\\(?\\d{3}\\)?\\d{2}\\-?\\d{2}\\-?\\d{2,3})";
-            Pattern p = Pattern.compile(reg);
-            Matcher m = p.matcher(phone);
-            return m.matches();
-        } else {
-            return false;
+    private boolean isPhoneNumberValid(String phone) {
+        if (phone == null) return false;
+        if (phone.isEmpty()) return false;
+        int digits = phone.replaceAll("\\D", "").length();
+        if (digits == 11) {
+            return phone.matches("(\\+\\d+)?\\d*(\\(\\d{3}\\))?\\d+(-?\\d+){0,2}");
         }
+        else return false;
     }
 
     private boolean isNicknameFree(String nick) {
