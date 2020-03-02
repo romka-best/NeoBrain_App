@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NeoBrain</string>
+    <string name="auth">Authorization</string>
+    <string name="entry">Enter</string>
+    <string name="reg">Registration</string>
+    <string name="reg2">Register</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_username">Nickname/Number phone/Email</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_nickname">Nickname</string>
+    <string name="hint_number">Number phone</string>
+    <string name="hint_password_repeat">Password repeat</string>
+    <string name="hint_surname">Surname</string>
+    <string name="password_forget">Forgot your password?</string>
+</resources>

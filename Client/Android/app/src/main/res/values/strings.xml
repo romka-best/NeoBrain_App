@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">NeoBrain</string>
+    <string name="auth">Авторизация</string>
+    <string name="hint_username">Никнейм/Номер телефона/Эл. почта</string>
+    <string name="hint_password">Пароль</string>
+    <string name="entry">Войти</string>
+    <string name="reg">Регистрация</string>
+    <string name="reg2">Зарегистрироваться</string>
+    <string name="hint_name">Имя</string>
+    <string name="hint_surname">Фамилия</string>
+    <string name="hint_nickname">Никнейм</string>
+    <string name="hint_password_repeat">Повторение пароля</string>
+    <string name="hint_number">Номер телефона</string>
+    <string name="password_forget">Забыли пароль?</string>
+</resources>
