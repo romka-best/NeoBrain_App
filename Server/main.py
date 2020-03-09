@@ -15,7 +15,7 @@ login_manager.init_app(app)
 def main():
     db_session.global_init("db/neobrain.db")
     app.register_blueprint(users_api.blueprint)
-    app.run(port=5000, host='127.0.0.1')
+    app.run(port=5000, host='0.0.0.0')
 
 
 @app.errorhandler(404)

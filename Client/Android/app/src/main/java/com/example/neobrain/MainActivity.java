@@ -9,7 +9,6 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.Controllers.AuthController;
-import com.example.neobrain.Controllers.StartController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

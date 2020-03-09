@@ -1,3 +1,5 @@
+import datetime
+
 import flask
 from flask import jsonify, request
 from data import db_session
@@ -43,8 +45,11 @@ def create_user():
     elif not all(key in request.json for key in
                  ['name', 'surname', 'nickname', 'number', 'password']):
         return jsonify({'error': 'Bad request'})
-    elif session.query(User).filter(User.nickname == request.json['nickname']).first():
-        return jsonify({'error': 'Id already exists'})
+    elif session.query(User).filter(
+            User.nickname == request.json['nickname']).first():
+        return jsonify({'error': 'Nickname already exists'})
+    elif session.query(User).filter(User.number == request.json['number']).first():
+        return jsonify({'error': 'Phone number already exists'})
     user = User(
         name=request.json['name'],
         surname=request.json['surname'],
@@ -54,7 +59,7 @@ def create_user():
     user.set_password(request.json['password'])
     session.add(user)
     session.commit()
-    return jsonify({'error': 'OK'})
+    return jsonify({'status': 'OK'})
 
 
 @blueprint.route('/api/users/login', methods=['POST'])
@@ -67,7 +72,9 @@ def login_user():
         return jsonify({'error': 'Bad request'})
     user = session.query(User).filter(User.number == request.json['number']).first()
     if user and user.check_password(request.json['password']):
-        return jsonify({'success': 'OK'})
+        return jsonify({'status': 'OK'})
+    elif user and not user.check_password(request.json['password']):
+        return jsonify({'error': "Password is not correct"})
     return jsonify({'error': 404})
 
 
@@ -88,7 +95,7 @@ def edit_user(user_id):
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not all(key in request.json for key in
-                 ['name', 'surname', 'nickname', 'number', 'modified_date', 'password']):
+                 ['name', 'surname', 'nickname', 'number', 'password']):
         return jsonify({'error': 'Bad request'})
     user = session.query(User).get(user_id)
     if not user:
@@ -99,7 +106,7 @@ def edit_user(user_id):
         surname=request.json['surname'],
         nickname=request.json['nickname'],
         number=request.json['number'],
-        modified_date=request.json['modified_date']
+        modified_date=datetime.datetime.now
     )
     user.set_password(request.json['password'])
     session.commit()

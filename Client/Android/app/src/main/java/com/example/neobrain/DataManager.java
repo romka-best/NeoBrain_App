@@ -3,11 +3,12 @@ package com.example.neobrain;
 import com.example.neobrain.API.APIConfig;
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
-import com.example.neobrain.API.model.StatusResponse;
+import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.UserModel;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class DataManager {
@@ -19,7 +20,7 @@ public class DataManager {
     }
 
     public static DataManager getInstance() {
-        if (instance != null)
+        if (instance == null)
             instance = new DataManager();
         return instance;
     }
@@ -30,20 +31,15 @@ public class DataManager {
         );
     }
 
-    public Call<UserModel> login(String number, String password) {
+    public Call<Status> login(UserModel userModel) {
         return mAPIService.login(
-                number,
-                password
+                userModel
         );
     }
 
-    public Call<UserModel> createUser(String name, String surname, String nickname, String number, String password) {
+    public Call<Status> createUser(UserModel userModel) {
         return mAPIService.createUser(
-                name,
-                surname,
-                nickname,
-                number,
-                password
+                userModel
         );
     }
 }

@@ -1,6 +1,5 @@
 package com.example.neobrain.Controllers;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +9,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.bluelinelabs.conductor.Controller;
-import com.example.neobrain.API.model.StatusResponse;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.changehandler.FlipChangeHandler;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,22 +63,35 @@ public class RegController extends Controller {
         boolean error = false;
         if (!isPasswordSame(password, passwordRepeat)) error = true;
         if (!error) {
-            String TAG = "RRR";
-            DataManager.getInstance().createUser(name, surname, nickname, number, password).enqueue(new Callback<UserModel>() {
+            UserModel userModel = new UserModel();
+            userModel.setName(name);
+            userModel.setSurname(surname);
+            userModel.setNickname(nickname);
+            userModel.setNumber(number);
+            userModel.setPassword(password);
+            Call<Status> call = DataManager.getInstance().createUser(userModel);
+            call.enqueue(new Callback<Status>() {
                 @Override
-                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                public void onResponse(Call<Status> call, Response<Status> response) {
                     if (response.isSuccessful()) {
-                        System.out.println(response.body());
+                        Status post = response.body();
+                        assert post != null;
+                        if (post.getError() != null) {
+                            Toast.makeText(getApplicationContext(), post.getError(), Toast.LENGTH_LONG).show();
+                        } else if (post.getStatus().equals("OK")) {
+                            getRouter().pushController(RouterTransaction.with(new ProfileController())
+                                    .popChangeHandler(new FlipChangeHandler())
+                                    .pushChangeHandler(new FlipChangeHandler()));
+                            getRouter().popController(RegController.this);
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_LONG).show();
                     }
-                    else{
-                        System.out.println(response.errorBody());
-                    }
-
                 }
 
                 @Override
-                public void onFailure(Call<UserModel> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
+                public void onFailure(Call<Status> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
                 }
             });
         } else {
@@ -85,6 +101,9 @@ public class RegController extends Controller {
 
     @OnClick({R.id.authButton})
     void launchAuth() {
+        getRouter().pushController(RouterTransaction.with(new AuthController())
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler()));
         getRouter().popController(this);
     }
 
