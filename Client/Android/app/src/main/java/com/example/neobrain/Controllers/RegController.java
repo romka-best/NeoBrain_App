@@ -1,5 +1,6 @@
 package com.example.neobrain.Controllers;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.bluelinelabs.conductor.Controller;
+import com.example.neobrain.API.model.StatusResponse;
+import com.example.neobrain.API.model.UserModel;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
 import java.util.regex.Matcher;
@@ -16,6 +20,9 @@ import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegController extends Controller {
 
@@ -51,50 +58,19 @@ public class RegController extends Controller {
         String passwordRepeat = textPasswordRepeat.getText().toString();
         String number = textNumber.getText().toString();
         boolean error = false;
-        if (name.equals("")) {
-            Toast.makeText(getApplicationContext(), "Не введёно Имя", Toast.LENGTH_SHORT).show();
-            error = true;
-        } else
-            Toast.makeText(getApplicationContext(), "С именем всё ок", Toast.LENGTH_SHORT).show();
-        if (surname.equals("")) {
-            Toast.makeText(getApplicationContext(), "Не введёно Фамилия", Toast.LENGTH_SHORT).show();
-            error = true;
-        } else
-            Toast.makeText(getApplicationContext(), "С фамилией всё ок", Toast.LENGTH_SHORT).show();
-        if (isNicknameFree(nickname)) {
-            Toast.makeText(getApplicationContext(), "С никнеймом всё ок", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Никнейм занят", Toast.LENGTH_SHORT).show();
-            error = true;
-        }
-        if (passwordValidate(password)) {
-            Toast.makeText(getApplicationContext(), "С паролем всё ок", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Пароль плохой", Toast.LENGTH_SHORT).show();
-            error = true;
-        }
-        if (isPasswordSame(password, passwordRepeat)) {
-            Toast.makeText(getApplicationContext(), "Пароли схожи", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Пароли не похожи", Toast.LENGTH_SHORT).show();
-            error = true;
-        }
-        if (isPhoneNumberValid(number)) {
-            Toast.makeText(getApplicationContext(), "С телефоном всё ок", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "С телефоном чёт не то", Toast.LENGTH_SHORT).show();
-            error = true;
-        }
-        /*
-        if(!error){
-            Call<UserModel> call = DataManager.getInstance().register();
-            call.enqueue(new Callback<UserModel>() {
+        if (!isPasswordSame(password, passwordRepeat)) error = true;
+        if (!error) {
+            String TAG = "RRR";
+            DataManager.getInstance().createUser(name, surname, nickname, number, password).enqueue(new Callback<UserModel>() {
                 @Override
                 public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                    int code = response.code();
-                    if (code == 200){
-                        Toast.makeText(getApplicationContext(), "Удачно", Toast.LENGTH_LONG).show();
+                    if (response.isSuccessful()) {
+                        System.out.println(response.body());
                     }
+                    else{
+                        System.out.println(response.errorBody());
+                    }
+
                 }
 
                 @Override
@@ -102,7 +78,9 @@ public class RegController extends Controller {
                     Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                 }
             });
-            */
+        } else {
+            Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
+        }
     }
 
     @OnClick({R.id.authButton})
@@ -124,11 +102,12 @@ public class RegController extends Controller {
         final String regex4 = ".{6,20}";
 
         if (Pattern.matches(regex1, password) &
-            Pattern.matches(regex2,password) &
-            Pattern.matches(regex3,password) &
-            Pattern.matches(regex4,password)) {
+                Pattern.matches(regex2, password) &
+                Pattern.matches(regex3, password) &
+                Pattern.matches(regex4, password)) {
             return true;
-        } return false;
+        }
+        return false;
     }
 
     private boolean isPasswordSame(String password1, String password2) {
@@ -141,8 +120,7 @@ public class RegController extends Controller {
         int digits = phone.replaceAll("\\D", "").length();
         if (digits == 11) {
             return phone.matches("(\\+\\d+)?\\d*(\\(\\d{3}\\))?\\d+(-?\\d+){0,2}");
-        }
-        else return false;
+        } else return false;
     }
 
     private boolean isNicknameFree(String nick) {

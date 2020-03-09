@@ -3,6 +3,7 @@ package com.example.neobrain;
 import com.example.neobrain.API.APIConfig;
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
+import com.example.neobrain.API.model.StatusResponse;
 import com.example.neobrain.API.model.UserModel;
 
 import java.util.List;
@@ -13,33 +14,36 @@ public class DataManager {
     private static DataManager instance;
     private APIService mAPIService;
 
-    private DataManager(){
+    private DataManager() {
         mAPIService = ServiceConstructor.CreateService(APIService.class);
     }
 
     public static DataManager getInstance() {
-        if(instance != null)
+        if (instance != null)
             instance = new DataManager();
         return instance;
     }
 
-    public Call<UserModel> getUser(String nickname){
+    public Call<UserModel> getUser(Integer id) {
         return mAPIService.getUser(
-                nickname,
-                APIConfig.FORMAT
+                id
         );
     }
 
-    public Call<UserModel> login(String nickname, String password){
+    public Call<UserModel> login(String number, String password) {
         return mAPIService.login(
-                nickname,
+                number,
                 password
         );
     }
 
-    public Call<UserModel> register(UserModel user){
-        return mAPIService.register(
-                user
+    public Call<UserModel> createUser(String name, String surname, String nickname, String number, String password) {
+        return mAPIService.createUser(
+                name,
+                surname,
+                nickname,
+                number,
+                password
         );
     }
 }

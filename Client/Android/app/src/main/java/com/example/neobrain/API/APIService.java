@@ -1,5 +1,6 @@
 package com.example.neobrain.API;
 
+import com.example.neobrain.API.model.StatusResponse;
 import com.example.neobrain.API.model.UserModel;
 
 import java.util.List;
@@ -15,21 +16,24 @@ import retrofit2.http.Query;
 
 public interface APIService {
 
-    @GET("/{nickname}{format}")
+    @GET("/users/{id}")
     Call<UserModel> getUser(
-            @Path("nickname") String nickname,
-            @Path("format") String format);
+            @Path("id") Integer id);
 
     @FormUrlEncoded
-    @POST("/login")
-    Call<UserModel> login(
+    @POST("/users/create")
+    Call<UserModel> createUser(
+            @Field("name") String name,
+            @Field("surname") String surname,
             @Field("nickname") String nickname,
+            @Field("number") String number,
             @Field("password") String password
     );
 
     @FormUrlEncoded
-    @POST("/register")
-    Call<UserModel> register(
-            @Body UserModel user
+    @POST("/users/login")
+    Call<UserModel> login(
+            @Field("number") String number,
+            @Field("password") String password
     );
 }

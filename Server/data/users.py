@@ -1,9 +1,12 @@
 import sqlalchemy
 from .db_session import SqlAlchemyBase
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+import datetime
+from sqlalchemy_serializer import SerializerMixin
 
 
-class User(SqlAlchemyBase):
+class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
@@ -12,6 +15,7 @@ class User(SqlAlchemyBase):
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
     number = sqlalchemy.Column(sqlalchemy.String, unique=True, index=True, nullable=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
