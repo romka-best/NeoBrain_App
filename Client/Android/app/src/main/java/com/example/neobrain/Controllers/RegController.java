@@ -68,7 +68,7 @@ public class RegController extends Controller {
             userModel.setSurname(surname);
             userModel.setNickname(nickname);
             userModel.setNumber(number);
-            userModel.setPassword(password);
+            userModel.setHashedPassword(password);
             Call<Status> call = DataManager.getInstance().createUser(userModel);
             call.enqueue(new Callback<Status>() {
                 @Override
@@ -76,9 +76,9 @@ public class RegController extends Controller {
                     if (response.isSuccessful()) {
                         Status post = response.body();
                         assert post != null;
-                        if (post.getError() != null) {
-                            Toast.makeText(getApplicationContext(), post.getError(), Toast.LENGTH_LONG).show();
-                        } else if (post.getStatus().equals("OK")) {
+                        if (post.getStatus() != 201) {
+                            Toast.makeText(getApplicationContext(), "Status code: " + post.getStatus() + "\n" + post.getText(), Toast.LENGTH_LONG).show();
+                        } else if (post.getStatus() == 201) {
                             getRouter().pushController(RouterTransaction.with(new ProfileController())
                                     .popChangeHandler(new FlipChangeHandler())
                                     .pushChangeHandler(new FlipChangeHandler()));

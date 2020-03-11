@@ -17,6 +17,7 @@ class Photo(SqlAlchemyBase, SerializerMixin):
     last_message = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     count_new_messages = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     count_messages = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
-    users = orm.relation("Users", back_populates='photo')
-    chats = orm.relation("Chats", back_populates='photo')
+    users = orm.relation("User", back_populates='photo')
+    chats = orm.relation("Chat", back_populates='photo')

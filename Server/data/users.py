@@ -40,8 +40,10 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
 
-    chats = orm.relation("Chats", back_populates='user')
+    chats = orm.relation("Chat", back_populates='user')
     photo = orm.relation("Photo")
+    photo_id = sqlalchemy.Column(sqlalchemy.Integer,
+                                 sqlalchemy.ForeignKey("photos.id"))
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

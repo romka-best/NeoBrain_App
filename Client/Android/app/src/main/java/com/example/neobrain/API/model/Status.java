@@ -7,25 +7,25 @@ public class Status {
 
     @SerializedName("status")
     @Expose
-    private String status;
-    @SerializedName("error")
+    private Integer status;
+    @SerializedName("text")
     @Expose
-    private String error;
+    private String text;
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public String getError() {
-        return error;
+    public String getText() {
+        return text;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setText(String text) {
+        this.text = text;
     }
 
 }

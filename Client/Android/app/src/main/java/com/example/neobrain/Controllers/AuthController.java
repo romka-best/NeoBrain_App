@@ -55,7 +55,7 @@ public class AuthController extends Controller {
         if (isPasswordValid(password)) {
             UserModel userModel = new UserModel();
             userModel.setNumber(number);
-            userModel.setPassword(password);
+            userModel.setHashedPassword(password);
             Call<Status> call = DataManager.getInstance().login(userModel);
             call.enqueue(new Callback<Status>() {
                 @Override
@@ -63,13 +63,15 @@ public class AuthController extends Controller {
                     if (response.isSuccessful()) {
                         Status post = response.body();
                         assert post != null;
-                        if (post.getError() != null) {
-                            if (post.getError().equals("404")) {
+                        if (post.getStatus() != 200) {
+                            if (post.getStatus() == 404) {
                                 Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_LONG).show();
+                            } else if (post.getStatus() == 449) {
+                                Toast.makeText(getApplicationContext(), "Неверный пароль", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), post.getError(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), post.getText(), Toast.LENGTH_LONG).show();
                             }
-                        } else if (post.getStatus().equals("OK")) {
+                        } else if (post.getStatus() == 200) {
                             getRouter().pushController(RouterTransaction.with(new ProfileController())
                                     .popChangeHandler(new FlipChangeHandler())
                                     .pushChangeHandler(new FlipChangeHandler()));

@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
 api = Api(app)
-api.add_resource(UserResource, '/api/users/<int:users_id>')
+api.add_resource(UserResource, '/api/users/<int:user_id>')
 api.add_resource(UsersListResource, '/api/users')
 api.add_resource(UserLoginResource, '/api/users/login')
 
@@ -25,7 +25,7 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/neobrain.db")
-    app.run(port=5000, host='0.0.0.0')
+    app.run(port=5000, host='0.0.0.0', debug=True)
 
 
 @login_manager.user_loader
