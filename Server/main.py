@@ -1,26 +1,31 @@
-from flask import Flask, request, make_response, jsonify, redirect, render_template, abort
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from data import db_session
-from data.users import User
-import users_api
 import datetime
+
+from flask import Flask, request, make_response, jsonify, redirect, render_template
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
+from data import db_session
+
+from data.users import User
+from resources.users_resource import UserResource, UsersListResource, UserLoginResource
+
+from flask_restful import abort, Api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
+
+api = Api(app)
+api.add_resource(UserResource, '/api/users/<int:users_id>')
+api.add_resource(UsersListResource, '/api/users')
+api.add_resource(UserLoginResource, '/api/users/login')
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 
 def main():
     db_session.global_init("db/neobrain.db")
-    app.register_blueprint(users_api.blueprint)
     app.run(port=5000, host='0.0.0.0')
-
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 @login_manager.user_loader
