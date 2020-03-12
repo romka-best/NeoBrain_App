@@ -12,6 +12,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -64,11 +65,13 @@ public class RegController extends Controller {
         if (!isPasswordSame(password, passwordRepeat)) error = true;
         if (!error) {
             UserModel userModel = new UserModel();
-            userModel.setName(name);
-            userModel.setSurname(surname);
-            userModel.setNickname(nickname);
-            userModel.setNumber(number);
-            userModel.setHashedPassword(password);
+            User user = new User();
+            user.setName(name);
+            user.setSurname(surname);
+            user.setNickname(nickname);
+            user.setNumber(number);
+            user.setHashedPassword(password);
+            userModel.setUser(user);
             Call<Status> call = DataManager.getInstance().createUser(userModel);
             call.enqueue(new Callback<Status>() {
                 @Override
