@@ -1,5 +1,7 @@
 package com.example.neobrain;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -9,15 +11,23 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.Controllers.AuthController;
+import com.example.neobrain.Controllers.ProfileController;
+import com.example.neobrain.changehandler.FlipChangeHandler;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.controller_container) ViewGroup container;
+    @BindView(R.id.controller_container)
+    ViewGroup container;
 
     private Router router;
+
+    private static final String MY_SETTINGS = "my_settings";
+    SharedPreferences sp;
 
 
     @Override
@@ -30,7 +40,14 @@ public class MainActivity extends AppCompatActivity{
 
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(new AuthController()));
+            sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                    Context.MODE_PRIVATE);
+            boolean hasVisited = sp.getBoolean("hasAuthed", false);
+            if (hasVisited) {
+                router.setRoot(RouterTransaction.with(new ProfileController()));
+            } else {
+                router.setRoot(RouterTransaction.with(new AuthController()));
+            }
         }
     }
 

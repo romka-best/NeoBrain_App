@@ -1,5 +1,7 @@
 package com.example.neobrain.Controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +20,20 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 
+import java.util.Objects;
+
 public class AuthController extends Controller {
-    private boolean isAuth = false;
     private TextView textLogin;
     private TextView textPassword;
+
+    private static final String MY_SETTINGS = "my_settings";
+    SharedPreferences sp;
 
 
     @NonNull
@@ -36,6 +43,8 @@ public class AuthController extends Controller {
         ButterKnife.bind(this, view);
         textLogin = view.findViewById(R.id.login);
         textPassword = view.findViewById(R.id.password);
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
         return view;
     }
 
@@ -54,8 +63,11 @@ public class AuthController extends Controller {
         String password = textPassword.getText().toString();
         if (isPasswordValid(password)) {
             UserModel userModel = new UserModel();
-            userModel.setNumber(number);
-            userModel.setHashedPassword(password);
+            User user = new User();
+            // TODO Проверка на логин, в зависимости от логина, отправляем разные значения
+            user.setNumber(number);
+            user.setHashedPassword(password);
+            userModel.setUser(user);
             Call<Status> call = DataManager.getInstance().login(userModel);
             call.enqueue(new Callback<Status>() {
                 @Override
@@ -72,6 +84,9 @@ public class AuthController extends Controller {
                                 Toast.makeText(getApplicationContext(), post.getText(), Toast.LENGTH_LONG).show();
                             }
                         } else if (post.getStatus() == 200) {
+                            SharedPreferences.Editor e = sp.edit();
+                            e.putBoolean("hasAuthed", true);
+                            e.apply();
                             getRouter().pushController(RouterTransaction.with(new ProfileController())
                                     .popChangeHandler(new FlipChangeHandler())
                                     .pushChangeHandler(new FlipChangeHandler()));

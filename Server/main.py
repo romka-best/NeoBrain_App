@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
 api = Api(app)
-api.add_resource(UserResource, '/api/users/<int:user_id>', '/api/users')
+api.add_resource(UserResource, '/api/users/<int:user_id>')
 api.add_resource(UsersListResource, '/api/users')
 api.add_resource(UserLoginResource, '/api/users/login')
 

@@ -33,6 +33,98 @@ class UserResource(Resource):
             only=('name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'email'))})
 
+    def put(self, user_id):
+        abort_if_user_not_found(user_id)
+        args = self.parser.parse_args()
+        session = db_session.create_session()
+        if not args:
+            return jsonify({'status': 400,
+                            'text': "Empty request"})
+        elif not all(key in args for key in
+                     ['name', 'surname', 'nickname', 'number', 'hashed_password']):
+            return jsonify({'status': 400,
+                            'text': "Bad request"})
+        user = session.query(User).get(user_id)
+        user = User(
+            id=user_id,
+            name=args['name'],
+            surname=args['surname'],
+            nickname=args['nickname'],
+            number=args['number'],
+            modified_date=datetime.datetime.now()
+        )
+        user.set_password(args['hashed_password'])
+        session.commit()
+        return jsonify({'status': 200,
+                        'text': 'edited'})
+
+    def delete(self, user_id):
+        abort_if_user_not_found(user_id)
+        session = db_session.create_session()
+        user = session.query(User).get(user_id)
+        session.delete(user)
+        session.commit()
+        return jsonify({'status': 200,
+                        'text': 'deleted'})
+
+
+class UserLoginResource(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('nickname', required=False)
+        self.parser.add_argument('number', required=False)
+        self.parser.add_argument('email', required=False)
+        self.parser.add_argument('hashed_password', required=True)
+
+    def post(self):
+        args = self.parser.parse_args()
+        session = db_session.create_session()
+        if not args:
+            return jsonify({'status': 400,
+                            'text': "Empty request"})
+        elif not all(key in args for key in
+                     ['hashed_password']) and \
+                not any(key in args for key in ['number', 'nickname', 'email']):
+            return jsonify({'status': 400,
+                            'text': "Bad request"})
+        if args['number']:
+            user = session.query(User).filter(User.number == args['number']).first()
+        elif args['nickname']:
+            user = session.query(User).filter(User.nickname == args['nickname']).first()
+        elif args['email']:
+            user = session.query(User).filter(User.email == args['email']).first()
+        else:
+            return jsonify({'status': 400,
+                            'text': 'Bad request'})
+        if user and user.check_password(args['hashed_password']):
+            return jsonify({'status': 200,
+                            'text': 'Login allowed'})
+        elif user and not user.check_password(args['hashed_password']):
+            return jsonify({'status': 449,
+                            'text': 'Password is not correct'})
+        return jsonify({'status': 404,
+                        'text': 'User is not defined'})
+
+
+class UsersListResource(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('name', required=True)
+        self.parser.add_argument('surname', required=True)
+        self.parser.add_argument('nickname', required=True)
+        self.parser.add_argument('number', required=True)
+        self.parser.add_argument('email', required=False)
+        self.parser.add_argument('created_date', required=False)
+        self.parser.add_argument('modified_date', required=False)
+        self.parser.add_argument('hashed_password', required=True, type=str)
+
+    def get(self):
+        session = db_session.create_session()
+        users = session.query(User).all()
+        return jsonify({'users': [item.to_dict(
+            only=('name', 'surname', 'nickname', 'number',
+                  'created_date', 'modified_date', 'email')) for item in users]})
+
     def post(self):
         args = self.parser.parse_args()
         session = db_session.create_session()
@@ -61,85 +153,3 @@ class UserResource(Resource):
         session.commit()
         return jsonify({'status': 201,
                         'text': 'created'})
-
-    def put(self, user_id):
-        abort_if_user_not_found(user_id)
-        args = self.parser.parse_args()
-        session = db_session.create_session()
-        if not args:
-            return jsonify({'status': 400,
-                            'text': "Empty request"})
-        elif not all(key in args for key in
-                     ['name', 'surname', 'nickname', 'number', 'hashed_password']):
-            return jsonify({'status': 400,
-                            'text': "Bad request"})
-        user = session.query(User).get(user_id)
-        user = User(
-            id=user_id,
-            name=args['name'],
-            surname=args['surname'],
-            nickname=args['nickname'],
-            number=args['number'],
-            modified_date=datetime.datetime.now()
-        )
-        user.set_password(args['hashed_password'])
-        session.commit()
-        return jsonify({'status': 200,
-                        'text': 'edited'})
-
-    def delete(self, users_id):
-        abort_if_user_not_found(users_id)
-        session = db_session.create_session()
-        user = session.query(User).get(users_id)
-        session.delete(user)
-        session.commit()
-        return jsonify({'status': 200,
-                        'text': 'deleted'})
-
-
-class UserLoginResource(Resource):
-    def __init__(self):
-        self.parser = reqparse.RequestParser()
-        self.parser.add_argument('nickname', required=False)
-        self.parser.add_argument('number', required=True)
-        self.parser.add_argument('email', required=False)
-        self.parser.add_argument('hashed_password', required=True)
-
-    def post(self):
-        args = self.parser.parse_args()
-        session = db_session.create_session()
-        if not args:
-            return jsonify({'status': 400,
-                            'text': "Empty request"})
-        elif not all(key in args for key in
-                     ['number', 'hashed_password']):
-            return jsonify({'status': 400,
-                            'text': "Bad request"})
-        user = session.query(User).filter(User.number == args['number']).first()
-        if user and user.check_password(args['hashed_password']):
-            return jsonify({'status': 200,
-                            'text': 'Login allowed'})
-        elif user and not user.check_password(args['hashed_password']):
-            return jsonify({'status': 449,
-                            'text': 'Password is not correct'})
-        return jsonify({'status': 404,
-                        'text': 'User is not defined'})
-
-
-class UsersListResource(Resource):
-    def __init__(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', required=True)
-        parser.add_argument('surname', required=True)
-        parser.add_argument('nickname', required=True)
-        parser.add_argument('number', required=True)
-        parser.add_argument('email', required=False)
-        parser.add_argument('created_date', required=False)
-        parser.add_argument('modified_date', required=False)
-
-    def get(self):
-        session = db_session.create_session()
-        users = session.query(User).all()
-        return jsonify({'users': [item.to_dict(
-            only=('name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'email')) for item in users]})

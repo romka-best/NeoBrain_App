@@ -33,27 +33,26 @@
         android:id="@+id/textAuth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="240dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="220dp"
         android:text="@string/reg"
         android:textAppearance="@style/textAuth"
         android:textColor="@color/colorText"
         android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@+id/square"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.934"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.422" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/regButton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_width="222dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/reg2"
         android:textColor="@color/colorText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.924"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/number" />
 
@@ -128,7 +127,6 @@
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="172dp"
-        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/hint_name"
         android:inputType="textPersonName"
