@@ -15,15 +15,15 @@ def abort_if_user_not_found(user_id):
 
 class UserResource(Resource):
     def __init__(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', required=True)
-        parser.add_argument('surname', required=True)
-        parser.add_argument('nickname', required=True)
-        parser.add_argument('number', required=True)
-        parser.add_argument('email', required=False)
-        parser.add_argument('created_date', required=False)
-        parser.add_argument('modified_date', required=False)
-        parser.add_argument('hashed_password', required=True, type=str)
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('name', required=True)
+        self.parser.add_argument('surname', required=True)
+        self.parser.add_argument('nickname', required=True)
+        self.parser.add_argument('number', required=True)
+        self.parser.add_argument('email', required=False)
+        self.parser.add_argument('created_date', required=False)
+        self.parser.add_argument('modified_date', required=False)
+        self.parser.add_argument('hashed_password', required=True, type=str)
 
     def get(self, user_id):
         abort_if_user_not_found(user_id)
@@ -100,13 +100,9 @@ class UserResource(Resource):
 class UserLoginResource(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('name', required=True)
-        self.parser.add_argument('surname', required=True)
-        self.parser.add_argument('nickname', required=True)
+        self.parser.add_argument('nickname', required=False)
         self.parser.add_argument('number', required=True)
         self.parser.add_argument('email', required=False)
-        self.parser.add_argument('created_date', required=False)
-        self.parser.add_argument('modified_date', required=False)
         self.parser.add_argument('hashed_password', required=True)
 
     def post(self):
@@ -140,7 +136,6 @@ class UsersListResource(Resource):
         parser.add_argument('email', required=False)
         parser.add_argument('created_date', required=False)
         parser.add_argument('modified_date', required=False)
-        parser.add_argument('hashed_password', required=True)
 
     def get(self):
         session = db_session.create_session()
