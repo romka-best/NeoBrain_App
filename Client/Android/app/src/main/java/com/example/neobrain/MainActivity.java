@@ -11,6 +11,7 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.Controllers.AuthController;
+import com.example.neobrain.Controllers.HomeController;
 import com.example.neobrain.Controllers.ProfileController;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     Context.MODE_PRIVATE);
             boolean hasVisited = sp.getBoolean("hasAuthed", false);
             if (hasVisited) {
-                router.setRoot(RouterTransaction.with(new ProfileController()));
+                router.setRoot(RouterTransaction.with(new HomeController()));
             } else {
                 router.setRoot(RouterTransaction.with(new AuthController()));
             }

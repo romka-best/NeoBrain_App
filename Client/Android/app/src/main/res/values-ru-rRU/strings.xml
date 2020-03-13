@@ -12,4 +12,5 @@
     <string name="hint_password_repeat">Повторение пароля</string>
     <string name="reg">Регистрация</string>
     <string name="hint_surname">Фамилия</string>
+    <string name="password_forget">Забыли пароль?</string>
 </resources>

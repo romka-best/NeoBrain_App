@@ -4,6 +4,7 @@ import com.example.neobrain.API.APIConfig;
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 
 import java.util.List;
@@ -31,15 +32,15 @@ public class DataManager {
         );
     }
 
-    public Call<Status> login(UserModel userModel) {
+    public Call<Status> login(User user) {
         return mAPIService.login(
-                userModel
+                user
         );
     }
 
-    public Call<Status> createUser(UserModel userModel) {
+    public Call<Status> createUser(User user) {
         return mAPIService.createUser(
-                userModel
+                user
         );
     }
 }

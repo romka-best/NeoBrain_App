@@ -62,13 +62,11 @@ public class AuthController extends Controller {
         String number = textLogin.getText().toString();
         String password = textPassword.getText().toString();
         if (isPasswordValid(password)) {
-            UserModel userModel = new UserModel();
             User user = new User();
             // TODO Проверка на логин, в зависимости от логина, отправляем разные значения
             user.setNumber(number);
             user.setHashedPassword(password);
-            userModel.setUser(user);
-            Call<Status> call = DataManager.getInstance().login(userModel);
+            Call<Status> call = DataManager.getInstance().login(user);
             call.enqueue(new Callback<Status>() {
                 @Override
                 public void onResponse(Call<Status> call, Response<Status> response) {

@@ -64,15 +64,13 @@ public class RegController extends Controller {
         boolean error = false;
         if (!isPasswordSame(password, passwordRepeat)) error = true;
         if (!error) {
-            UserModel userModel = new UserModel();
             User user = new User();
             user.setName(name);
             user.setSurname(surname);
             user.setNickname(nickname);
             user.setNumber(number);
             user.setHashedPassword(password);
-            userModel.setUser(user);
-            Call<Status> call = DataManager.getInstance().createUser(userModel);
+            Call<Status> call = DataManager.getInstance().createUser(user);
             call.enqueue(new Callback<Status>() {
                 @Override
                 public void onResponse(Call<Status> call, Response<Status> response) {

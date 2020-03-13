@@ -3,6 +3,7 @@ package com.example.neobrain.API;
 import androidx.room.Delete;
 
 import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 
 import java.util.List;
@@ -27,18 +28,18 @@ public interface APIService {
 
     @POST("users")
     Call<Status> createUser(
-            @Body UserModel userModel
+            @Body User user
     );
 
     @POST("users/login")
     Call<Status> login(
-            @Body UserModel userModel
+            @Body User user
     );
 
     @PUT("users/{id}")
     Call<Status> editUser(
             @Path("id") Integer id,
-            @Body UserModel userModel
+            @Body User user
     );
 
     @DELETE("users/{id}")
