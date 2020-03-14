@@ -80,7 +80,7 @@ public class RegController extends Controller {
                         if (post.getStatus() != 201) {
                             Toast.makeText(getApplicationContext(), "Status code: " + post.getStatus() + "\n" + post.getText(), Toast.LENGTH_LONG).show();
                         } else if (post.getStatus() == 201) {
-                            getRouter().pushController(RouterTransaction.with(new ProfileController())
+                            getRouter().pushController(RouterTransaction.with(new HomeController())
                                     .popChangeHandler(new FlipChangeHandler())
                                     .pushChangeHandler(new FlipChangeHandler()));
                             getRouter().popController(RegController.this);

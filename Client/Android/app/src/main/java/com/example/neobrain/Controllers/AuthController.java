@@ -85,7 +85,7 @@ public class AuthController extends Controller {
                             SharedPreferences.Editor e = sp.edit();
                             e.putBoolean("hasAuthed", true);
                             e.apply();
-                            getRouter().pushController(RouterTransaction.with(new ProfileController())
+                            getRouter().pushController(RouterTransaction.with(new HomeController())
                                     .popChangeHandler(new FlipChangeHandler())
                                     .pushChangeHandler(new FlipChangeHandler()));
                             getRouter().popController(AuthController.this);

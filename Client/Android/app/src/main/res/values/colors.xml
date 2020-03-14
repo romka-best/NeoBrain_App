@@ -6,4 +6,5 @@
     <color name="colorAccent">#D0D0D0</color>
     <color name="colorText">#FFF</color>
     <color name="colorError">#fa013f</color>
+    <color name="colorOnSurface">#828282</color>
 </resources>

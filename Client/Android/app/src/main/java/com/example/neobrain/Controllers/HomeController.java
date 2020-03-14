@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +24,7 @@ public class HomeController extends Controller {
 
     @BindViews({R.id.container})
     ViewGroup[] childContainers;
+    private ProgressBar progressBar;
 
     @NonNull
     @Override
@@ -30,11 +32,15 @@ public class HomeController extends Controller {
         View view = inflater.inflate(R.layout.start_controller, container, false);
         ButterKnife.bind(this, view);
 
+        progressBar = view.findViewById(R.id.progress_circular);
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+
         Router childRouterStart = getChildRouter(childContainers[0]).setPopsLastView(false);
         childRouterStart.setRoot(RouterTransaction.with(new ProfileController()));
 
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_menu);
+//        bottomNavigationView.set
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 item -> {
                     Router childRouter = getChildRouter(childContainers[0]).setPopsLastView(false);

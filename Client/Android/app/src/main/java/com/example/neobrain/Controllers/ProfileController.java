@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 
+import org.jetbrains.annotations.NotNull;
+
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +35,7 @@ public class ProfileController extends Controller {
     private SwipeRefreshLayout swipeContainer;
     private TextView nameAndSurname;
     private TextView nickname;
+    private ProgressBar progressBar;
 
 
     @NonNull
@@ -45,6 +49,8 @@ public class ProfileController extends Controller {
 
         nameAndSurname = view.findViewById(R.id.name_surname);
         nickname = view.findViewById(R.id.nickname);
+
+//        progressBar = view.findViewById(R.id.progress_circular);
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -62,6 +68,7 @@ public class ProfileController extends Controller {
                 R.color.colorPrimaryDark);
 
         getProfile();
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
         return view;
     }
 
@@ -70,7 +77,7 @@ public class ProfileController extends Controller {
         call.enqueue(new Callback<UserModel>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+            public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     User user = response.body().getUser();
@@ -81,7 +88,7 @@ public class ProfileController extends Controller {
             }
 
             @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });

@@ -15,8 +15,8 @@ public class ServiceConstructor {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(3, TimeUnit.MINUTES)
-                .readTimeout(3, TimeUnit.MINUTES)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .build();
 
