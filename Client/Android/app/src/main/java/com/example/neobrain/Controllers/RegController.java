@@ -1,5 +1,7 @@
 package com.example.neobrain.Controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,9 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +43,8 @@ public class RegController extends Controller {
     private TextView textPassword;
     private TextView textPasswordRepeat;
     private TextView textNumber;
+    private static final String MY_SETTINGS = "my_settings";
+    SharedPreferences sp;
 
     @NonNull
     @Override
@@ -50,6 +57,8 @@ public class RegController extends Controller {
         textPassword = view.findViewById(R.id.password);
         textPasswordRepeat = view.findViewById(R.id.passwordRepeat);
         textNumber = view.findViewById(R.id.number);
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
         return view;
     }
 
@@ -73,13 +82,17 @@ public class RegController extends Controller {
             Call<Status> call = DataManager.getInstance().createUser(user);
             call.enqueue(new Callback<Status>() {
                 @Override
-                public void onResponse(Call<Status> call, Response<Status> response) {
+                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                     if (response.isSuccessful()) {
                         Status post = response.body();
                         assert post != null;
                         if (post.getStatus() != 201) {
                             Toast.makeText(getApplicationContext(), "Status code: " + post.getStatus() + "\n" + post.getText(), Toast.LENGTH_LONG).show();
                         } else if (post.getStatus() == 201) {
+                            SharedPreferences.Editor e = sp.edit();
+                            e.putBoolean("hasAuthed", true);
+                            e.putString("nickname", nickname);
+                            e.apply();
                             getRouter().pushController(RouterTransaction.with(new HomeController())
                                     .popChangeHandler(new FlipChangeHandler())
                                     .pushChangeHandler(new FlipChangeHandler()));
@@ -91,7 +104,7 @@ public class RegController extends Controller {
                 }
 
                 @Override
-                public void onFailure(Call<Status> call, Throwable t) {
+                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                     Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
                 }
             });

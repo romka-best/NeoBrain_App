@@ -6,11 +6,11 @@ from data import db_session
 from data.users import User
 
 
-def abort_if_user_not_found(user_id):
+def abort_if_user_not_found(user_nickname):
     session = db_session.create_session()
-    user = session.query(User).get(user_id)
+    user = session.query(User).filter(User.nickname == user_nickname).first()
     if not user:
-        abort(404, message=f"Users {user_id} not found")
+        abort(404, message=f"Users {user_nickname} not found")
 
 
 class UserResource(Resource):
@@ -25,16 +25,16 @@ class UserResource(Resource):
         self.parser.add_argument('modified_date', required=False)
         self.parser.add_argument('hashed_password', required=True, type=str)
 
-    def get(self, user_id):
-        abort_if_user_not_found(user_id)
+    def get(self, user_nickname):
+        abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
-        user = session.query(User).get(user_id)
+        user = session.query(User).filter(User.nickname == user_nickname).first()
         return jsonify({'user': user.to_dict(
             only=('name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'email'))})
 
-    def put(self, user_id):
-        abort_if_user_not_found(user_id)
+    def put(self, user_nickname):
+        abort_if_user_not_found(user_nickname)
         args = self.parser.parse_args()
         session = db_session.create_session()
         if not args:
@@ -44,9 +44,8 @@ class UserResource(Resource):
                      ['name', 'surname', 'nickname', 'number', 'hashed_password']):
             return jsonify({'status': 400,
                             'text': "Bad request"})
-        user = session.query(User).get(user_id)
+        user = session.query(User).filter(User.nickname == user_nickname).first()
         user = User(
-            id=user_id,
             name=args['name'],
             surname=args['surname'],
             nickname=args['nickname'],
@@ -58,10 +57,10 @@ class UserResource(Resource):
         return jsonify({'status': 200,
                         'text': 'edited'})
 
-    def delete(self, user_id):
-        abort_if_user_not_found(user_id)
+    def delete(self, user_nickname):
+        abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
-        user = session.query(User).get(user_id)
+        user = session.query(User).filter(User.nickname == user_nickname).first()
         session.delete(user)
         session.commit()
         return jsonify({'status': 200,
@@ -98,7 +97,7 @@ class UserLoginResource(Resource):
                             'text': 'Bad request'})
         if user and user.check_password(args['hashed_password']):
             return jsonify({'status': 200,
-                            'text': 'Login allowed'})
+                            'text': f'Login {user.nickname} allowed'})
         elif user and not user.check_password(args['hashed_password']):
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})

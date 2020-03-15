@@ -26,9 +26,9 @@ public class DataManager {
         return instance;
     }
 
-    public Call<UserModel> getUser(Integer id) {
+    public Call<UserModel> getUser(String nickname) {
         return mAPIService.getUser(
-                id
+                nickname
         );
     }
 

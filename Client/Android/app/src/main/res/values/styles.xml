@@ -5,7 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonStyle">@style/NotCapsButton</item>
-<!--        <item name=""-->
+        <!--        <item name=""-->
     </style>
 
     <style name="NotCapsButton" parent="Widget.AppCompat.Button">
@@ -16,10 +16,14 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="colorPrimary">@color/colorError</item>
+    </style>
+
     <style name="textAuth">
-    <item name="android:textSize">
-        36sp
-    </item>
+        <item name="android:textSize">
+            36sp
+        </item>
     </style>
 
 </resources>

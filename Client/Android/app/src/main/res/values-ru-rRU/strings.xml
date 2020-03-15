@@ -13,4 +13,7 @@
     <string name="reg">Регистрация</string>
     <string name="hint_surname">Фамилия</string>
     <string name="password_forget">Забыли пароль?</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_question">Удалить фотографию?</string>
 </resources>

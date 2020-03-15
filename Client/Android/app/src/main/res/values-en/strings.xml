@@ -13,4 +13,7 @@
     <string name="hint_password_repeat">Password repeat</string>
     <string name="hint_surname">Surname</string>
     <string name="password_forget">Forgot your password?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="delete_question">Delete the photo?</string>
 </resources>

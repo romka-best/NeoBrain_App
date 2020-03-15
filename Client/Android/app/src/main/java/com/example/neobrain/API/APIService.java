@@ -22,9 +22,9 @@ import retrofit2.http.Query;
 
 public interface APIService {
 
-    @GET("users/{id}")
+    @GET("users/{nickname}")
     Call<UserModel> getUser(
-            @Path("id") Integer id);
+            @Path("nickname") String nickname);
 
     @POST("users")
     Call<Status> createUser(
@@ -36,14 +36,14 @@ public interface APIService {
             @Body User user
     );
 
-    @PUT("users/{id}")
+    @PUT("users/{nickname}")
     Call<Status> editUser(
-            @Path("id") Integer id,
+            @Path("nickname") String nickname,
             @Body User user
     );
 
-    @DELETE("users/{id}")
+    @DELETE("users/{nickname}")
     Call<Status> deleteUser(
-            @Path("id") Integer id
+            @Path("nickname") String nickname
     );
 }

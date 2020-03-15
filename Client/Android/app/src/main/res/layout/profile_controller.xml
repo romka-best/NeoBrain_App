@@ -82,7 +82,7 @@
                 android:layout_width="341dp"
                 android:layout_height="249dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="61dp"
+                android:layout_marginTop="60dp"
                 android:background="@drawable/background_profile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -93,6 +93,7 @@
                 android:layout_width="142dp"
                 android:layout_height="193dp"
                 android:layout_marginTop="40dp"
+                android:focusable="true"
                 app:cardCornerRadius="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.193"
@@ -114,26 +115,26 @@
                 android:layout_alignParentTop="false"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentBottom="false"
-                android:layout_marginTop="96dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_horizontal|top"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.721"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintHorizontal_bias="0.073"
+                app:layout_constraintStart_toEndOf="@+id/avatar_card"
+                app:layout_constraintTop_toBottomOf="@+id/line" />
 
             <View
                 android:id="@+id/line"
-                android:layout_width="166dp"
+                android:layout_width="176dp"
                 android:layout_height="3dp"
                 android:layout_alignParentStart="false"
                 android:layout_alignParentTop="false"
                 android:layout_marginTop="80dp"
                 android:background="@drawable/line_darkblue"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.854"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/avatar_card"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
@@ -142,10 +143,10 @@
                 android:layout_height="14dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="22dp"
                 android:background="@drawable/circle_online"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.134"
+                app:layout_constraintHorizontal_bias="0.126"
                 app:layout_constraintStart_toEndOf="@+id/name_surname"
                 app:layout_constraintTop_toBottomOf="@+id/line" />
 
@@ -173,6 +174,100 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/background_profile" />
+
+            <View
+                android:id="@+id/line_darkblue"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="-4dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginEnd="-4dp"
+                android:background="@drawable/line_darkblue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/background_profile" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutCompat2"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/line_darkblue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line_blue">
+
+                <View
+                    android:id="@+id/button_first"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/ic_button_start"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.134"
+                    app:layout_constraintStart_toEndOf="@+id/name_surname"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                <View
+                    android:id="@+id/button_second"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_button_start"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.134"
+                    app:layout_constraintStart_toEndOf="@+id/name_surname"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                <View
+                    android:id="@+id/button_third"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_button_middle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.134"
+                    app:layout_constraintStart_toEndOf="@+id/name_surname"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                <View
+                    android:id="@+id/button_fourth"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_button_end"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.134"
+                    app:layout_constraintStart_toEndOf="@+id/name_surname"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                <View
+                    android:id="@+id/button_fifth"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+
+                    android:background="@drawable/ic_button_end"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.134"
+                    app:layout_constraintStart_toEndOf="@+id/name_surname"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

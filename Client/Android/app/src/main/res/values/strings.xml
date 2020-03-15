@@ -12,4 +12,7 @@
     <string name="hint_password_repeat">Повторение пароля</string>
     <string name="hint_number">Номер телефона</string>
     <string name="password_forget">Забыли пароль?</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_question">Удалить фотографию?</string>
 </resources>

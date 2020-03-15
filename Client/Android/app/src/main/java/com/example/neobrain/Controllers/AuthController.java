@@ -26,6 +26,8 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 public class AuthController extends Controller {
@@ -69,7 +71,7 @@ public class AuthController extends Controller {
             Call<Status> call = DataManager.getInstance().login(user);
             call.enqueue(new Callback<Status>() {
                 @Override
-                public void onResponse(Call<Status> call, Response<Status> response) {
+                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                     if (response.isSuccessful()) {
                         Status post = response.body();
                         assert post != null;
@@ -84,6 +86,7 @@ public class AuthController extends Controller {
                         } else if (post.getStatus() == 200) {
                             SharedPreferences.Editor e = sp.edit();
                             e.putBoolean("hasAuthed", true);
+                            e.putString("nickname", post.getText().substring(6, post.getText().length() - 8));
                             e.apply();
                             getRouter().pushController(RouterTransaction.with(new HomeController())
                                     .popChangeHandler(new FlipChangeHandler())
@@ -96,7 +99,7 @@ public class AuthController extends Controller {
                 }
 
                 @Override
-                public void onFailure(Call<Status> call, Throwable t) {
+                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                     Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
                 }
             });
