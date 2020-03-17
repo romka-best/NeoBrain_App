@@ -43,6 +43,9 @@ public class RegController extends Controller {
     private TextView textPassword;
     private TextView textPasswordRepeat;
     private TextView textNumber;
+
+    private View squareAuth;
+
     private static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp;
 
@@ -51,12 +54,16 @@ public class RegController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.reg_controller, container, false);
         ButterKnife.bind(this, view);
-        textName = view.findViewById(R.id.name);
-        textSurname = view.findViewById(R.id.surname);
-        textNickname = view.findViewById(R.id.nickname);
-        textPassword = view.findViewById(R.id.password);
-        textPasswordRepeat = view.findViewById(R.id.passwordRepeat);
-        textNumber = view.findViewById(R.id.number);
+        textName = view.findViewById(R.id.name_text);
+        textSurname = view.findViewById(R.id.surname_text);
+        textNickname = view.findViewById(R.id.nickname_text);
+        textPassword = view.findViewById(R.id.password_text);
+        textPasswordRepeat = view.findViewById(R.id.passwordRepeat_text);
+        textNumber = view.findViewById(R.id.number_text);
+
+        squareAuth = view.findViewById(R.id.square_s);
+        squareAuth.setOnClickListener(v -> launchAuth());
+
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
         return view;

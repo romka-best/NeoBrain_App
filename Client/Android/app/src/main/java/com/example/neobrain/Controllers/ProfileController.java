@@ -27,6 +27,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
@@ -57,6 +59,12 @@ public class ProfileController extends Controller {
     private static final int CAMERA_REQUEST = 100;
     private static final int RESULT_OK = -1;
 
+    private View imagesButton;
+    private View peopleButton;
+    private View musicButton;
+    private View achievementsButton;
+    private View videosButton;
+
     private static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp;
 
@@ -69,39 +77,58 @@ public class ProfileController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
+        imagesButton = view.findViewById(R.id.button_first);
+        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new ImagesController())
+                .popChangeHandler(new VerticalChangeHandler())
+                .pushChangeHandler(new VerticalChangeHandler())));
+
+        peopleButton = view.findViewById(R.id.button_second);
+        peopleButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PeopleController())
+                .popChangeHandler(new VerticalChangeHandler())
+                .pushChangeHandler(new VerticalChangeHandler())));
+
+        musicButton = view.findViewById(R.id.button_third);
+        musicButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new MusicController())
+                .popChangeHandler(new VerticalChangeHandler())
+                .pushChangeHandler(new VerticalChangeHandler())));
+
+        achievementsButton = view.findViewById(R.id.button_fourth);
+        achievementsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new AchievementsController())
+                .popChangeHandler(new VerticalChangeHandler())
+                .pushChangeHandler(new VerticalChangeHandler())));
+
+        videosButton = view.findViewById(R.id.button_fifth);
+        videosButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new VideosController())
+                .popChangeHandler(new VerticalChangeHandler())
+                .pushChangeHandler(new VerticalChangeHandler())));
+
+
         avatar = view.findViewById(R.id.avatar);
 
         avatarCard = view.findViewById(R.id.avatar_card);
         avatarCard.setPreventCornerOverlap(false);
-        avatarCard.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"};
-                new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
-                        .setTitle("Фотография")
-                        .setItems(testArray, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 1:
-                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        startActivityForResult(intent, CAMERA_REQUEST);
-                                        break;
-                                    case 3:
-                                        new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
-                                                .setMessage(R.string.delete_question)
-                                                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        // TODO Удаление
-                                                    }
-                                                })
-                                                .setNegativeButton(R.string.cancel, null)
-                                                .show();
-                                        break;
-                                }
-                            }
-                        })
-                        .show();
-            }
+        avatarCard.setOnClickListener(v -> {
+            String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"}; // TODO Изменить на R.string.{}
+            new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
+                    .setTitle("Фотография") // TODO Изменить на R.string.{}
+                    .setItems(testArray, (dialog, which) -> {
+                        switch (which) {
+                            case 1:
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, CAMERA_REQUEST);
+                                break;
+                            case 3:
+                                new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
+                                        .setMessage(R.string.delete_question)
+                                        .setPositiveButton(R.string.delete, (dialog1, which1) -> {
+                                            // TODO Удаление
+                                        })
+                                        .setNegativeButton(R.string.cancel, null)
+                                        .show();
+                                break;
+                        }
+                    })
+                    .show();
         });
 
         nameAndSurname = view.findViewById(R.id.name_surname);

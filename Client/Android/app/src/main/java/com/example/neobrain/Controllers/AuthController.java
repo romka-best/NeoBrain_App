@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,14 +26,17 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class AuthController extends Controller {
-    private TextView textLogin;
-    private TextView textPassword;
+    private TextInputEditText textLogin;
+    private TextInputEditText textPassword;
+    private View squareReg;
 
     private static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp;
@@ -43,8 +47,12 @@ public class AuthController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.auth_controller, container, false);
         ButterKnife.bind(this, view);
-        textLogin = view.findViewById(R.id.login);
-        textPassword = view.findViewById(R.id.password);
+        textLogin = view.findViewById(R.id.login_text);
+        textPassword = view.findViewById(R.id.password_text);
+
+        squareReg = view.findViewById(R.id.square_s);
+        squareReg.setOnClickListener(v -> launchReg());
+
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
         return view;
@@ -61,8 +69,8 @@ public class AuthController extends Controller {
 
     @OnClick(R.id.authButton)
     void launchAuth() {
-        String number = textLogin.getText().toString();
-        String password = textPassword.getText().toString();
+        String number = Objects.requireNonNull(textLogin.getText()).toString();
+        String password = Objects.requireNonNull(textPassword.getText()).toString();
         if (isPasswordValid(password)) {
             User user = new User();
             // TODO Проверка на логин, в зависимости от логина, отправляем разные значения

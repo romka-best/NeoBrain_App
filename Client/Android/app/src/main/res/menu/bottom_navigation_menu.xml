@@ -11,11 +11,11 @@
         android:title="" />
     <item
         android:id="@+id/action_messages"
-        android:icon="@android:drawable/ic_dialog_email"
+        android:icon="@drawable/ic_chat"
         android:title="" />
     <item
         android:id="@+id/action_apps"
-        android:icon="@android:drawable/ic_menu_more"
+        android:icon="@drawable/ic_apps"
         android:title="" />
     <item
         android:id="@+id/action_menu"
