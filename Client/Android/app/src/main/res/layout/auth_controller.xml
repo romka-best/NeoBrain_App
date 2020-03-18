@@ -97,11 +97,10 @@
         android:textColor="@color/colorText"
         android:tint="@color/colorAccent"
         app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/square_s"
+        app:layout_constraintHorizontal_bias="0.772"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.756" />
+        app:layout_constraintTop_toBottomOf="@+id/square" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/forgot_button"
@@ -120,12 +119,13 @@
         android:id="@+id/authButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="92dp"
+        android:layout_marginBottom="84dp"
         android:text="@string/entry"
         android:textColor="@color/colorText"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/square"
         app:layout_constraintEnd_toEndOf="@+id/forgot_button"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/forgot_button" />
 
     <TextView

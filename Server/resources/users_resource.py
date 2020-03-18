@@ -26,6 +26,8 @@ class UserResource(Resource):
         self.parser.add_argument('hashed_password', required=True, type=str)
 
     def get(self, user_nickname):
+        if user_nickname.find("?") != -1:
+            user_nickname = user_nickname[:user_nickname.find("?")].strip()
         abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()
@@ -34,6 +36,8 @@ class UserResource(Resource):
                   'created_date', 'modified_date', 'email'))})
 
     def put(self, user_nickname):
+        if user_nickname.find("?") != -1:
+            user_nickname = user_nickname[:user_nickname.find("?")].strip()
         abort_if_user_not_found(user_nickname)
         args = self.parser.parse_args()
         session = db_session.create_session()
@@ -58,6 +62,8 @@ class UserResource(Resource):
                         'text': 'edited'})
 
     def delete(self, user_nickname):
+        if user_nickname.find("?") != -1:
+            user_nickname = user_nickname[:user_nickname.find("?")].strip()
         abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()

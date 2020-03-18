@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from flask import Flask, request, make_response, jsonify, redirect, render_template
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -25,7 +26,8 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/neobrain.db")
-    app.run(port=5000, host='0.0.0.0', debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 @login_manager.user_loader
@@ -49,6 +51,11 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     pass
+
+
+@app.route("/")
+def index():
+    return "Test"
 
 
 if __name__ == '__main__':
