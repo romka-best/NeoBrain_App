@@ -22,8 +22,7 @@ import butterknife.ButterKnife;
 public class HomeController extends Controller {
 
     @BindViews({R.id.container})
-    ViewGroup[] childContainers;
-    private ProgressBar progressBar;
+    ViewGroup[] childContainers; // TODO Уверен, что здесь можно изменить на не массив(Ведь у нас всего один контейнер)
 
     @NonNull
     @Override
@@ -31,7 +30,7 @@ public class HomeController extends Controller {
         View view = inflater.inflate(R.layout.start_controller, container, false);
         ButterKnife.bind(this, view);
 
-        progressBar = view.findViewById(R.id.progress_circular);
+        ProgressBar progressBar = view.findViewById(R.id.progress_circular);
 
         Router childRouterStart = getChildRouter(childContainers[0]).setPopsLastView(false);
         childRouterStart.setRoot(RouterTransaction.with(new ProfileController()));

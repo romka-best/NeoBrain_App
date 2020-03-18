@@ -36,10 +36,9 @@ import java.util.Objects;
 public class AuthController extends Controller {
     private TextInputEditText textLogin;
     private TextInputEditText textPassword;
-    private View squareReg;
 
     private static final String MY_SETTINGS = "my_settings";
-    SharedPreferences sp;
+    private SharedPreferences sp;
 
 
     @NonNull
@@ -50,7 +49,7 @@ public class AuthController extends Controller {
         textLogin = view.findViewById(R.id.login_text);
         textPassword = view.findViewById(R.id.password_text);
 
-        squareReg = view.findViewById(R.id.square_s);
+        View squareReg = view.findViewById(R.id.square_s);
         squareReg.setOnClickListener(v -> launchReg());
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
@@ -61,6 +60,7 @@ public class AuthController extends Controller {
 
     @OnClick({R.id.regButton})
     void launchReg() {
+        // TODO Исправить баг: При первом переходе, отсутствует анимация
         getRouter().pushController(RouterTransaction.with(new RegController())
                 .popChangeHandler(new FadeChangeHandler())
                 .pushChangeHandler(new FadeChangeHandler()));
@@ -69,6 +69,7 @@ public class AuthController extends Controller {
 
     @OnClick(R.id.authButton)
     void launchAuth() {
+        // TODO Корректно обработать вход: Если поля пустые или неправильные, сделать Error message к textLogin и textPassword
         String number = Objects.requireNonNull(textLogin.getText()).toString();
         String password = Objects.requireNonNull(textPassword.getText()).toString();
         if (isPasswordValid(password)) {
@@ -85,9 +86,9 @@ public class AuthController extends Controller {
                         assert post != null;
                         if (post.getStatus() != 200) {
                             if (post.getStatus() == 404) {
-                                Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}
                             } else if (post.getStatus() == 449) {
-                                Toast.makeText(getApplicationContext(), "Неверный пароль", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Неверный пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}
                             } else {
                                 Toast.makeText(getApplicationContext(), post.getText(), Toast.LENGTH_LONG).show();
                             }
@@ -102,15 +103,19 @@ public class AuthController extends Controller {
                             getRouter().popController(AuthController.this);
                         }
                     } else {
+                        // TODO Изменить на Snackbar
                         Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                    // TODO Изменить везде Toast на Snackbar и в зависимости от ошибки, показать пользователю ошибку
                     Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
                 }
             });
+        } else {
+            // TODO Добавить Error message
         }
     }
 

@@ -44,10 +44,8 @@ public class RegController extends Controller {
     private TextView textPasswordRepeat;
     private TextView textNumber;
 
-    private View squareAuth;
-
     private static final String MY_SETTINGS = "my_settings";
-    SharedPreferences sp;
+    private SharedPreferences sp;
 
     @NonNull
     @Override
@@ -61,7 +59,7 @@ public class RegController extends Controller {
         textPasswordRepeat = view.findViewById(R.id.passwordRepeat_text);
         textNumber = view.findViewById(R.id.number_text);
 
-        squareAuth = view.findViewById(R.id.square_s);
+        View squareAuth = view.findViewById(R.id.square_s);
         squareAuth.setOnClickListener(v -> launchAuth());
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
@@ -71,6 +69,7 @@ public class RegController extends Controller {
 
     @OnClick({R.id.regButton})
     void launchReg() {
+        // TODO Сделать корректную обработку регистрации
         String name = textName.getText().toString();
         String surname = textSurname.getText().toString();
         String nickname = textNickname.getText().toString();
@@ -94,6 +93,7 @@ public class RegController extends Controller {
                         Status post = response.body();
                         assert post != null;
                         if (post.getStatus() != 201) {
+                            // TODO В зависимости от текста, вывести пользователю ошибку в Error message(outlinedTextField.setError("Error message"))
                             Toast.makeText(getApplicationContext(), "Status code: " + post.getStatus() + "\n" + post.getText(), Toast.LENGTH_LONG).show();
                         } else if (post.getStatus() == 201) {
                             SharedPreferences.Editor e = sp.edit();
@@ -112,10 +112,12 @@ public class RegController extends Controller {
 
                 @Override
                 public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                    // TODO Корректно обработать ошибку
                     Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
                 }
             });
         } else {
+            // TODO Корректно обработать ошибку
             Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
         }
     }
@@ -141,13 +143,10 @@ public class RegController extends Controller {
         final String regex3 = "(.*)([@#_&]{1,})(.*)";
         final String regex4 = ".{6,20}";
 
-        if (Pattern.matches(regex1, password) &
+        return Pattern.matches(regex1, password) &
                 Pattern.matches(regex2, password) &
                 Pattern.matches(regex3, password) &
-                Pattern.matches(regex4, password)) {
-            return true;
-        }
-        return false;
+                Pattern.matches(regex4, password);
     }
 
     private boolean isPasswordSame(String password1, String password2) {
@@ -161,9 +160,5 @@ public class RegController extends Controller {
         if (digits == 11) {
             return phone.matches("(\\+\\d+)?\\d*(\\(\\d{3}\\))?\\d+(-?\\d+){0,2}");
         } else return false;
-    }
-
-    private boolean isNicknameFree(String nick) {
-        return true;
     }
 }

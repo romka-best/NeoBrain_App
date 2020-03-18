@@ -50,7 +50,6 @@ import retrofit2.Response;
 @SuppressLint("ValidController")
 public class ProfileController extends Controller {
 
-    private CardView avatarCard;
     private ImageView avatar;
     private SwipeRefreshLayout swipeContainer;
     private TextView nameAndSurname;
@@ -59,14 +58,8 @@ public class ProfileController extends Controller {
     private static final int CAMERA_REQUEST = 100;
     private static final int RESULT_OK = -1;
 
-    private View imagesButton;
-    private View peopleButton;
-    private View musicButton;
-    private View achievementsButton;
-    private View videosButton;
-
     private static final String MY_SETTINGS = "my_settings";
-    SharedPreferences sp;
+    private SharedPreferences sp;
 
     @NonNull
     @Override
@@ -77,27 +70,27 @@ public class ProfileController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
-        imagesButton = view.findViewById(R.id.button_first);
+        View imagesButton = view.findViewById(R.id.button_first);
         imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new ImagesController())
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
-        peopleButton = view.findViewById(R.id.button_second);
+        View peopleButton = view.findViewById(R.id.button_second);
         peopleButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PeopleController())
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
-        musicButton = view.findViewById(R.id.button_third);
+        View musicButton = view.findViewById(R.id.button_third);
         musicButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new MusicController())
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
-        achievementsButton = view.findViewById(R.id.button_fourth);
+        View achievementsButton = view.findViewById(R.id.button_fourth);
         achievementsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new AchievementsController())
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
-        videosButton = view.findViewById(R.id.button_fifth);
+        View videosButton = view.findViewById(R.id.button_fifth);
         videosButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new VideosController())
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
@@ -105,7 +98,7 @@ public class ProfileController extends Controller {
 
         avatar = view.findViewById(R.id.avatar);
 
-        avatarCard = view.findViewById(R.id.avatar_card);
+        CardView avatarCard = view.findViewById(R.id.avatar_card);
         avatarCard.setPreventCornerOverlap(false);
         avatarCard.setOnClickListener(v -> {
             String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"}; // TODO Изменить на R.string.{}
@@ -121,7 +114,7 @@ public class ProfileController extends Controller {
                                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
                                         .setMessage(R.string.delete_question)
                                         .setPositiveButton(R.string.delete, (dialog1, which1) -> {
-                                            // TODO Удаление
+                                            // TODO Корректно удалить фотографию
                                         })
                                         .setNegativeButton(R.string.cancel, null)
                                         .show();
@@ -136,7 +129,6 @@ public class ProfileController extends Controller {
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
-            // TODO Сделать обновление страницы
             swipeContainer.setRefreshing(true);
             getProfile();
             swipeContainer.setRefreshing(false);
@@ -169,6 +161,7 @@ public class ProfileController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                // TODO Корректно обработать ошибку и изменить на Snackbar
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
@@ -181,7 +174,7 @@ public class ProfileController extends Controller {
             // Фотка сделана, извлекаем картинку
             Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             avatar.setImageBitmap(thumbnailBitmap);
-            // TODO загрузку фотографии на сервер
+            // TODO Сделать корректную загрузку фотографии на сервер
         }
     }
 }
