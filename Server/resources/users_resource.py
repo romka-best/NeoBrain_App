@@ -50,10 +50,10 @@ class UserResource(Resource):
         abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()
-        # photo = encodebytes(bytes(session.query(Photo).filter(Photo.id == user.photo_id).first().data))
+        photo = encodebytes(session.query(Photo).filter(Photo.id == user.photo_id).first().data).decode()
         return jsonify({'user': user.to_dict(
             only=('name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'email')), 'photo': None})
+                  'created_date', 'modified_date', 'email')), 'photo': photo})
 
     def put(self, user_nickname):
         if user_nickname.find("?") != -1:

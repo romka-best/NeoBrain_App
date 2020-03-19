@@ -18,4 +18,4 @@ def test():
     if r.ok:
         r_new = r.json()
         with open("filename.jpg", 'wb') as f:
-            f.write(decodebytes(r_new['photo']))
+            f.write(decodebytes(r_new['photo'].encode()))
