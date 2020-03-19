@@ -1,4 +1,5 @@
 import pytest
+from base64 import decodebytes
 from requests import get, post, put, delete
 
 
@@ -11,7 +12,10 @@ def test():
     #     "hashed_password": "123"
     # }).json())
 
-    print(get("http://192.168.1.83:5000/api/users/Test_Nickname").json())
+    # print(get("http://192.168.1.83:5000/api/users/Test_Nickname").json())
 
-
-test()
+    r = get("http://192.168.1.84:5000/api/users/Test_Nickname", stream=True)
+    if r.ok:
+        r_new = r.json()
+        with open("filename.jpg", 'wb') as f:
+            f.write(decodebytes(r_new['photo']))

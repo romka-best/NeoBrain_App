@@ -9,6 +9,9 @@ from data import db_session
 from data.users import User
 from resources.users_resource import UserResource, UsersListResource, UserLoginResource
 
+from data.chats import Chat
+from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
+
 from flask_restful import abort, Api
 
 app = Flask(__name__)
@@ -16,9 +19,14 @@ app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
 api = Api(app)
+
 api.add_resource(UserResource, '/api/users/<string:user_nickname>')
 api.add_resource(UsersListResource, '/api/users')
 api.add_resource(UserLoginResource, '/api/users/login')
+
+api.add_resource(ChatResource, '/api/chats/<int:chat_id>')
+api.add_resource(ChatCreateResource, '/api/chats')
+api.add_resource(ChatsListResource, '/api/chats/<string:user_nickname>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -55,7 +63,7 @@ def login():
 
 @app.route("/")
 def index():
-    return "Test"
+    return "NeoHello!"
 
 
 if __name__ == '__main__':
