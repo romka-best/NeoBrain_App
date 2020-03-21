@@ -2,16 +2,13 @@ package com.example.neobrain.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
-import android.net.Uri;
-import android.os.Bundle;
+import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,31 +18,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
-import com.example.neobrain.MainActivity;
 import com.example.neobrain.R;
-import com.example.neobrain.changehandler.FlipChangeHandler;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Objects;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 @SuppressLint("ValidController")
 public class ProfileController extends Controller {
@@ -58,7 +55,6 @@ public class ProfileController extends Controller {
     private static final int CAMERA_REQUEST = 100;
     private static final int RESULT_OK = -1;
 
-    private static final String MY_SETTINGS = "my_settings";
     private SharedPreferences sp;
 
     @NonNull
@@ -153,15 +149,20 @@ public class ProfileController extends Controller {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     User user = response.body().getUser();
+                    String photo = response.body().getPhoto();
                     assert user != null;
                     nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     nickname.setText(user.getNickname());
+                    byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    avatar.setImageBitmap(decodedByte);
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                 // TODO Корректно обработать ошибку и изменить на Snackbar
+                Log.e("ERROR", t.toString());
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
@@ -173,8 +174,28 @@ public class ProfileController extends Controller {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             // Фотка сделана, извлекаем картинку
             Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+            assert thumbnailBitmap != null;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            thumbnailBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
+            byte[] decoded = Base64.decode(encoded, Base64.DEFAULT);
+
             avatar.setImageBitmap(thumbnailBitmap);
-            // TODO Сделать корректную загрузку фотографии на сервер
+
+            String nicknameSP = sp.getString("nickname", null);
+            User user = new User();
+            user.setPhoto(Arrays.toString(decoded));
+            Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
+            call.enqueue(new Callback<Status>() {
+                @Override
+                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                }
+            });
         }
     }
 }

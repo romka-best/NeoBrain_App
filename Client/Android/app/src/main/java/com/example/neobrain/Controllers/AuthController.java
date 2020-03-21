@@ -33,11 +33,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
+
 public class AuthController extends Controller {
     private TextInputEditText textLogin;
     private TextInputEditText textPassword;
 
-    private static final String MY_SETTINGS = "my_settings";
     private SharedPreferences sp;
 
 

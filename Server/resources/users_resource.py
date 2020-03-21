@@ -1,5 +1,7 @@
+import array
 import datetime
-from base64 import encodebytes
+import sqlite3
+from base64 import encodebytes, decodebytes
 
 from flask_restful import reqparse, abort, Resource
 from flask import jsonify, request
@@ -18,14 +20,14 @@ def abort_if_user_not_found(user_nickname):
 class UserResource(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('name', required=True, type=str)
-        self.parser.add_argument('surname', required=True, type=str)
-        self.parser.add_argument('nickname', required=True, type=str)
-        self.parser.add_argument('number', required=True, type=str)
+        self.parser.add_argument('name', required=False, type=str)
+        self.parser.add_argument('surname', required=False, type=str)
+        self.parser.add_argument('nickname', required=False, type=str)
+        self.parser.add_argument('number', required=False, type=str)
         self.parser.add_argument('email', required=False, type=str)
         self.parser.add_argument('created_date', required=False)
         self.parser.add_argument('modified_date', required=False)
-        self.parser.add_argument('hashed_password', required=True, type=str)
+        self.parser.add_argument('hashed_password', required=False, type=str)
         self.parser.add_argument('is_closed', required=False, type=bool)
         self.parser.add_argument('about', required=False, type=str)
         self.parser.add_argument('birthday', required=False)
@@ -43,6 +45,7 @@ class UserResource(Resource):
         self.parser.add_argument('status', required=False, type=int)
         self.parser.add_argument('last_seen', required=False, type=str)
         self.parser.add_argument('photo_id', required=False, type=int)
+        self.parser.add_argument('photo', required=False, type=str)
 
     def get(self, user_nickname):
         if user_nickname.find("?") != -1:
@@ -64,22 +67,23 @@ class UserResource(Resource):
         if not args:
             return jsonify({'status': 400,
                             'text': "Empty request"})
-        elif not all(key in args for key in
-                     ['name', 'surname', 'nickname', 'hashed_password']) and not any(
-            key in args for key in ['number', 'email']):
-            return jsonify({'status': 400,
-                            'text': "Bad request"})
         user = session.query(User).filter(User.nickname == user_nickname).first()
-        user.name = args['name']
-        user.surname = args['surname']
-        user.nickname = args['nickname']
+        if args['name']:
+            user.name = args['name']
+        if args['surname']:
+            user.surname = args['surname']
+        if args['nickname']:
+            user.nickname = args['nickname']
         if args['number']:
             user.number = args['number']
         if args['email']:
             user.email = args['email']
+        if args['hashed_password']:
+            user.set_password(args['hashed_password'])
+        if args['photo']:
+            photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
+            photo.data = array.array('B', decodebytes(args['photo'].encode()))
         user.modified_date = datetime.datetime.now()
-        user.set_password(args['hashed_password'])
-
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited'})
@@ -181,6 +185,7 @@ class UsersListResource(Resource):
             user.number = args['number']
         if args['email']:
             user.email = args['email']
+        user.photo_id = 2
         session.add(user)
         session.commit()
         return jsonify({'status': 201,

@@ -14,8 +14,10 @@ def test():
 
     # print(get("http://192.168.1.83:5000/api/users/Test_Nickname").json())
 
-    r = get("http://192.168.1.84:5000/api/users/Test_Nickname", stream=True)
-    if r.ok:
-        r_new = r.json()
-        with open("filename.jpg", 'wb') as f:
-            f.write(decodebytes(r_new['photo'].encode()))
+    print(get("https://neobrain.herokuapp.com/api/users/rrr").json())
+
+    # r = get("http://192.168.1.84:5000/api/users/Test_Nickname", stream=True)
+    # if r.ok:
+    #     r_new = r.json()
+    #     with open("filename.jpg", 'wb') as f:
+    #         f.write(decodebytes(r_new['photo'].encode()))

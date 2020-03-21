@@ -1,5 +1,6 @@
 import datetime
 import os
+from requests import get
 
 from flask import Flask, request, make_response, jsonify, redirect, render_template
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -11,6 +12,9 @@ from resources.users_resource import UserResource, UsersListResource, UserLoginR
 
 from data.chats import Chat
 from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
+
+from data.photos import Photo
+from resources.photos_resource import PhotoResource
 
 from flask_restful import abort, Api
 
@@ -27,6 +31,8 @@ api.add_resource(UserLoginResource, '/api/users/login')
 api.add_resource(ChatResource, '/api/chats/<int:chat_id>')
 api.add_resource(ChatCreateResource, '/api/chats')
 api.add_resource(ChatsListResource, '/api/chats/<string:user_nickname>')
+
+api.add_resource(PhotoResource, '/api/photos/<int:photo_id>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)

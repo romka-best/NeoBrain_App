@@ -35,7 +35,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     //Google play service
-    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+    implementation 'com.google.android.gms:play-services-ads:19.0.1'
 
     // CardView
     implementation 'androidx.core:core-ktx:1.2.0'
@@ -56,6 +56,7 @@ dependencies {
 
     // Материал Дизайн
     def materialDesign_version = "1.2.0-alpha04"
+    //noinspection GradleDependency
     implementation "com.google.android.material:material:$materialDesign_version"
 
     // Retrofit
@@ -73,4 +74,8 @@ dependencies {
     implementation "com.bluelinelabs:conductor-rxlifecycle2:$conductor_version"
     implementation "com.bluelinelabs:conductor-autodispose:$conductor_version"
     implementation "com.bluelinelabs:conductor-archlifecycle:$conductor_version"
+
+    // Picasso
+    def picasso_version = "2.71828"
+    implementation "com.squareup.picasso:picasso:$picasso_version"
 }

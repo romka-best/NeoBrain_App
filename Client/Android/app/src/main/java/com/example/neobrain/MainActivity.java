@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Router router;
 
-    private static final String MY_SETTINGS = "my_settings";
+    public static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp; // TODO Сделать так, чтобы везде было доступно
 
 

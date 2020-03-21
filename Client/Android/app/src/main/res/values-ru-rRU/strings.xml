@@ -16,4 +16,5 @@
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
     <string name="delete_question">Удалить фотографию?</string>
+    <string name="messages">Сообщения</string>
 </resources>

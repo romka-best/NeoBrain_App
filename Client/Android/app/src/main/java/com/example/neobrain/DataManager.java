@@ -32,6 +32,13 @@ public class DataManager {
         );
     }
 
+    public Call<Status> editUser(String nickname, User user) {
+        return mAPIService.editUser(
+                nickname,
+                user
+        );
+    }
+
     public Call<Status> login(User user) {
         return mAPIService.login(
                 user

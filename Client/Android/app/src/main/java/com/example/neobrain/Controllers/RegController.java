@@ -33,6 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
+
 public class RegController extends Controller {
 
     private Pattern pattern;
@@ -44,7 +46,6 @@ public class RegController extends Controller {
     private TextView textPasswordRepeat;
     private TextView textNumber;
 
-    private static final String MY_SETTINGS = "my_settings";
     private SharedPreferences sp;
 
     @NonNull
