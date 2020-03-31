@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -29,6 +31,7 @@ import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.util.BundleBuilder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,12 +54,35 @@ public class ProfileController extends Controller {
     private SwipeRefreshLayout swipeContainer;
     private TextView nameAndSurname;
     private TextView nickname;
-    private ProgressBar progressBar;
     private static final int CAMERA_REQUEST = 100;
     private static final int RESULT_OK = -1;
+    private String nameText;
+    private String surnameText;
+    private String nicknameText;
+    private byte[] decodedStringPhoto;
 
     private SharedPreferences sp;
 
+
+    public ProfileController(String name, String surname, String nickname, byte[] decodedString) {
+        this(new BundleBuilder(new Bundle())
+                .putString("name", name)
+                .putString("surname", surname)
+                .putString("nickname", nickname)
+                .putByteArray("decodedString", decodedString)
+                .build());
+    }
+
+    public ProfileController(Bundle args) {
+        super(args);
+        assert args != null;
+        this.nameText = args.getString("name");
+        this.surnameText = args.getString("surname");
+        this.nicknameText = args.getString("nickname");
+        this.decodedStringPhoto = args.getByteArray("decodedString");
+    }
+
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -122,6 +148,11 @@ public class ProfileController extends Controller {
 
         nameAndSurname = view.findViewById(R.id.name_surname);
         nickname = view.findViewById(R.id.nickname);
+        nameAndSurname.setText(this.nameText + " " + this.surnameText);
+        nickname.setText(this.nicknameText);
+
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(this.decodedStringPhoto, 0, decodedStringPhoto.length);
+        avatar.setImageBitmap(decodedByte);
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
@@ -133,9 +164,6 @@ public class ProfileController extends Controller {
         swipeContainer.setColorSchemeResources(
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
-
-        getProfile();
-//        progressBar.setVisibility(ProgressBar.INVISIBLE);
         return view;
     }
 

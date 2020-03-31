@@ -2,6 +2,8 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,16 +127,18 @@ public class AuthController extends Controller {
         return text != null && text.length() >= 1;
     }
 
-
+// Не работает :(
 //    @Override
 //    protected void onSaveInstanceState(@NonNull Bundle outState) {
 //        super.onSaveInstanceState(outState);
-//        outState.putBoolean("isAuth", isAuth);
+//        outState.putString("login", Objects.requireNonNull(textLogin.getText()).toString());
+//        outState.putString("password", Objects.requireNonNull(textPassword.getText()).toString());
 //    }
 //
 //    @Override
 //    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
 //        super.onRestoreInstanceState(savedInstanceState);
-//        isAuth = savedInstanceState.getBoolean("isAuth");
+//        textLogin.setText(savedInstanceState.getString("login"));
+//        textPassword.setText(savedInstanceState.getString("password"));
 //    }
 }

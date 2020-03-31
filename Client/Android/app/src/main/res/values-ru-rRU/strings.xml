@@ -17,4 +17,13 @@
     <string name="delete">Удалить</string>
     <string name="delete_question">Удалить фотографию?</string>
     <string name="messages">Сообщения</string>
+    <string name="apps">Приложения</string>
+    <string name="images">Фотографии</string>
+    <string name="lenta">Лента</string>
+    <string name="music">Музыка</string>
+    <string name="navigation">Обзор</string>
+    <string name="people">Люди</string>
+    <string name="videos">Видео</string>
+    <string name="achievements">Достижения</string>
+    <string name="empty_posts">Постов пока нет. Исправьте это!)</string>
 </resources>

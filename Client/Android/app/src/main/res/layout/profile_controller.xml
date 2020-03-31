@@ -116,7 +116,8 @@
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentBottom="false"
                 android:layout_marginTop="16dp"
-                android:gravity="center_horizontal|top"
+                android:fontFamily="@font/roboto_bold"
+                android:gravity="top"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -154,13 +155,12 @@
                 android:id="@+id/nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
-                android:gravity="center_horizontal|top"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.73"
-                app:layout_constraintStart_toEndOf="@+id/avatar_card"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:fontFamily="@font/roboto"
+                android:gravity="top"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/line"
+                app:layout_constraintTop_toTopOf="@+id/background_profile" />
 
             <View
                 android:id="@+id/line_blue"
@@ -208,6 +208,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:background="@drawable/ic_button_start"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toEndOf="@+id/name_surname"
@@ -221,6 +222,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="5dp"
                     android:background="@drawable/ic_button_start"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toEndOf="@+id/name_surname"
@@ -234,6 +236,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="5dp"
                     android:background="@drawable/ic_button_middle"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toEndOf="@+id/name_surname"
@@ -247,6 +250,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="5dp"
                     android:background="@drawable/ic_button_end"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toEndOf="@+id/name_surname"
@@ -259,8 +263,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="5dp"
-
                     android:background="@drawable/ic_button_end"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toEndOf="@+id/name_surname"
@@ -348,9 +352,35 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/slightly_smiling_face"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/recyclerView"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat1" />
+
+            <TextView
+                android:id="@+id/titlePost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/empty_posts"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/recyclerView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="391dp"
                 android:layout_height="370dp"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -358,8 +388,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat1"
                 app:layout_constraintVertical_bias="0.0"
                 tools:itemCount="0"
-                tools:layoutManager="GridLayoutManager"
-                tools:spanCount="5" />
+                tools:listitem="@layout/recycler_view_item_post"
+                tools:spanCount="5"
+                tools:layoutManager="GridLayoutManager" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

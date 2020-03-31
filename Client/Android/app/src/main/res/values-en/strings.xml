@@ -17,4 +17,13 @@
     <string name="delete">Delete</string>
     <string name="delete_question">Delete the photo?</string>
     <string name="messages">Mesages</string>
+    <string name="apps">Apps</string>
+    <string name="images">Photos</string>
+    <string name="lenta">Lenta</string>
+    <string name="music">Music</string>
+    <string name="navigation">Navigation</string>
+    <string name="people">People</string>
+    <string name="videos">Videos</string>
+    <string name="achievements">Achievements</string>
+    <string name="empty_posts">There are no posts yet. Fix it!)</string>
 </resources>

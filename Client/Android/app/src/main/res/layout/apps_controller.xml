@@ -12,14 +12,100 @@
         android:layout_height="wrap_content">
 
         <View
-            android:id="@+id/gradient_circle2"
+            android:id="@+id/gradient_circle"
             android:layout_width="250dp"
             android:layout_height="250dp"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="256dp"
-            android:layout_marginBottom="2220dp"
+            android:layout_marginEnd="252dp"
             android:background="@drawable/circle_darkblue"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/apps"
             app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <View
+            android:id="@+id/gradient_dark_ring"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="232dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/circle_darkblue_without_center_tight"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:id="@+id/gradien_darkblue_circle"
+            android:layout_width="71.87dp"
+            android:layout_height="71.87dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/circle_darkblue_gradient"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyclerView" />
+
+
+        <View
+            android:id="@+id/gradient_darkblue_ring1"
+            android:layout_width="76.25dp"
+            android:layout_height="76.25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="236dp"
+            android:background="@drawable/circle_darkblue_ring_middle"
+            app:layout_constraintEnd_toEndOf="@+id/background_apps"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+        <View
+            android:id="@+id/gradient_darkblue_ring2"
+            android:layout_width="76.25dp"
+            android:layout_height="76.25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="44dp"
+            android:layout_marginBottom="36dp"
+            android:background="@drawable/circle_darkblue_ring_middle"
+            app:layout_constraintBottom_toBottomOf="@+id/gradient_darkblue_ring1"
+            app:layout_constraintEnd_toEndOf="@+id/gradient_darkblue_ring1" />
+
+        <View
+            android:id="@+id/background_apps"
+            android:layout_width="335dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/background_apps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/apps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/apps"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="@+id/background_apps"
+            app:layout_constraintHorizontal_bias="0.138"
+            app:layout_constraintStart_toStartOf="@+id/background_apps"
+            app:layout_constraintTop_toTopOf="@+id/background_apps" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="325dp"
+            android:layout_height="194dp"
+            android:layout_marginTop="36dp"
+            app:layout_constraintEnd_toEndOf="@+id/background_apps"
+            app:layout_constraintStart_toStartOf="@+id/background_apps"
+            app:layout_constraintTop_toBottomOf="@+id/apps"
+            tools:layoutManager="GridLayoutManager"
+            tools:listitem="@layout/recycler_view_item_app"
+            tools:spanCount="5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

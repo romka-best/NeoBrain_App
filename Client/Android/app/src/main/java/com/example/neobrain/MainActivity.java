@@ -3,7 +3,9 @@ package com.example.neobrain;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -57,5 +59,11 @@ public class MainActivity extends AppCompatActivity {
         if (!router.handleBack()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // TODO Изменить статус с online на offline через минуту
     }
 }
