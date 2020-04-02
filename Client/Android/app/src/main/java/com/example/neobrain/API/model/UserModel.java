@@ -9,24 +9,12 @@ public class UserModel {
     @Expose
     private User user;
 
-    @SerializedName("photo")
-    @Expose
-    private String photo;
-
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
 }

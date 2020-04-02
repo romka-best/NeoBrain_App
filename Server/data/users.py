@@ -53,6 +53,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     followers_count = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     subscriptions_count = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     status = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+    authenticated = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     last_seen = sqlalchemy.Column(sqlalchemy.String, default=datetime.datetime.now)
 
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
@@ -71,3 +72,15 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id

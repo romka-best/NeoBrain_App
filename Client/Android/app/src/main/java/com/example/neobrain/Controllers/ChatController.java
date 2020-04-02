@@ -1,5 +1,8 @@
 package com.example.neobrain.Controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,21 +11,37 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.MessagesAdapter;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 public class ChatController extends Controller {
     @BindView(R.id.messagesRecycler)
     public RecyclerView messagesRecycler;
     private MessagesAdapter messagesAdapter;
+    private SwipeRefreshLayout swipeContainer;
+
+    private SharedPreferences sp;
 
 
     @NonNull
@@ -30,6 +49,18 @@ public class ChatController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.chat_controller, container, false);
         ButterKnife.bind(this, view);
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(() -> {
+            swipeContainer.setRefreshing(true);
+            setUp();
+            swipeContainer.setRefreshing(false);
+        });
+        swipeContainer.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark);
+
         setUp();
         return view;
     }
@@ -38,16 +69,27 @@ public class ChatController extends Controller {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
-        /*
-        Это пример! Если хотите посмотреть как это будет выглядеть (+-), раскомментируйте!
-        ArrayList<Chat> mChats = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            mChats.add(new Chat("Я давно хотел тебе это сказать" + i, "12:30",
-                    "https://androidwave.com/media/images/img_baseball.jpg", "Лёха"));
-        }
-        messagesAdapter = new MessagesAdapter(mChats);
-        */
-        messagesAdapter = new MessagesAdapter(new ArrayList<>());
-        messagesRecycler.setAdapter(messagesAdapter);
+        String nicknameSP = sp.getString("nickname", "");
+        Call<ChatModel> call = DataManager.getInstance().getChats(nicknameSP);
+        call.enqueue(new Callback<ChatModel>() {
+            @Override
+            public void onResponse(@NotNull Call<ChatModel> call, @NotNull Response<ChatModel> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    List<Chat> chats = response.body().getChats();
+                    ArrayList<Chat> mChats = new ArrayList<>();
+                    for (Chat chat : chats) {
+                        mChats.add(new Chat(chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
+                    }
+                    messagesAdapter = new MessagesAdapter(mChats);
+                    messagesRecycler.setAdapter(messagesAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
+
+            }
+        });
     }
 }

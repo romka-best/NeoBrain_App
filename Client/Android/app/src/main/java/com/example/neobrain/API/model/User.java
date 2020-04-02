@@ -77,9 +77,6 @@ public class User {
     @SerializedName("photo_id")
     @Expose
     private Integer photoId;
-    @SerializedName("photo")
-    @Expose
-    private String photo;
 
     public String getCreatedDate() {
         return createdDate;
@@ -271,13 +268,5 @@ public class User {
 
     public void setPhotoId(Integer photoId) {
         this.photoId = photoId;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 }

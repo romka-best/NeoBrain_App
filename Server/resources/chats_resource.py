@@ -1,11 +1,20 @@
 import datetime
 
 from flask_restful import reqparse, abort, Resource
+from flask_login import login_required, current_user
 from flask import jsonify, request
 from data import db_session
 from data.chats import Chat
 from data.users import User
 from data.photos import Photo
+from .users_resource import abort_if_user_not_found
+
+
+def abort_if_chat_not_found(chat_id):
+    session = db_session.create_session()
+    chat = session.query(Chat).filter(Chat.id == chat_id).first()
+    if not chat:
+        abort(404, message=f"Chat {chat_id} not found")
 
 
 class ChatResource(Resource):
@@ -70,10 +79,12 @@ class ChatResource(Resource):
 
 class ChatsListResource(Resource):
     def get(self, user_nickname):
+        abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
-        chats = session.query(Chat).filter(Chat.user_id == User.id).all()
+        user = session.query(User).filter(User.nickname == user_nickname).first()
+        chats = session.query(Chat).filter(Chat.user_id == user.id).all()
         return jsonify({'chats': [chat.to_dict(
-            only=('name', 'type_of_chat', 'status', 'last_time_message',
+            only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
                   'last_message', 'count_new_messages', 'count_messages',
                   'created_date', 'user_id', 'photo_id')) for chat in chats]})
 

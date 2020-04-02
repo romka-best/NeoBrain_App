@@ -1,4 +1,5 @@
 import datetime
+from base64 import encodebytes
 
 from flask_restful import reqparse, abort, Resource
 from flask import jsonify, request
@@ -15,11 +16,11 @@ class PhotoResource(Resource):
         self.parser.add_argument('about', required=False)
 
     def get(self, photo_id):
-        if photo_id.find("?") != -1:
-            chat_id = int(photo_id[:photo_id.find("?")].strip())
+        if str(photo_id).find("?") != -1:
+            photo_id = int(photo_id[:photo_id.find("?")].strip())
         session = db_session.create_session()
-        photo = session.query(Chat).get(photo_id)
-        return jsonify({'photo': photo.data})
+        photo = encodebytes(session.query(Photo).get(photo_id).data).decode()
+        return jsonify({'photo': photo})
 
     # def put(self, chat_id):
     #     if chat_id.find("?") != -1:

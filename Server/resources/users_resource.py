@@ -3,6 +3,7 @@ import datetime
 import sqlite3
 from base64 import encodebytes, decodebytes
 
+from flask_login import login_required, current_user, login_user, logout_user
 from flask_restful import reqparse, abort, Resource
 from flask import jsonify, request
 from data import db_session
@@ -47,17 +48,18 @@ class UserResource(Resource):
         self.parser.add_argument('photo_id', required=False, type=int)
         self.parser.add_argument('photo', required=False, type=str)
 
+    # @login_required
     def get(self, user_nickname):
         if user_nickname.find("?") != -1:
             user_nickname = user_nickname[:user_nickname.find("?")].strip()
         abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()
-        photo = encodebytes(session.query(Photo).filter(Photo.id == user.photo_id).first().data).decode()
         return jsonify({'user': user.to_dict(
             only=('name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'email')), 'photo': photo})
+                  'created_date', 'modified_date', 'email', 'photo_id'))})
 
+    # @login_required
     def put(self, user_nickname):
         if user_nickname.find("?") != -1:
             user_nickname = user_nickname[:user_nickname.find("?")].strip()
@@ -68,6 +70,9 @@ class UserResource(Resource):
             return jsonify({'status': 400,
                             'text': "Empty request"})
         user = session.query(User).filter(User.nickname == user_nickname).first()
+        # if user != current_user:
+        #     return jsonify({'status': 403,
+        #                     'text': f'User {user.nickname} forbidden'})
         if args['name']:
             user.name = args['name']
         if args['surname']:
@@ -81,6 +86,7 @@ class UserResource(Resource):
         if args['hashed_password']:
             user.set_password(args['hashed_password'])
         if args['photo']:
+            # TODO Сделать корректное добавление фотографии на сервер
             photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
             photo.data = array.array('B', decodebytes(args['photo'].encode()))
         user.modified_date = datetime.datetime.now()
@@ -88,16 +94,21 @@ class UserResource(Resource):
         return jsonify({'status': 200,
                         'text': 'edited'})
 
+    # @login_required
     def delete(self, user_nickname):
         if user_nickname.find("?") != -1:
             user_nickname = user_nickname[:user_nickname.find("?")].strip()
         abort_if_user_not_found(user_nickname)
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()
+        # if user == current_user:
         session.delete(user)
         session.commit()
         return jsonify({'status': 200,
                         'text': 'deleted'})
+        # else:
+        #     return jsonify({'status': 403,
+        #                     'text': f'User {user.nickname} forbidden'})
 
 
 class UserLoginResource(Resource):
@@ -129,6 +140,7 @@ class UserLoginResource(Resource):
             return jsonify({'status': 400,
                             'text': 'Bad request'})
         if user and user.check_password(args['hashed_password']):
+            # login_user(user, remember=True)
             return jsonify({'status': 200,
                             'text': f'Login {user.nickname} allowed'})
         elif user and not user.check_password(args['hashed_password']):
@@ -136,6 +148,29 @@ class UserLoginResource(Resource):
                             'text': 'Password is not correct'})
         return jsonify({'status': 404,
                         'text': 'User is not defined'})
+
+
+class UserLogoutResource(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('nickname', required=True)
+
+    # @login_required
+    def post(self):
+        args = self.parser.parse_args()
+        session = db_session.create_session()
+        if not args:
+            return jsonify({'status': 400,
+                            'text': "Empty request"})
+        abort_if_user_not_found(args['nickname'])
+        user = session.query(User).filter(User.nickname == args['nickname']).first()
+        # if user == current_user:
+        # logout_user()
+        return jsonify({'status': 200,
+                        'text': f'Logout {user.nickname}'})
+        # else:
+        #     return jsonify({'status': 403,
+        #                     'text': f'User {user.nickname} forbidden'})
 
 
 class UsersListResource(Resource):
@@ -150,6 +185,7 @@ class UsersListResource(Resource):
         self.parser.add_argument('modified_date', required=False)
         self.parser.add_argument('hashed_password', required=True, type=str)
 
+    # @login_required
     def get(self):
         session = db_session.create_session()
         users = session.query(User).all()
@@ -188,5 +224,6 @@ class UsersListResource(Resource):
         user.photo_id = 2
         session.add(user)
         session.commit()
+        # login_user(user, remember=True)
         return jsonify({'status': 201,
                         'text': 'created'})

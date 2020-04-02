@@ -26,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
@@ -64,7 +65,7 @@ public class ProfileController extends Controller {
     private SharedPreferences sp;
 
 
-    public ProfileController(String name, String surname, String nickname, byte[] decodedString) {
+    ProfileController(String name, String surname, String nickname, byte[] decodedString) {
         this(new BundleBuilder(new Bundle())
                 .putString("name", name)
                 .putString("surname", surname)
@@ -177,13 +178,25 @@ public class ProfileController extends Controller {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     User user = response.body().getUser();
-                    String photo = response.body().getPhoto();
                     assert user != null;
                     nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     nickname.setText(user.getNickname());
-                    byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    avatar.setImageBitmap(decodedByte);
+                    Call<Photo> photoCall = DataManager.getInstance().getPhoto(user.getPhotoId());
+                    photoCall.enqueue(new Callback<Photo>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
+                            assert response.body() != null;
+                            String photo = response.body().getPhoto();
+                            byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            avatar.setImageBitmap(decodedByte);
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
+
+                        }
+                    });
                 }
             }
 
@@ -212,18 +225,18 @@ public class ProfileController extends Controller {
             avatar.setImageBitmap(thumbnailBitmap);
 
             String nicknameSP = sp.getString("nickname", null);
-            User user = new User();
-            user.setPhoto(Arrays.toString(decoded));
-            Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
-            call.enqueue(new Callback<Status>() {
-                @Override
-                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                }
-            });
+//            User user = new User();
+//            user.setPhoto(Arrays.toString(decoded));
+//            Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
+//            call.enqueue(new Callback<Status>() {
+//                @Override
+//                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+//                }
+//
+//                @Override
+//                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+//                }
+//            });
         }
     }
 }

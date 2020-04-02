@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
@@ -91,14 +92,25 @@ public class HomeController extends Controller {
                                     if (response.isSuccessful()) {
                                         assert response.body() != null;
                                         User user = response.body().getUser();
-                                        String photo = response.body().getPhoto();
                                         assert user != null;
                                         String name = user.getName();
                                         String surname = user.getSurname();
                                         String nickname = user.getNickname();
-                                        byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        childRouter.setRoot(RouterTransaction.with(new ProfileController(name, surname, nickname, decodedString)));
+                                        Call<Photo> photoCall = DataManager.getInstance().getPhoto(user.getPhotoId());
+                                        photoCall.enqueue(new Callback<Photo>() {
+                                            @Override
+                                            public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
+                                                assert response.body() != null;
+                                                String photo = response.body().getPhoto();
+                                                byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                childRouter.setRoot(RouterTransaction.with(new ProfileController(name, surname, nickname, decodedString)));
+                                            }
+
+                                            @Override
+                                            public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
+                                            }
+                                        });
                                     }
                                 }
 

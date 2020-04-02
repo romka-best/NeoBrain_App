@@ -1,5 +1,9 @@
 package com.example.neobrain.Adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +15,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "ChatAdapter";
@@ -110,16 +121,33 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onBind(int position) {
             super.onBind(position);
             final Chat mChat = mChatsList.get(position);
-            if (mChat.getImageURL() != null) {
-                Glide.with(itemView.getContext())
-                        .load(mChat.getImageURL())
-                        .into(coverImageView);
+
+            if (mChat.getPhotoId() != null) {
+                Call<Photo> call = DataManager.getInstance().getPhoto(mChat.getPhotoId());
+                call.enqueue(new retrofit2.Callback<Photo>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            String photo = response.body().getPhoto();
+                            byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            coverImageView.setImageBitmap(decodedByte);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
+                        Log.e("E", "Чёрт...");
+                    }
+                });
             }
-            if (mChat.getText() != null) {
-                lastMessTextView.setText(mChat.getText());
+
+            if (mChat.getLastMessage() != null) {
+                lastMessTextView.setText(mChat.getLastMessage());
             }
-            if (mChat.getTime() != null) {
-                timeTextView.setText(mChat.getTime());
+            if (mChat.getLastTimeMessage() != null) {
+                timeTextView.setText(mChat.getLastTimeMessage());
             }
             if (mChat.getName() != null) {
                 titleTextView.setText(mChat.getName());

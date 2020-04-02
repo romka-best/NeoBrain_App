@@ -3,6 +3,9 @@ package com.example.neobrain;
 import com.example.neobrain.API.APIConfig;
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
+import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
@@ -32,6 +35,25 @@ public class DataManager {
         );
     }
 
+    public Call<Photo> getPhoto(Integer photo_id) {
+        return mAPIService.getPhoto(
+                photo_id
+        );
+    }
+
+    public Call<Chat> getChat(Integer chat_id) {
+        return mAPIService.getChat(
+                chat_id
+        );
+    }
+
+
+    public Call<ChatModel> getChats(String nickname) {
+        return mAPIService.getChats(
+                nickname
+        );
+    }
+
     public Call<Status> editUser(String nickname, User user) {
         return mAPIService.editUser(
                 nickname,
@@ -48,6 +70,12 @@ public class DataManager {
     public Call<Status> createUser(User user) {
         return mAPIService.createUser(
                 user
+        );
+    }
+
+    public Call<Status> createChat(Chat chat) {
+        return mAPIService.createChat(
+                chat
         );
     }
 }

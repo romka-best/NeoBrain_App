@@ -8,31 +8,13 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from data import db_session
 
 from data.users import User
-from resources.users_resource import UserResource, UsersListResource, UserLoginResource
-
-from data.chats import Chat
-from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
-
-from data.photos import Photo
-from resources.photos_resource import PhotoResource
-
-from flask_restful import abort, Api
+from conf.routes import generate_routes
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
-api = Api(app)
-
-api.add_resource(UserResource, '/api/users/<string:user_nickname>')
-api.add_resource(UsersListResource, '/api/users')
-api.add_resource(UserLoginResource, '/api/users/login')
-
-api.add_resource(ChatResource, '/api/chats/<int:chat_id>')
-api.add_resource(ChatCreateResource, '/api/chats')
-api.add_resource(ChatsListResource, '/api/chats/<string:user_nickname>')
-
-api.add_resource(PhotoResource, '/api/photos/<int:photo_id>')
+generate_routes(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -64,7 +46,8 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
+    if request.method == 'POST':
+        pass
 
 
 @app.route("/")
