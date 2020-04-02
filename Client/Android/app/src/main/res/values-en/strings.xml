@@ -26,4 +26,6 @@
     <string name="videos">Videos</string>
     <string name="achievements">Achievements</string>
     <string name="empty_posts">There are no posts yet. Fix it!)</string>
+    <string name="empty_screen">You have nothing here!</string>
+    <string name="btn_retry">Retry</string>
 </resources>

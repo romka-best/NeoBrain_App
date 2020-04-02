@@ -78,4 +78,7 @@ dependencies {
     // Picasso
     def picasso_version = "2.71828"
     implementation "com.squareup.picasso:picasso:$picasso_version"
+    // Glide for image loading
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 }

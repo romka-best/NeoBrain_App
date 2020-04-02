@@ -24,11 +24,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="30sp"
+            android:src="@android:drawable/ic_menu_search"
+            android:backgroundTint="@color/cardview_light_background"
+            app:layout_constraintBottom_toTopOf="@+id/messagesRecycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/title"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@android:drawable/ic_menu_search">
+
+        </ImageButton>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messagesRecycler"
             android:layout_width="391dp"
             android:layout_height="742dp"
             android:layout_marginTop="1dp"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

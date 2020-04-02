@@ -26,4 +26,6 @@
     <string name="videos">Видео</string>
     <string name="achievements">Достижения</string>
     <string name="empty_posts">Постов пока нет. Исправьте это!)</string>
+    <string name="empty_screen">Тут пока что ничего нет!</string>
+    <string name="btn_retry">Обновить</string>
 </resources>
