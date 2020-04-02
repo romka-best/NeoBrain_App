@@ -1,4 +1,4 @@
-package com.example.neobrain.AdaptersAndClassesForThem;
+package com.example.neobrain.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.R;
+import com.example.neobrain.util.BaseViewHolder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -22,8 +24,8 @@ import butterknife.ButterKnife;
 
 public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "ChatAdapter";
-    public static final int VIEW_TYPE_EMPTY = 0;
-    public static final int VIEW_TYPE_NORMAL = 1;
+    private static final int VIEW_TYPE_EMPTY = 0;
+    private static final int VIEW_TYPE_NORMAL = 1;
     private List<Chat> mChatsList;
     private Callback mCallback;
 
@@ -39,7 +41,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case VIEW_TYPE_NORMAL:
                 return new ViewHolder(
                         LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.recycler_view_item_chat, parent, false));
+                                .inflate(R.layout.recycler_view_item_chat, parent, false));
             case VIEW_TYPE_EMPTY:
             default:
                 return new EmptyViewHolder(
@@ -92,16 +94,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         TextView lastMessTextView;
         @BindView(R.id.time)
         TextView timeTextView;
-        public ViewHolder(View itemView) {
+
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
         protected void clear() {
             coverImageView.setImageDrawable(null);
             titleTextView.setText("");
             lastMessTextView.setText("");
             timeTextView.setText("");
         }
+
         public void onBind(int position) {
             super.onBind(position);
             final Chat mChat = mChatsList.get(position);
@@ -125,11 +130,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    public class EmptyViewHolder extends BaseViewHolder {
+    public static class EmptyViewHolder extends BaseViewHolder {
         @BindView(R.id.tv_message)
         TextView messageTextView;
         @BindView(R.id.buttonRetry)
         TextView buttonRetry;
+
         EmptyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -141,6 +147,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             });
         }
+
         @Override
         protected void clear() {
         }

@@ -1,4 +1,4 @@
-package com.example.neobrain.AdaptersAndClassesForThem;
+package com.example.neobrain.API.model;
 
 import com.google.gson.annotations.SerializedName;
 

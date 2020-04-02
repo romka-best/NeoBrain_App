@@ -1,4 +1,4 @@
-package com.example.neobrain.AdaptersAndClassesForThem;
+package com.example.neobrain.util;
 
 import android.view.View;
 
@@ -13,7 +13,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    protected void clear(){;}
+    protected void clear() {
+
+    }
 
     public void onBind(int position) {
         mCurrentPosition = position;
