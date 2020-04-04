@@ -1,13 +1,22 @@
+# Импортируем нужные библиотеки
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
 
+# Создадим две переменные: SqlAlchemyBase — некоторую абстрактную декларативную базу,
+# в которую позднее будем наследовать все наши модели,
+# и __factory, которую будем использовать для получения сессий подключения к нашей базе данных.
 SqlAlchemyBase = dec.declarative_base()
 
 __factory = None
 
 
+# global_init принимает на вход адрес базы данных,
+# затем проверяет, не создали ли мы уже фабрику подключений
+# (то есть не вызываем ли мы функцию не первый раз).
+# Если уже создали, то завершаем работу, так как начальную инициализацию
+# надо проводить только единожды.
 def global_init(db_file):
     global __factory
 
