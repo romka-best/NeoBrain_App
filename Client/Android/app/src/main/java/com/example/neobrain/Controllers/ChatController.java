@@ -2,6 +2,7 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class ChatController extends Controller {
     @BindView(R.id.messagesRecycler)
     public RecyclerView messagesRecycler;
     private MessagesAdapter messagesAdapter;
+
     private SwipeRefreshLayout swipeContainer;
 
     private SharedPreferences sp;

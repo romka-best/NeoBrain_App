@@ -5,6 +5,8 @@ import androidx.room.Delete;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Post;
+import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
@@ -65,11 +67,6 @@ public interface APIService {
             @Path("nickname") String nickname
     );
 
-    @GET("photos/{photo_id}")
-    Call<Photo> getPhoto(
-            @Path("photo_id") Integer photo_id
-    );
-
     @PUT("chats/{chat_id}")
     Call<Status> editChat(
             @Path("chat_id") Integer chat_id,
@@ -85,5 +82,25 @@ public interface APIService {
     @POST("chats")
     Call<Status> createChat(
             @Body Chat chat
+    );
+
+    @GET("photos/{photo_id}")
+    Call<Photo> getPhoto(
+            @Path("photo_id") Integer photo_id
+    );
+
+    @GET("posts/{nickname}")
+    Call<PostModel> getPosts(
+            @Path("nickname") String nickname
+    );
+
+    @GET("posts/{post_id}")
+    Call<Post> getPost(
+            @Path("post_id") Integer post_id
+    );
+
+    @POST("posts")
+    Call<Status> createPost(
+            @Body Post post
     );
 }

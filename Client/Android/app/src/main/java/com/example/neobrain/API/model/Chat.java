@@ -39,6 +39,13 @@ public class Chat {
     @Expose
     private Integer userId;
 
+    public Chat(String lastMessage, String lastTimeMessage, String name, Integer photoId) {
+        this.lastMessage = lastMessage;
+        this.lastTimeMessage = lastTimeMessage;
+        this.name = name;
+        this.photoId = photoId;
+    }
+
     public Integer getCountMessages() {
         return countMessages;
     }
@@ -125,12 +132,5 @@ public class Chat {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public Chat(String lastMessage, String lastTimeMessage, String name, Integer photoId) {
-        this.lastMessage = lastMessage;
-        this.lastTimeMessage = lastTimeMessage;
-        this.name = name;
-        this.photoId = photoId;
     }
 }

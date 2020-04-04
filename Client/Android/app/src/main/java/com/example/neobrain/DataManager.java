@@ -6,6 +6,7 @@ import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
@@ -50,6 +51,12 @@ public class DataManager {
 
     public Call<ChatModel> getChats(String nickname) {
         return mAPIService.getChats(
+                nickname
+        );
+    }
+
+    public Call<PostModel> getPosts(String nickname) {
+        return mAPIService.getPosts(
                 nickname
         );
     }

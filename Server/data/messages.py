@@ -10,6 +10,8 @@ from sqlalchemy_serializer import SerializerMixin
 class Message(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'messages'
 
+    # Формат даты
+    datetime_format = '%Y-%m-%d %H:%M:%S'
     # id сообщения
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     # текст сообщения

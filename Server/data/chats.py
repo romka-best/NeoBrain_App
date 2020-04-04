@@ -10,6 +10,8 @@ from sqlalchemy_serializer import SerializerMixin
 class Chat(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'chats'
 
+    # Формат даты
+    datetime_format = '%Y-%m-%d %H:%M:%S'
     # id Чата
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     # Имя(Заголовок) чата
@@ -26,7 +28,7 @@ class Chat(SqlAlchemyBase, SerializerMixin):
     count_new_messages = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     # Количество сообщений
     count_messages = sqlalchemy.Column(sqlalchemy.Integer, default=0)
-    # Дата создания чата
+    # Дата создания чата в формате YYYY-MM-DD HH:MM:SS
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
 

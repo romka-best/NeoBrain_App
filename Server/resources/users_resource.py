@@ -1,7 +1,7 @@
 # Импортируем библиотеки
 import array
 import datetime
-from base64 import decodebytes
+from base64 import decodebytes, encodebytes
 
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
@@ -157,7 +157,7 @@ class UserResource(Resource):
         if args['photo']:
             # TODO Сделать корректное добавление фотографии на сервер
             photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
-            photo.data = array.array('B', decodebytes(args['photo'].encode()))
+            photo.data = decodebytes(args['photo'].encode())
         # Обновляем дату модификации пользователя
         user.modified_date = datetime.datetime.now()
         session.commit()

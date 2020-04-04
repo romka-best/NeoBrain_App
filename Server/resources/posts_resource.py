@@ -5,16 +5,16 @@ from flask_restful import reqparse, Resource, abort
 from data import db_session
 from data.posts import Post
 
-# Если пост не найден, то приходит ответа сервера
 from data.users import User
 from resources.users_resource import abort_if_user_not_found
 
 
+# Если пост не найден, то приходит ответа сервера
 def abort_if_post_not_found(post_id):
     session = db_session.create_session()
     post = session.query(Post).filter(Post.id == post_id).first()
     if not post:
-        abort(404, message=f"Chat {post_id} not found")
+        abort(404, message=f"Post {post_id} not found")
 
 
 # Основной ресурс для работы с Post
@@ -23,10 +23,16 @@ class PostResource(Resource):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
         self.parser = reqparse.RequestParser()
+        # Заголовок(Имя) поста
+        self.parser.add_argument('title', required=False, type=str)
         # Текст
-        self.parser.add_argument('text', required=True, type=str)
+        self.parser.add_argument('text', required=False, type=str)
+        # Дата создания поста
+        self.parser.add_argument('created_date', type=str)
         # id пользователя
-        self.parser.add_argument('user_id', required=True)
+        self.parser.add_argument('user_id', required=False, type=int)
+        # id фото
+        self.parser.add_argument('photo_id', required=False, type=int)
 
     # Получаем пост по его id
     def get(self, post_id):
@@ -37,7 +43,7 @@ class PostResource(Resource):
         session = db_session.create_session()
         post = session.query(Post).get(post_id)
         return jsonify({'post': post.to_dict(
-            only=('id', 'text', 'user_id'))})
+            only=('id', 'title', 'text', 'created_date', 'user_id', 'photo_id'))})
 
 
 # Ресурс для получения постов
@@ -51,7 +57,7 @@ class PostsListResource(Resource):
         user = session.query(User).filter(User.nickname == user_nickname).first()
         posts = session.query(Post).filter(Post.user_id == user.id).all()
         return jsonify({'posts': [post.to_dict(
-            only=('id', 'name', 'user_id')) for post in posts]})
+            only=('id', 'title', 'text', 'created_date', 'user_id', 'photo_id')) for post in posts]})
 
 
 class PostCreateResource(Resource):
@@ -59,10 +65,16 @@ class PostCreateResource(Resource):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
         self.parser = reqparse.RequestParser()
+        # Заголовок(Имя) поста
+        self.parser.add_argument('title', required=True, type=str)
         # Текст
-        self.parser.add_argument('text', required=True)
+        self.parser.add_argument('text', required=True, type=str)
+        # Дата создания поста
+        self.parser.add_argument('created_date', required=False, type=str)
         # id пользователя
-        self.parser.add_argument('user_id', required=True)
+        self.parser.add_argument('user_id', required=True, type=int)
+        # id фото
+        self.parser.add_argument('photo_id', required=False, type=int)
 
     # Создаём пост
     def post(self):
@@ -76,9 +88,12 @@ class PostCreateResource(Resource):
         session = db_session.create_session()
         # Создаём пост
         post = Post(
+            title=args['title'],
             text=args['text'],
             user_id=args['user_id']
         )
+        if args['photo_id']:
+            post.photo_id = args['photo_id']
         # Добавляем в БД чат
         session.add(post)
         session.commit()

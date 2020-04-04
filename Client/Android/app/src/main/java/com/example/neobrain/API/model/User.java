@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("created_date")
     @Expose
     private String createdDate;
@@ -77,6 +80,58 @@ public class User {
     @SerializedName("photo_id")
     @Expose
     private Integer photoId;
+    @SerializedName("photo")
+    @Expose
+    private String photo;
+    @SerializedName("republic")
+    @Expose
+    private String republic;
+    @SerializedName("authenticated")
+    @Expose
+    private Boolean authenticated;
+    @SerializedName("in_black_list")
+    @Expose
+    private String inBlackList;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Boolean getClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(Boolean closed) {
+        isClosed = closed;
+    }
+
+    public String getRepublic() {
+        return republic;
+    }
+
+    public void setRepublic(String republic) {
+        this.republic = republic;
+    }
+
+    public Boolean getAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(Boolean authenticated) {
+        this.authenticated = authenticated;
+    }
+
+    public String getInBlackList() {
+        return inBlackList;
+    }
+
+    public void setInBlackList(String inBlackList) {
+        this.inBlackList = inBlackList;
+    }
 
     public String getCreatedDate() {
         return createdDate;
@@ -268,5 +323,13 @@ public class User {
 
     public void setPhotoId(Integer photoId) {
         this.photoId = photoId;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

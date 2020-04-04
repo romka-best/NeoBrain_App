@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -21,15 +24,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Post;
+import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
+import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BundleBuilder;
@@ -38,9 +48,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,11 +67,17 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 @SuppressLint("ValidController")
 public class ProfileController extends Controller {
 
+    @BindView(R.id.postRecycler)
+    public RecyclerView postRecycler;
+    private PostAdapter postAdapter;
+    LinearLayoutManager mLayoutManager;
+
     private ImageView avatar;
     private SwipeRefreshLayout swipeContainer;
     private TextView nameAndSurname;
     private TextView nickname;
     private static final int CAMERA_REQUEST = 100;
+    private static final int PICK_IMAGE = 101;
     private static final int RESULT_OK = -1;
     private String nameText;
     private String surnameText;
@@ -129,9 +151,19 @@ public class ProfileController extends Controller {
                     .setTitle("Фотография") // TODO Изменить на R.string.{}
                     .setItems(testArray, (dialog, which) -> {
                         switch (which) {
+                            case 0:
+                                Intent i = new Intent(Intent.ACTION_PICK);
+                                i.setType("image/*");
+                                startActivityForResult(i, PICK_IMAGE);
+                                break;
                             case 1:
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                 startActivityForResult(intent, CAMERA_REQUEST);
+                                break;
+                            case 2:
+                                getRouter().pushController(RouterTransaction.with(new PhotoController())
+                                        .popChangeHandler(new VerticalChangeHandler(false))
+                                        .pushChangeHandler(new VerticalChangeHandler()));
                                 break;
                             case 3:
                                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
@@ -165,6 +197,8 @@ public class ProfileController extends Controller {
         swipeContainer.setColorSchemeResources(
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
+
+        getPosts();
         return view;
     }
 
@@ -207,36 +241,102 @@ public class ProfileController extends Controller {
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
+        getPosts();
+    }
+
+    private void getPosts() {
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        postRecycler.setLayoutManager(mLayoutManager);
+        postRecycler.setItemAnimator(new DefaultItemAnimator());
+        String nicknameSP = sp.getString("nickname", "");
+        Call<PostModel> call = DataManager.getInstance().getPosts(nicknameSP);
+        call.enqueue(new Callback<PostModel>() {
+            @Override
+            public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    List<Post> posts = response.body().getPosts();
+                    ArrayList<Post> mPosts = new ArrayList<>();
+                    for (Post post : posts) {
+                        mPosts.add(new Post(post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
+                    }
+                    postAdapter = new PostAdapter(mPosts);
+                    postRecycler.setAdapter(postAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
+
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-            // Фотка сделана, извлекаем картинку
-            Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            assert thumbnailBitmap != null;
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            thumbnailBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-            byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
-            byte[] decoded = Base64.decode(encoded, Base64.DEFAULT);
+        switch (requestCode) {
+            case CAMERA_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+                    assert thumbnailBitmap != null;
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    thumbnailBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
 
-            avatar.setImageBitmap(thumbnailBitmap);
+                    avatar.setImageBitmap(thumbnailBitmap);
 
-            String nicknameSP = sp.getString("nickname", null);
-//            User user = new User();
-//            user.setPhoto(Arrays.toString(decoded));
-//            Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
-//            call.enqueue(new Callback<Status>() {
-//                @Override
-//                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-//                }
-//
-//                @Override
-//                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-//                }
-//            });
+                    String nicknameSP = sp.getString("nickname", null);
+                    User user = new User();
+                    user.setPhoto(new String(encoded));
+                    Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
+                    call.enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                        }
+                    });
+                }
+                break;
+            case PICK_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    try {
+                        final Uri imageUri = data.getData();
+                        assert imageUri != null;
+                        final InputStream imageStream = Objects.requireNonNull(getApplicationContext()).getContentResolver().openInputStream(imageUri);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(90);
+                        Bitmap newSelectedImage = Bitmap.createBitmap(selectedImage, 0, 0, selectedImage.getWidth(), selectedImage.getHeight(), matrix, true);
+                        avatar.setImageBitmap(newSelectedImage);
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        newSelectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
+
+                        String nicknameSP = sp.getString("nickname", null);
+                        User user = new User();
+                        user.setPhoto(new String(encoded));
+                        Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
+                        call.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
         }
     }
 }

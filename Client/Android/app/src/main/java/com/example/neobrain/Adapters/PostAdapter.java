@@ -13,9 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Post;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
@@ -24,40 +23,38 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private static final String TAG = "ChatAdapter";
-    private static final int VIEW_TYPE_EMPTY = 0;
-    private static final int VIEW_TYPE_NORMAL = 1;
-    private List<Chat> mChatsList;
-    private Callback mCallback;
 
-    public MessagesAdapter(ArrayList<Chat> mChatsList) {
-        this.mChatsList = mChatsList;
+public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    private static final String TAG = "PostAdapter";
+    public static final int VIEW_TYPE_EMPTY = 0;
+    public static final int VIEW_TYPE_NORMAL = 1;
+
+    private List<Post> mPostList;
+
+    public PostAdapter(List<Post> postList) {
+        mPostList = postList;
     }
 
     @NonNull
     @Override
-
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return new ViewHolder(
-                        LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.recycler_view_item_chat, parent, false));
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item_post, parent, false)
+                );
             case VIEW_TYPE_EMPTY:
             default:
                 return new EmptyViewHolder(
-                        LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.recycler_view_empty_item_chat, parent, false));
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_empty_item_post, parent, false)
+                );
         }
     }
 
@@ -66,8 +63,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         holder.onBind(position);
     }
 
+    @Override
     public int getItemViewType(int position) {
-        if (mChatsList != null && mChatsList.size() > 0) {
+        if (mPostList != null && mPostList.size() > 0) {
             return VIEW_TYPE_NORMAL;
         } else {
             return VIEW_TYPE_EMPTY;
@@ -76,54 +74,51 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mChatsList != null && mChatsList.size() > 0) {
-            return mChatsList.size();
+        if (mPostList != null && mPostList.size() > 0) {
+            return mPostList.size();
         } else {
             return 1;
         }
     }
 
-    public void addItems(List<Chat> ChatList) {
-        mChatsList.addAll(ChatList);
+    public void addItems(List<Post> postList) {
+        mPostList.addAll(postList);
         notifyDataSetChanged();
     }
 
-    public interface Callback {
-        void onEmptyViewRetryClick();
-    }
-
-    public void setCallback(Callback callback) {
-        mCallback = callback;
-    }
-
     public class ViewHolder extends BaseViewHolder {
-        @BindView(R.id.avatar)
-        ImageView coverImageView;
+
         @BindView(R.id.title)
         TextView titleTextView;
-        @BindView(R.id.lastMessage)
-        TextView lastMessTextView;
+
+        @BindView(R.id.avatar)
+        ImageView avatarImageView;
+
+        @BindView(R.id.text)
+        TextView textTextView;
+
         @BindView(R.id.time)
         TextView timeTextView;
 
-        ViewHolder(View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        @Override
         protected void clear() {
-            coverImageView.setImageDrawable(null);
+            avatarImageView.setImageBitmap(null);
             titleTextView.setText("");
-            lastMessTextView.setText("");
+            textTextView.setText("");
             timeTextView.setText("");
         }
 
         public void onBind(int position) {
             super.onBind(position);
-            final Chat mChat = mChatsList.get(position);
+            final Post mPost = mPostList.get(position);
 
-            if (mChat.getPhotoId() != null) {
-                Call<Photo> call = DataManager.getInstance().getPhoto(mChat.getPhotoId());
+            if (mPost.getPhotoId() != null) {
+                Call<Photo> call = DataManager.getInstance().getPhoto(mPost.getPhotoId());
                 call.enqueue(new retrofit2.Callback<Photo>() {
                     @Override
                     public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
@@ -132,7 +127,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                             String photo = response.body().getPhoto();
                             byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
                             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            coverImageView.setImageBitmap(decodedByte);
+                            avatarImageView.setImageBitmap(decodedByte);
                         }
                     }
 
@@ -142,38 +137,31 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     }
                 });
             }
-
-            if (mChat.getLastMessage() != null) {
-                lastMessTextView.setText(mChat.getLastMessage());
+            if (mPost.getTitle() != null) {
+                titleTextView.setText(mPost.getTitle());
             }
-            if (mChat.getLastTimeMessage() != null) {
-                timeTextView.setText(mChat.getLastTimeMessage());
+            if (mPost.getText() != null) {
+                textTextView.setText(mPost.getText());
             }
-            if (mChat.getName() != null) {
-                titleTextView.setText(mChat.getName());
+            if (mPost.getCreatedDate() != null) {
+                timeTextView.setText(mPost.getCreatedDate());
             }
             itemView.setOnClickListener(v -> {
-                // TODO: реализовать переход на MessagesController!
+                // TODO: добавить childController (PostController)
             });
         }
     }
 
     public static class EmptyViewHolder extends BaseViewHolder {
-        @BindView(R.id.tv_message)
-        TextView messageTextView;
-        @BindView(R.id.buttonRetry)
-        TextView buttonRetry;
+        @BindView(R.id.titlePost)
+        TextView titlePostTextView;
+        @BindView(R.id.emoji)
+        ImageView emojiImageView;
 
         EmptyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             // buttonRetry.setOnClickListener(v -> mCallback.onEmptyViewRetryClick());
-            buttonRetry.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Snackbar.make(v, R.string.empty_screen, BaseTransientBottomBar.LENGTH_LONG).show();
-                }
-            });
         }
 
         @Override

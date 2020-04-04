@@ -129,7 +129,7 @@ class ChatCreateResource(Resource):
         self.parser.add_argument('type_of_chat', required=True, type=int)
         # 0 - Offline, >=1 Количество user-ов онлайн в чате
         self.parser.add_argument('status', required=True, type=int)
-        # Время последнего отправленного сообщения в формате YYYY-MM-DD HH:MM
+        # Время последнего отправленного сообщения в формате YYYY-MM-DD HH:MM:SS
         self.parser.add_argument('last_time_message', required=True)
         # Последнее сообщение в чате
         self.parser.add_argument('last_message', required=True, type=str)

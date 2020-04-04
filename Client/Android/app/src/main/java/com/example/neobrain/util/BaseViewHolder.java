@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class BaseViewHolder extends RecyclerView.ViewHolder {
+public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private int mCurrentPosition;
 
@@ -13,16 +13,14 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    protected void clear() {
-
-    }
+    protected abstract void clear();
 
     public void onBind(int position) {
-        mCurrentPosition = position;
+        this.mCurrentPosition = position;
         clear();
     }
 
     public int getCurrentPosition() {
-        return mCurrentPosition;
+        return this.mCurrentPosition;
     }
 }

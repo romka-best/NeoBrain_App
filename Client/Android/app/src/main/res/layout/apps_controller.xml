@@ -32,7 +32,7 @@
             android:layout_marginEnd="232dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/circle_darkblue_without_center_tight"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintBottom_toTopOf="@+id/appsRecycler"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <View
@@ -45,7 +45,7 @@
             android:layout_marginEnd="4dp"
             android:background="@drawable/circle_darkblue_gradient"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/recyclerView" />
+            app:layout_constraintTop_toTopOf="@+id/appsRecycler" />
 
 
         <View
@@ -57,7 +57,7 @@
             android:layout_marginTop="236dp"
             android:background="@drawable/circle_darkblue_ring_middle"
             app:layout_constraintEnd_toEndOf="@+id/background_apps"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+            app:layout_constraintTop_toBottomOf="@+id/appsRecycler" />
 
         <View
             android:id="@+id/gradient_darkblue_ring2"
@@ -97,7 +97,7 @@
             app:layout_constraintTop_toTopOf="@+id/background_apps" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/appsRecycler"
             android:layout_width="325dp"
             android:layout_height="194dp"
             android:layout_marginTop="36dp"

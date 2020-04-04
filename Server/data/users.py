@@ -35,6 +35,8 @@ def correct_password(password):
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
+    # Формат даты
+    datetime_format = '%Y-%m-%d %H:%M:%S'
     # id пользователя
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     # Имя пользователя
@@ -58,7 +60,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     # Возраст пользователя
     age = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     # id юзеров кто в чёрном списке в формате id1, id2, id3...
-    in_black_list = sqlalchemy.Column(sqlalchemy.String, default=False)
+    in_black_list = sqlalchemy.Column(sqlalchemy.String)
     # Могут ли смотреть его аудио
     can_see_audio = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
     # Могут ли смотреть его группы
