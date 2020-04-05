@@ -2,8 +2,6 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
-import com.example.neobrain.API.model.UserModel;
-import com.example.neobrain.Adapters.MessagesAdapter;
+import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
@@ -39,7 +36,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 public class ChatController extends Controller {
     @BindView(R.id.messagesRecycler)
     public RecyclerView messagesRecycler;
-    private MessagesAdapter messagesAdapter;
+    private ChatAdapter chatAdapter;
 
     private SwipeRefreshLayout swipeContainer;
 
@@ -83,8 +80,8 @@ public class ChatController extends Controller {
                     for (Chat chat : chats) {
                         mChats.add(new Chat(chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
                     }
-                    messagesAdapter = new MessagesAdapter(mChats);
-                    messagesRecycler.setAdapter(messagesAdapter);
+                    chatAdapter = new ChatAdapter(mChats);
+                    messagesRecycler.setAdapter(chatAdapter);
                 }
             }
 

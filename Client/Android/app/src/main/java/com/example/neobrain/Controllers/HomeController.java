@@ -24,6 +24,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,6 +37,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG;
 
 @SuppressLint("ValidController")
 public class HomeController extends Controller {
@@ -116,9 +118,9 @@ public class HomeController extends Controller {
 
                                 @Override
                                 public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                                    // TODO Корректно обработать ошибку и изменить на Snackbar
+                                    // TODO Корректно обработать ошибку
                                     Log.e("ERROR", t.toString());
-                                    Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                                    Snackbar.make(view, t.toString(), LENGTH_LONG).show();
                                 }
                             });
                             return true;

@@ -33,14 +33,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MessagesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "ChatAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<Chat> mChatsList;
     private Callback mCallback;
 
-    public MessagesAdapter(ArrayList<Chat> mChatsList) {
+    public ChatAdapter(ArrayList<Chat> mChatsList) {
         this.mChatsList = mChatsList;
     }
 
