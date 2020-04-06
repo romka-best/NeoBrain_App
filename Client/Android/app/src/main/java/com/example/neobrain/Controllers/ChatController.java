@@ -2,6 +2,7 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +41,9 @@ public class ChatController extends Controller {
     public RecyclerView messagesRecycler;
     private ChatAdapter chatAdapter;
 
+    private FloatingActionButton floatingActionButton;
+    private ShimmerFrameLayout shimmerViewContainer;
+
     private SwipeRefreshLayout swipeContainer;
 
     private SharedPreferences sp;
@@ -50,6 +56,14 @@ public class ChatController extends Controller {
         ButterKnife.bind(this, view);
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+
+        floatingActionButton = view.findViewById(R.id.fab);
+        floatingActionButton.setColorFilter(Color.argb(255, 255, 255, 255));
+
+        shimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
+        shimmerViewContainer.startShimmer();
+
+
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
@@ -80,6 +94,8 @@ public class ChatController extends Controller {
                     for (Chat chat : chats) {
                         mChats.add(new Chat(chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
                     }
+                    shimmerViewContainer.stopShimmer();
+                    shimmerViewContainer.setVisibility(View.GONE);
                     chatAdapter = new ChatAdapter(mChats);
                     messagesRecycler.setAdapter(chatAdapter);
                 }

@@ -28,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import butterknife.BindViews;
@@ -56,29 +57,54 @@ public class HomeController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
-        Router childRouterStart = getChildRouter(childContainers[0]).setPopsLastView(false);
+        Router childRouterStart = getChildRouter(childContainers[0]).setPopsLastView(true);
         childRouterStart.setRoot(RouterTransaction.with(new LentaController()));
 
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_lenta);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 item -> {
-                    Router childRouter = getChildRouter(childContainers[0]).setPopsLastView(false);
+                    Router childRouter = getChildRouter(childContainers[0]).setPopsLastView(true);
                     switch (item.getItemId()) {
                         case R.id.action_lenta:
-                            getChildRouter(childContainers[0]).popCurrentController();
+                            if (!childRouter.hasRootController()) {
+                                try {
+                                    getChildRouter(childContainers[0]).popCurrentController();
+                                } catch (java.lang.IllegalStateException e) {
+                                    return false;
+                                }
+                            }
                             childRouter.setRoot(RouterTransaction.with(new LentaController()));
                             return true;
                         case R.id.action_navigation:
-                            getChildRouter(childContainers[0]).popCurrentController();
+                            if (!childRouter.hasRootController()) {
+                                try {
+                                    getChildRouter(childContainers[0]).popCurrentController();
+                                } catch (java.lang.IllegalStateException e) {
+                                    return false;
+                                }
+                            }
+                            Log.d("HomeController", "!hasRoot");
                             childRouter.setRoot(RouterTransaction.with(new NavigationController()));
                             return true;
                         case R.id.action_messages:
-                            getChildRouter(childContainers[0]).popCurrentController();
+                            if (!childRouter.hasRootController()) {
+                                try {
+                                    getChildRouter(childContainers[0]).popCurrentController();
+                                } catch (java.lang.IllegalStateException e) {
+                                    return false;
+                                }
+                            }
                             childRouter.setRoot(RouterTransaction.with(new ChatController()));
                             return true;
                         case R.id.action_apps:
-                            getChildRouter(childContainers[0]).popCurrentController();
+                            if (!childRouter.hasRootController()) {
+                                try {
+                                    getChildRouter(childContainers[0]).popCurrentController();
+                                } catch (java.lang.IllegalStateException e) {
+                                    return false;
+                                }
+                            }
                             childRouter.setRoot(RouterTransaction.with(new AppsController()));
                             return true;
                         case R.id.action_menu:
@@ -119,8 +145,9 @@ public class HomeController extends Controller {
                                 @Override
                                 public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                                     // TODO Корректно обработать ошибку
-                                    Log.e("ERROR", t.toString());
-                                    Snackbar.make(view, t.toString(), LENGTH_LONG).show();
+                                    if (t.toString().startsWith("java.net.SocketTimeoutException")) {
+                                        Log.d("HomeController", "Catch!");
+                                    }
                                 }
                             });
                             return true;

@@ -12,12 +12,13 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="#2BE434"
+        android:backgroundTint="@color/colorPrimary"
         android:backgroundTintMode="src_over"
         android:visibility="visible"
-        android:src="@android:drawable/ic_menu_edit"
-        app:layout_behavior=".util.FAB_Float_on_Scroll">
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        app:backgroundTint="@color/colorText"
+        app:borderWidth="0dp"
+        app:layout_behavior=".util.FAB_Float_on_Scroll"
+        app:srcCompat="@drawable/ic_edit" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -28,6 +29,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/roboto_bold"
             android:text="@string/messages"
             android:textColor="@android:color/black"
@@ -38,30 +40,29 @@
 
         <ImageButton
             android:id="@+id/search_chats_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/cardview_light_background"
-            android:src="@android:drawable/ic_menu_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/colorText"
+            android:src="@drawable/ic_search"
             app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/title"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:src="@android:drawable/ic_menu_search">
-        </ImageButton>
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/filter_chats_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/cardview_light_background"
-            android:src="@drawable/ic_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/colorText"
+            android:src="@drawable/ic_sort"
             app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
             app:layout_constraintRight_toLeftOf="@+id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
-        </ImageButton>
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeContainer"
@@ -85,8 +86,41 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                tools:listitem="@layout/recycler_view_item_chat">
-            </androidx.recyclerview.widget.RecyclerView>
+                tools:listitem="@layout/recycler_view_item_chat" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="55dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shimmer_duration="1000">
+
+            <!-- Adding 7 rows of placeholders -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+
+                <include layout="@layout/recycler_view_shimmer_item_chat" />
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

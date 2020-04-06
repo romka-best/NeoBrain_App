@@ -155,7 +155,6 @@ class UserResource(Resource):
         if args['last_seen']:
             user.last_seen = args['last_seen']
         if args['photo']:
-            # TODO Сделать корректное добавление фотографии на сервер
             photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
             photo.data = decodebytes(args['photo'].encode())
         # Обновляем дату модификации пользователя
