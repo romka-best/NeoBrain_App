@@ -1,12 +1,13 @@
 package com.example.neobrain.Controllers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -15,10 +16,11 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
-import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +30,6 @@ import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +45,7 @@ public class RegController extends Controller {
     private TextView textNickname;
     private TextView textPassword;
     private TextView textPasswordRepeat;
-    private TextView textNumber;
+    private TextView textEmail;
 
     private SharedPreferences sp;
 
@@ -58,7 +59,7 @@ public class RegController extends Controller {
         textNickname = view.findViewById(R.id.nickname_text);
         textPassword = view.findViewById(R.id.password_text);
         textPasswordRepeat = view.findViewById(R.id.passwordRepeat_text);
-        textNumber = view.findViewById(R.id.number_text);
+        textEmail = view.findViewById(R.id.email_text);
 
         View squareAuth = view.findViewById(R.id.square_s);
         squareAuth.setOnClickListener(v -> launchAuth());
@@ -68,6 +69,7 @@ public class RegController extends Controller {
         return view;
     }
 
+    @SuppressLint("ResourceAsColor")
     @OnClick({R.id.regButton})
     void launchReg() {
         // TODO Сделать корректную обработку регистрации
@@ -76,15 +78,26 @@ public class RegController extends Controller {
         String nickname = textNickname.getText().toString();
         String password = textPassword.getText().toString();
         String passwordRepeat = textPasswordRepeat.getText().toString();
-        String number = textNumber.getText().toString();
+        String email = textEmail.getText().toString();
         boolean error = false;
-        if (!isPasswordSame(password, passwordRepeat)) error = true;
+        if (!isPasswordSame(password, passwordRepeat) | !passwordValidate(password)
+        | !isEmailValid(email) | name.equals("") | surname.equals("") | nickname.equals("")) error = true;
         if (!error) {
+            TextInputLayout ema = (TextInputLayout) getView().findViewById(R.id.email);
+            ema.setError(null);
+            getView().findViewById(R.id.email_text).getBackground().clearColorFilter();
+            TextInputLayout pass = (TextInputLayout) getView().findViewById(R.id.password);
+            pass.setError(null);
+            getView().findViewById(R.id.password_text).getBackground().clearColorFilter();
+            TextInputLayout passRep = (TextInputLayout) getView().findViewById(R.id.passwordRepeat);
+            passRep.setError(null);
+            getView().findViewById(R.id.passwordRepeat_text).getBackground().clearColorFilter();
+
             User user = new User();
             user.setName(name);
             user.setSurname(surname);
             user.setNickname(nickname);
-            user.setNumber(number);
+            user.setEmail(email);
             user.setHashedPassword(password);
             Call<Status> call = DataManager.getInstance().createUser(user);
             call.enqueue(new Callback<Status>() {
@@ -95,7 +108,7 @@ public class RegController extends Controller {
                         assert post != null;
                         if (post.getStatus() != 201) {
                             // TODO В зависимости от текста, вывести пользователю ошибку в Error message(outlinedTextField.setError("Error message"))
-                            Toast.makeText(getApplicationContext(), "Status code: " + post.getStatus() + "\n" + post.getText(), Toast.LENGTH_LONG).show();
+                            Snackbar.make(getView(), "Status code: " + post.getStatus() + "\n" + post.getText(), Snackbar.LENGTH_LONG).show();
                         } else if (post.getStatus() == 201) {
                             SharedPreferences.Editor e = sp.edit();
                             e.putBoolean("hasAuthed", true);
@@ -107,19 +120,56 @@ public class RegController extends Controller {
                             getRouter().popController(RegController.this);
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_LONG).show();
+                        Snackbar.make(getView(), response.message(), Snackbar.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                     // TODO Корректно обработать ошибку
-                    Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                    Snackbar.make(getView(), t.toString(), Snackbar.LENGTH_LONG).show();
                 }
             });
         } else {
-            // TODO Корректно обработать ошибку
-            Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
+            //TODO обработать ошибку нулевого ввода в нике, имени и фамилии
+            if (!isPasswordSame(password, passwordRepeat)) {
+                Snackbar.make(getView(), getResources().getString(R.string.pass_not_same), Snackbar.LENGTH_LONG).show();
+                TextInputLayout passRep = (TextInputLayout) getView().findViewById(R.id.passwordRepeat);
+                passRep.setError(getResources().getString(R.string.pass_not_same));
+                getView().findViewById(R.id.passwordRepeat_text).getBackground().
+                        setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
+            }   else {
+                TextInputLayout passRep = (TextInputLayout) getView().findViewById(R.id.passwordRepeat);
+                passRep.setError(null);
+                getView().findViewById(R.id.passwordRepeat_text).getBackground().clearColorFilter();
+            }
+            if (!passwordValidate(password)) {
+                Snackbar.make(getView(), getResources().getString(R.string.pass_not_corr), Snackbar.LENGTH_LONG).show();
+                TextInputLayout pass = (TextInputLayout) getView().findViewById(R.id.password);
+                pass.setError(getResources().getString(R.string.not_correct));
+                getView().findViewById(R.id.password_text).getBackground().
+                        setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
+                TextInputLayout passRep = (TextInputLayout) getView().findViewById(R.id.passwordRepeat);
+                passRep.setError(null);
+                getView().findViewById(R.id.passwordRepeat_text).getBackground().clearColorFilter();
+
+            } else {
+                TextInputLayout pass = (TextInputLayout) getView().findViewById(R.id.password);
+                pass.setError(null);
+                getView().findViewById(R.id.password_text).getBackground().clearColorFilter();
+            }
+            if (!isEmailValid(email)) {
+                TextInputLayout ema = (TextInputLayout) getView().findViewById(R.id.email);
+                ema.setError(getResources().getString(R.string.email_not_correct));
+                getView().findViewById(R.id.email_text).getBackground().
+                        setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
+                Snackbar.make(getView(), getResources().getString(R.string.email_not_correct),
+                        Snackbar.LENGTH_LONG).show();
+            } else {
+                TextInputLayout ema = (TextInputLayout) getView().findViewById(R.id.email);
+                ema.setError(null);
+                getView().findViewById(R.id.email_text).getBackground().clearColorFilter();
+            }
         }
     }
 

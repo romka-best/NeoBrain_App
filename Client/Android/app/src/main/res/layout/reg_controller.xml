@@ -52,8 +52,8 @@
         android:text="@string/reg2"
         android:textColor="@color/colorText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/number"
-        app:layout_constraintTop_toBottomOf="@+id/number" />
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name"
@@ -79,33 +79,34 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:textColor="@color/colorText" />
+            android:textColor="@color/colorText"
+            android:maxLength="15"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/number"
+        android:id="@+id/email"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="220dp"
         android:layout_height="55dp"
-        android:hint="@string/hint_number"
-        app:hintTextColor="@color/colorPrimaryDark"
+        android:hint="@string/email"
         android:textColor="@color/colorText"
         android:textColorHint="#80F6F6F6"
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toStartOf="@+id/square_s"
         app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="@+id/passwordRepeat"
         app:layout_constraintTop_toBottomOf="@+id/passwordRepeat"
-        app:startIconDrawable="@drawable/ic_phone"
+        app:startIconDrawable="@android:drawable/ic_dialog_email"
         app:startIconTint="@color/colorText">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/number_text"
+            android:id="@+id/email_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:inputType="phone"
+            android:inputType="textEmailAddress"
             android:textColor="@color/colorText" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -188,7 +189,8 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:textColor="@color/colorText" />
+            android:textColor="@color/colorText"
+            android:maxLength="20"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -214,7 +216,8 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:textColor="@color/colorText" />
+            android:textColor="@color/colorText"
+            android:maxLength="15"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView

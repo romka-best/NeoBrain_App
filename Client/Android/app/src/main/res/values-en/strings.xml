@@ -28,4 +28,9 @@
     <string name="empty_posts">There are no posts yet. Fix it!)</string>
     <string name="empty_screen">You have nothing here!</string>
     <string name="btn_retry">Retry</string>
+    <string name="email">E-mail</string>
+    <string name="pass_not_same">Passwords are not the same</string>
+    <string name="pass_not_corr">Password is not correct</string>
+    <string name="not_correct">Not correct</string>
+    <string name="email_not_correct">E-mail is not correct</string>
 </resources>
