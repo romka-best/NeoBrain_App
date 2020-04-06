@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BundleBuilder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,34 +78,16 @@ public class ProfileController extends Controller {
     private SwipeRefreshLayout swipeContainer;
     private TextView nameAndSurname;
     private TextView nickname;
+    private FloatingActionButton fabAdd;
+    private ProgressBar progressBar;
+    private ImageView emoji;
+    private TextView textError;
+
     private static final int CAMERA_REQUEST = 100;
     private static final int PICK_IMAGE = 101;
     private static final int RESULT_OK = -1;
-    private String nameText;
-    private String surnameText;
-    private String nicknameText;
-    private byte[] decodedStringPhoto;
 
     private SharedPreferences sp;
-
-
-    ProfileController(String name, String surname, String nickname, byte[] decodedString) {
-        this(new BundleBuilder(new Bundle())
-                .putString("name", name)
-                .putString("surname", surname)
-                .putString("nickname", nickname)
-                .putByteArray("decodedString", decodedString)
-                .build());
-    }
-
-    public ProfileController(Bundle args) {
-        super(args);
-        assert args != null;
-        this.nameText = args.getString("name");
-        this.surnameText = args.getString("surname");
-        this.nicknameText = args.getString("nickname");
-        this.decodedStringPhoto = args.getByteArray("decodedString");
-    }
 
     @SuppressLint("SetTextI18n")
     @NonNull
@@ -181,11 +165,14 @@ public class ProfileController extends Controller {
 
         nameAndSurname = view.findViewById(R.id.name_surname);
         nickname = view.findViewById(R.id.nickname);
-        nameAndSurname.setText(this.nameText + " " + this.surnameText);
-        nickname.setText(this.nicknameText);
 
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(this.decodedStringPhoto, 0, decodedStringPhoto.length);
-        avatar.setImageBitmap(decodedByte);
+        progressBar = view.findViewById(R.id.progress_circular);
+        emoji = view.findViewById(R.id.emoji);
+        textError = view.findViewById(R.id.titleError);
+
+        fabAdd = view.findViewById(R.id.fab);
+        fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
+        ;
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
@@ -198,7 +185,11 @@ public class ProfileController extends Controller {
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
+        getProfile();
         getPosts();
+        swipeContainer.setVisibility(View.INVISIBLE);
+        fabAdd.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -224,6 +215,9 @@ public class ProfileController extends Controller {
                             byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
                             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                             avatar.setImageBitmap(decodedByte);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            swipeContainer.setVisibility(View.VISIBLE);
+                            fabAdd.setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -235,9 +229,11 @@ public class ProfileController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                // TODO Корректно обработать ошибку и изменить на Snackbar
-                Log.e("ERROR", t.toString());
-                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                if (t.toString().startsWith("java.net.SocketTimeoutException")) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    emoji.setVisibility(View.VISIBLE);
+                    textError.setVisibility(View.VISIBLE);
+                }
             }
         });
         getPosts();

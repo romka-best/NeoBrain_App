@@ -33,4 +33,5 @@
     <string name="pass_not_corr">Пароль некорректен</string>
     <string name="not_correct">Некорректно</string>
     <string name="email_not_correct">Такой почты не существует!</string>
+    <string name="errors_with_connection">Проблемы с интернет соединением</string>
 </resources>

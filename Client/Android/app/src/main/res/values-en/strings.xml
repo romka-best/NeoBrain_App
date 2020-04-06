@@ -33,4 +33,5 @@
     <string name="pass_not_corr">Password is not correct</string>
     <string name="not_correct">Not correct</string>
     <string name="email_not_correct">E-mail is not correct</string>
+    <string name="errors_with_connection">problems with your Internet connection</string>
 </resources>
