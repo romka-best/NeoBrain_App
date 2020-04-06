@@ -228,7 +228,6 @@ public class ProfileController extends Controller {
 
                         @Override
                         public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
-
                         }
                     });
                 }
