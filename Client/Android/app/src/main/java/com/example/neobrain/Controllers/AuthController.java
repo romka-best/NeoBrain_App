@@ -40,9 +40,17 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 public class AuthController extends Controller {
     private TextInputEditText textLogin;
     private TextInputEditText textPassword;
-
     private SharedPreferences sp;
+    private String login = "";
+    private String pass = "";
 
+    public AuthController() {
+    }
+
+    public AuthController(String log, String pass) {
+        this.login = log;
+        this.pass = pass;
+    }
 
     @NonNull
     @Override
@@ -51,23 +59,27 @@ public class AuthController extends Controller {
         ButterKnife.bind(this, view);
         textLogin = view.findViewById(R.id.login_text);
         textPassword = view.findViewById(R.id.password_text);
-
+        if (!this.login.equals("")) textLogin.setText(this.login);
+        if (!this.pass.equals("")) textPassword.setText(this.login);
         View squareReg = view.findViewById(R.id.square_s);
         squareReg.setOnClickListener(v -> launchReg());
-
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
         return view;
     }
 
-
     @OnClick({R.id.regButton})
     void launchReg() {
         // TODO Исправить баг: При первом переходе, отсутствует анимация
-        getRouter().pushController(RouterTransaction.with(new RegController())
-                .popChangeHandler(new FadeChangeHandler())
-                .pushChangeHandler(new FadeChangeHandler()));
-        getRouter().popController(this);
+        if (getRouter().getBackstackSize() > 1) {
+            getActivity().onBackPressed();
+        } else {
+            getRouter().pushController(RouterTransaction.with(new RegController(
+                    textLogin.getText().toString(), textPassword.getText().toString()))
+                    .popChangeHandler(new FadeChangeHandler())
+                    .pushChangeHandler(new FadeChangeHandler()));
+            getRouter().popController(this);
+        }
     }
 
     @OnClick(R.id.authButton)
@@ -127,18 +139,17 @@ public class AuthController extends Controller {
         return text != null && text.length() >= 1;
     }
 
-// Не работает :(
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putString("login", Objects.requireNonNull(textLogin.getText()).toString());
-//        outState.putString("password", Objects.requireNonNull(textPassword.getText()).toString());
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        textLogin.setText(savedInstanceState.getString("login"));
-//        textPassword.setText(savedInstanceState.getString("password"));
-//    }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("login", Objects.requireNonNull(textLogin.getText()).toString());
+        outState.putString("password", Objects.requireNonNull(textPassword.getText()).toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        textLogin.setText(savedInstanceState.getString("login"));
+        textPassword.setText(savedInstanceState.getString("password"));
+    }
 }

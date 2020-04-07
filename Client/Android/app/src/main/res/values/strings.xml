@@ -28,9 +28,14 @@
     <string name="empty_screen">Тут пока что ничего нет!</string>
     <string name="btn_retry">Обновить</string>
     <string name="email">Почта</string>
-    <string name="pass_not_same">Пароли отличаются</string>
-    <string name="pass_not_corr">Пароль некорректен</string>
-    <string name="not_correct">Некорректно</string>
-    <string name="email_not_correct">Такой почты не существует</string>
+    <string name="pass_not_same">Пароли отличаются!</string>
+    <string name="pass_not_corr">Пароль некорректен!</string>
+    <string name="not_correct">Некорректно!</string>
+    <string name="email_not_correct">Такой почты не существует!</string>
+    <string name="empty_name">Имя не введено!</string>
+    <string name="empty_surname">Фамилия не введена!</string>
+    <string name="empty_nickname">Ник не введен!</string>
+    <string name="undo">Убрать</string>
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
+
 </resources>
