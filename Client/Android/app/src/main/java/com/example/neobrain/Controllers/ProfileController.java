@@ -64,7 +64,6 @@ public class ProfileController extends Controller {
     @BindView(R.id.postRecycler)
     public RecyclerView postRecycler;
     private PostAdapter postAdapter;
-    private LinearLayoutManager mLayoutManager;
 
     private ImageView avatar;
     private SwipeRefreshLayout swipeContainer;
@@ -274,7 +273,7 @@ public class ProfileController extends Controller {
     }
 
     private void getPosts() {
-        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         postRecycler.setLayoutManager(mLayoutManager);
         postRecycler.setItemAnimator(new DefaultItemAnimator());

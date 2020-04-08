@@ -2,6 +2,8 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
@@ -72,13 +75,12 @@ public class AuthController extends Controller {
     void launchReg() {
         // TODO Исправить баг: При первом переходе, отсутствует анимация
         if (getRouter().getBackstackSize() > 1) {
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         } else {
             getRouter().pushController(RouterTransaction.with(new RegController(
-                    textLogin.getText().toString(), textPassword.getText().toString()))
+                    Objects.requireNonNull(textLogin.getText()).toString(), Objects.requireNonNull(textPassword.getText()).toString()))
                     .popChangeHandler(new FadeChangeHandler())
                     .pushChangeHandler(new FadeChangeHandler()));
-            getRouter().popController(this);
         }
     }
 
@@ -96,30 +98,26 @@ public class AuthController extends Controller {
             call.enqueue(new Callback<Status>() {
                 @Override
                 public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                    Status post = response.body();
+                    assert post != null;
                     if (response.isSuccessful()) {
-                        Status post = response.body();
-                        assert post != null;
-                        if (post.getStatus() != 200) {
-                            if (post.getStatus() == 404) {
-                                Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}
-                            } else if (post.getStatus() == 449) {
-                                Toast.makeText(getApplicationContext(), "Неверный пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}
-                            } else {
-                                Toast.makeText(getApplicationContext(), post.getText(), Toast.LENGTH_LONG).show();
-                            }
-                        } else if (post.getStatus() == 200) {
-                            SharedPreferences.Editor e = sp.edit();
-                            e.putBoolean("hasAuthed", true);
-                            e.putString("nickname", post.getText().substring(6, post.getText().length() - 8));
-                            e.apply();
-                            getRouter().pushController(RouterTransaction.with(new HomeController())
-                                    .popChangeHandler(new FlipChangeHandler())
-                                    .pushChangeHandler(new FlipChangeHandler()));
-                            getRouter().popController(AuthController.this);
-                        }
+                        SharedPreferences.Editor e = sp.edit();
+                        e.putBoolean("hasAuthed", true);
+                        e.putString("nickname", post.getText().substring(6, post.getText().length() - 8));
+                        e.apply();
+                        getRouter().setRoot(RouterTransaction.with(new HomeController())
+                                .popChangeHandler(new FlipChangeHandler())
+                                .pushChangeHandler(new FlipChangeHandler()));
+                        getRouter().popCurrentController();
                     } else {
+                        if (post.getStatus() == 404) {
+                            Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}
+                        } else if (post.getStatus() == 449) {
+                            Toast.makeText(getApplicationContext(), "Неверный пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}
+                        } else {
+                            Toast.makeText(getApplicationContext(), post.getText(), Toast.LENGTH_LONG).show();
+                        }
                         // TODO Изменить на Snackbar
-                        Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_LONG).show();
                     }
                 }
 

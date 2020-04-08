@@ -66,13 +66,15 @@ class PostCreateResource(Resource):
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
         self.parser = reqparse.RequestParser()
         # Заголовок(Имя) поста
-        self.parser.add_argument('title', required=True, type=str)
+        self.parser.add_argument('title', required=False, type=str)
         # Текст
         self.parser.add_argument('text', required=True, type=str)
         # Дата создания поста
         self.parser.add_argument('created_date', required=False, type=str)
         # id пользователя
-        self.parser.add_argument('user_id', required=True, type=int)
+        self.parser.add_argument('user_id', required=False, type=int)
+        # Никнейм пользователя
+        self.parser.add_argument("user_nickname", required=False, type=str)
         # id фото
         self.parser.add_argument('photo_id', required=False, type=int)
 
@@ -88,12 +90,22 @@ class PostCreateResource(Resource):
         session = db_session.create_session()
         # Создаём пост
         post = Post(
-            title=args['title'],
-            text=args['text'],
-            user_id=args['user_id']
+            text=args['text']
         )
+        if args['user_id']:
+            user = session.query(User).get(args['user_id'])
+            post.user_id = args['user_id']
+        elif args['user_nickname']:
+            user = session.query(User).filter(User.nickname == args['user_nickname']).first()
+            post.user_id = user.id
         if args['photo_id']:
             post.photo_id = args['photo_id']
+        else:
+            post.photo_id = user.photo_id
+        if args['title']:
+            post.title = args['title']
+        else:
+            post.title = f"{user.name} {user.surname}"
         # Добавляем в БД чат
         session.add(post)
         session.commit()

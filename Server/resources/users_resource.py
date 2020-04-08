@@ -112,15 +112,15 @@ class UserResource(Resource):
         #                     'text': f'User {user.nickname} forbidden'})
         # В зависимости от аргументов, меняем пользователя
         if args['name']:
-            user.name = args['name']
+            user.name = args['name'].title()
         if args['surname']:
-            user.surname = args['surname']
+            user.surname = args['surname'].title()
         if args['nickname']:
             user.nickname = args['nickname']
         if args['number']:
-            user.number = args['number']
+            user.number = args['number'].lower()
         if args['email']:
-            user.email = args['email']
+            user.email = args['email'].lower()
         if args['hashed_password']:
             user.set_password(args['hashed_password'])
         if args['is_closed']:
@@ -224,11 +224,11 @@ class UserLoginResource(Resource):
         # Создаём сессиб и берём пользователя
         session = db_session.create_session()
         if args['number']:
-            user = session.query(User).filter(User.number == args['number']).first()
+            user = session.query(User).filter(User.number == args['number'].lower()).first()
         elif args['nickname']:
             user = session.query(User).filter(User.nickname == args['nickname']).first()
         elif args['email']:
-            user = session.query(User).filter(User.email == args['email']).first()
+            user = session.query(User).filter(User.email == args['email'].lower()).first()
         else:
             return jsonify({'status': 400,
                             'text': 'Bad request'})
@@ -257,7 +257,7 @@ class UsersListResource(Resource):
         # Никнейм пользователя
         self.parser.add_argument('nickname', required=True, type=str)
         # Номер телефона пользователя в формате 7XXXXXXXXXX
-        self.parser.add_argument('number', required=True, type=str)
+        self.parser.add_argument('number', required=False, type=str)
         # Емайл пользователя в формате email@name.com
         self.parser.add_argument('email', required=False, type=str)
         # Дата создания пользователя
@@ -316,27 +316,35 @@ class UsersListResource(Resource):
         if not args:
             return jsonify({'status': 400,
                             'text': "Empty request"})
+        # Обязательно либо номер, либо почта
+        if not args['number'] and not args['email']:
+            return jsonify({'status': 400,
+                            'text': "Bad request"})
         # Проверяем занят ли никнейм
         elif session.query(User).filter(
                 User.nickname == args['nickname']).first():
             return jsonify({'status': 449,
                             'text': 'Nickname already exists'})
-        # Проверяем занят ли номер телефона
-        elif session.query(User).filter(User.number == args['number']).first():
-            return jsonify({'status': 449,
-                            'text': 'Phone number already exists'})
         # Создаём пользователя
         user = User(
-            name=args['name'],
-            surname=args['surname'],
+            name=args['name'].title(),
+            surname=args['surname'].title(),
             nickname=args['nickname'],
             photo_id=2
         )
         user.set_password(args['hashed_password'])
         if args['number']:
-            user.number = args['number']
+            # Проверяем занят ли номер телефона
+            if session.query(User).filter(User.number == args['number'].lower()).first():
+                return jsonify({'status': 449,
+                                'text': 'Phone number already exists'})
+            user.number = args['number'].lower()
         if args['email']:
-            user.email = args['email']
+            # Проверяем занята ли почта
+            if session.query(User).filter(User.email == args['email'].lower()).first():
+                return jsonify({'status': 449,
+                                'text': 'Email already exists'})
+            user.email = args['email'].lower()
         # Добавляем пользователя
         session.add(user)
         session.commit()

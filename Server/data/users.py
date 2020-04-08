@@ -46,7 +46,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     # Никнейм пользователя
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
     # Номер телефона пользователя в формате 7XXXXXXXXXX
-    number = sqlalchemy.Column(sqlalchemy.String, unique=True, index=True, nullable=False)
+    number = sqlalchemy.Column(sqlalchemy.String, unique=True, index=True, nullable=True)
     # Хэшированный пароль
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # Емайл пользователя в формате email@name.com

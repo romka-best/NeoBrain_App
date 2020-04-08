@@ -61,12 +61,12 @@ public class RegController extends Controller {
     private String passwordRepeat;
     private String email;
     private List<String> errors = new ArrayList<>();
-    TextInputLayout passRepEdit;
-    TextInputLayout passEdit;
-    TextInputLayout emailEdit;
-    TextInputLayout nameEdit;
-    TextInputLayout surnameEdit;
-    TextInputLayout nicknameEdit;
+    private TextInputLayout passRepEdit;
+    private TextInputLayout passEdit;
+    private TextInputLayout emailEdit;
+    private TextInputLayout nameEdit;
+    private TextInputLayout surnameEdit;
+    private TextInputLayout nicknameEdit;
 
 
     private SharedPreferences sp;
@@ -108,7 +108,6 @@ public class RegController extends Controller {
     @SuppressLint("ResourceAsColor")
     @OnClick({R.id.regButton})
     void launchReg() {
-        // TODO Сделать корректную обработку регистрации
         name = textName.getText().toString();
         surname = textSurname.getText().toString();
         nickname = textNickname.getText().toString();
@@ -119,6 +118,7 @@ public class RegController extends Controller {
                 | !isEmailValid(email) | name.equals("") | surname.equals("") | nickname.equals("")
                 | name.equals("") | nickname.equals("") | surname.equals(""))) {
             emailEdit.setError(null);
+            assert getView() != null;
             getView().findViewById(R.id.email_text).getBackground().clearColorFilter();
             passEdit.setError(null);
             getView().findViewById(R.id.password_text).getBackground().clearColorFilter();
@@ -144,34 +144,28 @@ public class RegController extends Controller {
                     if (response.isSuccessful()) {
                         Status post = response.body();
                         assert post != null;
-                        if (post.getStatus() != 201) {
-                            // TODO В зависимости от текста, вывести пользователю ошибку в Error message(outlinedTextField.setError("Error message"))
-                            Snackbar.make(getView(), "Status code: " + post.getStatus() + "\n" + post.getText(), Snackbar.LENGTH_LONG).show();
-                        } else if (post.getStatus() == 201) {
-                            SharedPreferences.Editor e = sp.edit();
-                            e.putBoolean("hasAuthed", true);
-                            e.putString("nickname", nickname);
-                            e.apply();
-                            // Звук
-//                            try {
-//                                mp.reset();
-//                                AssetFileDescriptor afd;
-//                                afd = getApplicationContext().getAssets().openFd("reg_complete.wav");
-//                                mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-//                                mp.prepare();
-//                                mp.start();
-//                            } catch (IllegalStateException er) {
-//                                er.printStackTrace();
-//                            } catch (IOException er) {
-//                                er.printStackTrace();
-//                            }
-                            // Звук
-                            getRouter().pushController(RouterTransaction.with(new HomeController())
-                                    .popChangeHandler(new FlipChangeHandler())
-                                    .pushChangeHandler(new FlipChangeHandler()));
-                            getRouter().popController(RegController.this);
-                        }
+                        SharedPreferences.Editor e = sp.edit();
+                        e.putBoolean("hasAuthed", true);
+                        e.putString("nickname", nickname);
+                        e.apply();
+                        // Звук
+//                        try {
+//                            mp.reset();
+//                            AssetFileDescriptor afd;
+//                            afd = Objects.requireNonNull(getApplicationContext()).getAssets().openFd("reg_complete.wav");
+//                            mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+//                            mp.prepare();
+//                            mp.start();
+//                        } catch (IllegalStateException | IOException er) {
+//                            er.printStackTrace();
+//                        }
+                        // Звук
+                        getRouter().pushController(RouterTransaction.with(new HomeController())
+                                .popChangeHandler(new FlipChangeHandler())
+                                .pushChangeHandler(new FlipChangeHandler()));
+                        getRouter().popCurrentController();
                     } else {
+                        assert getView() != null;
                         Snackbar.make(getView(), response.message(), Snackbar.LENGTH_LONG).show();
                     }
                 }
@@ -179,13 +173,16 @@ public class RegController extends Controller {
                 @Override
                 public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                     // TODO Корректно обработать ошибку
+                    assert getView() != null;
                     Snackbar.make(getView(), t.toString(), Snackbar.LENGTH_LONG).show();
                 }
             });
         } else {
+            assert getView() != null;
             if (errors != null) errors.clear();
             if (name.equals("")) {
-                errors.add(getResources().getString(R.string.empty_name));
+                assert errors != null;
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.empty_name));
                 nameEdit.setError(getResources().getString(R.string.empty_name));
                 getView().findViewById(R.id.name_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
@@ -194,7 +191,7 @@ public class RegController extends Controller {
                 getView().findViewById(R.id.name_text).getBackground().clearColorFilter();
             }
             if (surname.equals("")) {
-                errors.add(getResources().getString(R.string.empty_surname));
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.empty_surname));
                 surnameEdit.setError(getResources().getString(R.string.empty_surname));
                 getView().findViewById(R.id.surname_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
@@ -203,7 +200,7 @@ public class RegController extends Controller {
                 getView().findViewById(R.id.surname_text).getBackground().clearColorFilter();
             }
             if (nickname.equals("")) {
-                errors.add(getResources().getString(R.string.empty_nickname));
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.empty_nickname));
                 nicknameEdit.setError(getResources().getString(R.string.empty_nickname));
                 getView().findViewById(R.id.nickname_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
@@ -212,7 +209,7 @@ public class RegController extends Controller {
                 getView().findViewById(R.id.nickname_text).getBackground().clearColorFilter();
             }
             if (!isPasswordSame(password, passwordRepeat)) {
-                errors.add(getResources().getString(R.string.pass_not_same));
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.pass_not_same));
                 passRepEdit.setError(getResources().getString(R.string.pass_not_same));
                 getView().findViewById(R.id.passwordRepeat_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
@@ -226,7 +223,7 @@ public class RegController extends Controller {
                 getView().findViewById(R.id.password_text).getBackground().clearColorFilter();
             }
             if (!passwordValidate(password)) {
-                errors.add(getResources().getString(R.string.pass_not_corr));
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.pass_not_corr));
                 passEdit.setError(getResources().getString(R.string.pass_not_corr));
                 getView().findViewById(R.id.password_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
@@ -240,7 +237,7 @@ public class RegController extends Controller {
                 getView().findViewById(R.id.passwordRepeat_text).getBackground().clearColorFilter();
             }
             if (!isEmailValid(email)) {
-                errors.add(getResources().getString(R.string.email_not_correct));
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.email_not_correct));
                 emailEdit.setError(getResources().getString(R.string.email_not_correct));
                 getView().findViewById(R.id.email_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
@@ -307,14 +304,12 @@ public class RegController extends Controller {
         final String regex1 = "(.*)(\\d{1,})(.*)";
         final String regex2 = "(.*)([a-z]{1,})(.*)";
         final String regex3 = "(.*)([A-Z]{1,})(.*)";
-        final String regex4 = "(.*)([{}@#$%^&+=*()!?,.~_]{1,})(.*)";
-        final String regex5 = ".{8,}";
+        final String regex4 = ".{8,}";
 
         return Pattern.matches(regex1, password) &
                 Pattern.matches(regex2, password) &
                 Pattern.matches(regex3, password) &
-                Pattern.matches(regex4, password) &
-                Pattern.matches(regex5, password);
+                Pattern.matches(regex4, password);
     }
 
     private boolean isPasswordSame(String password1, String password2) {
