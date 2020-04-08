@@ -4,26 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +27,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
@@ -43,7 +37,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BundleBuilder;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -52,9 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,7 +64,7 @@ public class ProfileController extends Controller {
     @BindView(R.id.postRecycler)
     public RecyclerView postRecycler;
     private PostAdapter postAdapter;
-    LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
 
     private ImageView avatar;
     private SwipeRefreshLayout swipeContainer;
@@ -86,6 +78,16 @@ public class ProfileController extends Controller {
     private static final int CAMERA_REQUEST = 100;
     private static final int PICK_IMAGE = 101;
     private static final int RESULT_OK = -1;
+
+    private int photoId;
+
+    public int getPhotoId() {
+        return photoId;
+    }
+
+    private void setPhotoId(int photoId) {
+        this.photoId = photoId;
+    }
 
     private SharedPreferences sp;
 
@@ -145,7 +147,7 @@ public class ProfileController extends Controller {
                                 startActivityForResult(intent, CAMERA_REQUEST);
                                 break;
                             case 2:
-                                getRouter().pushController(RouterTransaction.with(new PhotoController())
+                                getRouter().pushController(RouterTransaction.with(new PhotoController(photoId))
                                         .popChangeHandler(new VerticalChangeHandler(false))
                                         .pushChangeHandler(new VerticalChangeHandler()));
                                 break;
@@ -153,7 +155,33 @@ public class ProfileController extends Controller {
                                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
                                         .setMessage(R.string.delete_question)
                                         .setPositiveButton(R.string.delete, (dialog1, which1) -> {
-                                            // TODO Корректно удалить фотографию
+                                            if (photoId == 2) {
+                                                return;
+                                            }
+                                            Call<Status> call = DataManager.getInstance().deletePhoto(photoId);
+                                            call.enqueue(new Callback<Status>() {
+                                                @Override
+                                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                                    String nicknameSP = sp.getString("nickname", null);
+                                                    User user = new User();
+                                                    user.setPhotoId(2);
+                                                    Call<Status> userCall = DataManager.getInstance().editUser(nicknameSP, user);
+                                                    userCall.enqueue(new Callback<Status>() {
+                                                        @Override
+                                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                                            setPhotoId(2);
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                }
+                                            });
                                         })
                                         .setNegativeButton(R.string.cancel, null)
                                         .show();
@@ -172,7 +200,10 @@ public class ProfileController extends Controller {
 
         fabAdd = view.findViewById(R.id.fab);
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
-        ;
+        fabAdd.setOnClickListener(v -> {
+                    getRouter().pushController(RouterTransaction.with(new PostController()));
+                }
+        );
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
@@ -206,15 +237,18 @@ public class ProfileController extends Controller {
                     assert user != null;
                     nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     nickname.setText(user.getNickname());
+                    setPhotoId(user.getPhotoId());
                     Call<Photo> photoCall = DataManager.getInstance().getPhoto(user.getPhotoId());
                     photoCall.enqueue(new Callback<Photo>() {
                         @Override
                         public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
                             assert response.body() != null;
-                            String photo = response.body().getPhoto();
-                            byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
-                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            avatar.setImageBitmap(decodedByte);
+                            if (response.isSuccessful()) {
+                                String photo = response.body().getPhoto();
+                                byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                avatar.setImageBitmap(decodedByte);
+                            }
                             progressBar.setVisibility(View.INVISIBLE);
                             swipeContainer.setVisibility(View.VISIBLE);
                             fabAdd.setVisibility(View.VISIBLE);

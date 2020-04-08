@@ -1,4 +1,6 @@
 # Импортируем нужные библиотеки
+from base64 import decodebytes
+
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
 
@@ -84,7 +86,20 @@ class ChatResource(Resource):
             chat.count_new_messages = args['count_new_messages']
         if args['count_messages']:
             chat.count_messages = args['count_messages']
-        # TODO Менять фото
+        if args['photo']:
+            if chat.photo_id != 2:
+                photo = session.query(Photo).filter(Photo.id == chat.photo_id).first()
+                photo.data = decodebytes(args['photo'].encode())
+            else:
+                # Создаём фото
+                photo = Photo(
+                    data=decodebytes(args['photo'].encode())
+                )
+                session.add(photo)
+                session.commit()
+                chat.photo_id = photo.id
+        if args['photo_id']:
+            chat.photo_id = args['photo_id']
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited'})
@@ -96,6 +111,7 @@ class ChatResource(Resource):
         # Создаём сессию в БД и получаем чат, а затем его удаляем
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
+        user = session.query(User).filter()
         session.delete(chat)
         session.commit()
         return jsonify({'status': 200,
@@ -111,11 +127,11 @@ class ChatsListResource(Resource):
         # Создаём сессию в БД и получаем чаты
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()
-        chats = session.query(Chat).filter(Chat.user_id == user.id).all()
+        chats = user.chats
         return jsonify({'chats': [chat.to_dict(
             only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
                   'last_message', 'count_new_messages', 'count_messages',
-                  'created_date', 'user_id', 'photo_id')) for chat in chats]})
+                  'created_date', 'photo_id')) for chat in chats]})
 
 
 class ChatCreateResource(Resource):
@@ -140,7 +156,7 @@ class ChatCreateResource(Resource):
         # Дата создания чата
         self.parser.add_argument('created_date', required=False)
         # Чат user-a
-        self.parser.add_argument('user_id', required=True, type=int)
+        self.parser.add_argument('user_nickname', required=True, type=str)
         # Фото чата
         self.parser.add_argument('photo_id', required=False, type=int)
 
@@ -154,14 +170,15 @@ class ChatCreateResource(Resource):
                             'text': "Empty request"})
         # Создаём сессию в БД
         session = db_session.create_session()
+        abort_if_user_not_found(args['user_nickname'])
+        user = session.query(User).filter(User.nickname == args['user_nickname']).first()
         # Создаём чат
         chat = Chat(
             name=args['name'],
             type_of_chat=args['type_of_chat'],
             status=args['status'],
             last_time_message=args['last_time_message'],
-            last_message=args['last_message'],
-            user_id=args['user_id']
+            last_message=args['last_message']
         )
         # В зависимости от аргументов добавляем в чат новые
         if args['photo_id']:
@@ -172,6 +189,7 @@ class ChatCreateResource(Resource):
             chat.count_messages = args['count_messages']
         # Добавляем в БД чат
         session.add(chat)
+        user.chats.append(chat)
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{chat.id} created'})

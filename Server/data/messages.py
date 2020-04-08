@@ -33,10 +33,6 @@ class Message(SqlAlchemyBase, SerializerMixin):
     author_id = sqlalchemy.Column(sqlalchemy.Integer,
                                   sqlalchemy.ForeignKey("users.id"))
 
-    # Кому отправили
-    to = sqlalchemy.Column(sqlalchemy.String,
-                           nullable=False)
-
     # Связь с чатом
     chat = orm.relation("Chat")
     chat_id = sqlalchemy.Column(sqlalchemy.Integer,

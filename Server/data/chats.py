@@ -6,6 +6,13 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
+association_table = sqlalchemy.Table('association', SqlAlchemyBase.metadata,
+                                     sqlalchemy.Column('user', sqlalchemy.Integer,
+                                                       sqlalchemy.ForeignKey('users.id')),
+                                     sqlalchemy.Column('chat', sqlalchemy.Integer,
+                                                       sqlalchemy.ForeignKey('chats.id'))
+                                     )
+
 
 class Chat(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'chats'
@@ -31,11 +38,6 @@ class Chat(SqlAlchemyBase, SerializerMixin):
     # Дата создания чата в формате YYYY-MM-DD HH:MM:SS
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
-
-    # Связь с пользователем и его foreign key
-    user = orm.relation("User")
-    user_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                sqlalchemy.ForeignKey("users.id"))
 
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")

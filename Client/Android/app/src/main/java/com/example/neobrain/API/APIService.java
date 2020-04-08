@@ -89,6 +89,11 @@ public interface APIService {
             @Path("photo_id") Integer photo_id
     );
 
+    @DELETE("photos/{photo_id}")
+    Call<Status> deletePhoto(
+            @Path("photo_id") Integer photo_id
+    );
+
     @GET("posts/{nickname}")
     Call<PostModel> getPosts(
             @Path("nickname") String nickname

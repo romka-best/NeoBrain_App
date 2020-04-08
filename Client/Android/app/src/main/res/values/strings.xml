@@ -33,4 +33,6 @@
     <string name="not_correct">Некорректно</string>
     <string name="email_not_correct">Такой почты не существует</string>
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
+    <string name="loading">Идёт загрузка</string>
+    <string name="new_post">Новый пост</string>
 </resources>

@@ -32,6 +32,22 @@ public class Post {
     @Expose
     private Integer userId;
 
+    @SerializedName("user_nickname")
+    @Expose
+    private String userNickname;
+
+    public Post() {
+
+    }
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
     public Integer getId() {
         return id;
     }

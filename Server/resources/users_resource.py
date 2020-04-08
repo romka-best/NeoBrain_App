@@ -1,7 +1,6 @@
 # Импортируем библиотеки
-import array
 import datetime
-from base64 import decodebytes, encodebytes
+from base64 import decodebytes
 
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
@@ -75,6 +74,8 @@ class UserResource(Resource):
         self.parser.add_argument('last_seen', required=False, type=str)
         # Фото пользователя
         self.parser.add_argument('photo', required=False, type=str)
+        # id Фото пользователя
+        self.parser.add_argument('photo_id', required=False, type=int)
 
     # @login_required
     # Получаем пользователя по егу nickname
@@ -155,8 +156,19 @@ class UserResource(Resource):
         if args['last_seen']:
             user.last_seen = args['last_seen']
         if args['photo']:
-            photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
-            photo.data = decodebytes(args['photo'].encode())
+            if user.photo_id != 2:
+                photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
+                photo.data = decodebytes(args['photo'].encode())
+            else:
+                # Создаём фото
+                photo = Photo(
+                    data=decodebytes(args['photo'].encode())
+                )
+                session.add(photo)
+                session.commit()
+                user.photo_id = photo.id
+        if args['photo_id']:
+            user.photo_id = args['photo_id']
         # Обновляем дату модификации пользователя
         user.modified_date = datetime.datetime.now()
         session.commit()

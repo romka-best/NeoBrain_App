@@ -96,7 +96,10 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
                                       default=datetime.datetime.now)
 
     # Связь с Chat
-    chats = orm.relation("Chat", back_populates='user')
+    chats = orm.relation("Chat",
+                         secondary="association",
+                         backref="users")
+
     # Связь с Message
     messages_from = orm.relation("Message", back_populates='author')
     # Связь с Photo

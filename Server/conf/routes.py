@@ -1,7 +1,7 @@
 # Импортируем нужные библиотеки
 from resources.users_resource import UserResource, UsersListResource, UserLoginResource
 from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
-from resources.photos_resource import PhotoResource
+from resources.photos_resource import PhotoResource, PhotoCreateResource
 from resources.posts_resource import PostResource, PostCreateResource, PostsListResource
 from flask_restful import Api
 
@@ -23,6 +23,7 @@ def generate_routes(app):
 
     # Ресурсы с Photo
     api.add_resource(PhotoResource, '/api/photos/<int:photo_id>')
+    api.add_resource(PhotoCreateResource, '/api/photos')
 
     # Ресурсы с Post
     api.add_resource(PostResource, '/api/posts/<int:post_id>')

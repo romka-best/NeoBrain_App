@@ -34,4 +34,6 @@
     <string name="not_correct">Not correct</string>
     <string name="email_not_correct">E-mail is not correct</string>
     <string name="errors_with_connection">problems with your Internet connection</string>
+    <string name="loading">Loading</string>
+    <string name="new_post">new_post</string>
 </resources>
