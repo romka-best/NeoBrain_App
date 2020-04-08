@@ -79,6 +79,7 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:textColor="@color/colorText"
             android:maxLength="15"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -99,13 +100,14 @@
         app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="@+id/passwordRepeat"
         app:layout_constraintTop_toBottomOf="@+id/passwordRepeat"
-        app:startIconDrawable="@android:drawable/ic_dialog_email"
+        app:startIconDrawable="@drawable/ic_email"
         app:startIconTint="@color/colorText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorText" />
 
@@ -135,6 +137,7 @@
             android:id="@+id/passwordRepeat_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textPassword"
             android:textColor="@color/colorText" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -162,6 +165,7 @@
             android:id="@+id/password_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textPassword"
             android:textColor="@color/colorText" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -188,6 +192,7 @@
             android:id="@+id/nickname_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textPersonName"
             android:textColor="@color/colorText"
             android:maxLength="20"/>
@@ -215,6 +220,7 @@
             android:id="@+id/surname_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textPersonName"
             android:textColor="@color/colorText"
             android:maxLength="15"/>
