@@ -67,18 +67,18 @@ public class ChatController extends Controller {
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
-            setUp();
+            getChats();
             swipeContainer.setRefreshing(false);
         });
         swipeContainer.setColorSchemeResources(
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
-        setUp();
+        getChats();
         return view;
     }
 
-    private void setUp() {
+    private void getChats() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
@@ -92,7 +92,7 @@ public class ChatController extends Controller {
                     List<Chat> chats = response.body().getChats();
                     ArrayList<Chat> mChats = new ArrayList<>();
                     for (Chat chat : chats) {
-                        mChats.add(new Chat(chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
+                        mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
                     }
                     shimmerViewContainer.stopShimmer();
                     shimmerViewContainer.setVisibility(View.GONE);

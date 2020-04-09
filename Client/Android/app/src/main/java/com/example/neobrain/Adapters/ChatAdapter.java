@@ -159,21 +159,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public static class EmptyViewHolder extends BaseViewHolder {
-        @BindView(R.id.tv_message)
-        TextView messageTextView;
-        @BindView(R.id.buttonRetry)
-        TextView buttonRetry;
+        @BindView(R.id.emoji)
+        ImageView emoji;
+        @BindView(R.id.titlePost)
+        TextView titlePost;
 
         EmptyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            // buttonRetry.setOnClickListener(v -> mCallback.onEmptyViewRetryClick());
-            buttonRetry.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Snackbar.make(v, R.string.empty_screen, BaseTransientBottomBar.LENGTH_LONG).show();
-                }
-            });
         }
 
         @Override

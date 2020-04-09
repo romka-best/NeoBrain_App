@@ -39,7 +39,8 @@ public class Chat {
     @Expose
     private Integer userId;
 
-    public Chat(String lastMessage, String lastTimeMessage, String name, Integer photoId) {
+    public Chat(Integer id, String lastMessage, String lastTimeMessage, String name, Integer photoId) {
+        this.id = id;
         this.lastMessage = lastMessage;
         this.lastTimeMessage = lastTimeMessage;
         this.name = name;

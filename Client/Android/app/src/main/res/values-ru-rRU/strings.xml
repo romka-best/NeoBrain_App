@@ -40,4 +40,6 @@
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
     <string name="loading">Идёт загрузка</string>
     <string name="new_post">Новый пост</string>
+    <string name="empty_chat">На данный момент у вас нет чатов. Исправьте это</string>
+    <string name="empty_lenta">Лента пустая. Подпишитесь на кого-то или на что-то</string>
 </resources>

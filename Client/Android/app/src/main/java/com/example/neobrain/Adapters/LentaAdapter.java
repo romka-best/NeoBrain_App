@@ -18,8 +18,6 @@ import com.example.neobrain.API.model.Post;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,16 +28,15 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
-public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private static final String TAG = "PostAdapter";
+public class LentaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    private static final String TAG = "LentaAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
 
-    private List<Post> mPostList;
+    private List<Post> mLentaList;
 
-    public PostAdapter(List<Post> postList) {
-        mPostList = postList;
+    public LentaAdapter(List<Post> lentaList) {
+        mLentaList = lentaList;
     }
 
     @NonNull
@@ -47,13 +44,13 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
-                return new ViewHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item_post, parent, false)
+                return new LentaAdapter.ViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item_lenta, parent, false)
                 );
             case VIEW_TYPE_EMPTY:
             default:
-                return new EmptyViewHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_empty_item_post, parent, false)
+                return new PostAdapter.EmptyViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_empty_item_lenta, parent, false)
                 );
         }
     }
@@ -65,7 +62,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mPostList != null && mPostList.size() > 0) {
+        if (mLentaList != null && mLentaList.size() > 0) {
             return VIEW_TYPE_NORMAL;
         } else {
             return VIEW_TYPE_EMPTY;
@@ -74,15 +71,15 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mPostList != null && mPostList.size() > 0) {
-            return mPostList.size();
+        if (mLentaList != null && mLentaList.size() > 0) {
+            return mLentaList.size();
         } else {
             return 1;
         }
     }
 
     public void addItems(List<Post> postList) {
-        mPostList.addAll(postList);
+        mLentaList.addAll(postList);
         notifyDataSetChanged();
     }
 
@@ -115,7 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         public void onBind(int position) {
             super.onBind(position);
-            final Post mPost = mPostList.get(position);
+            final Post mPost = mLentaList.get(position);
 
             if (mPost.getPhotoId() != null) {
                 Call<Photo> call = DataManager.getInstance().getPhoto(mPost.getPhotoId());
@@ -146,9 +143,6 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             if (mPost.getCreatedDate() != null) {
                 timeTextView.setText(mPost.getCreatedDate());
             }
-            itemView.setOnClickListener(v -> {
-                // TODO: добавить childController (PostController)
-            });
         }
     }
 
@@ -161,7 +155,6 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         EmptyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            // buttonRetry.setOnClickListener(v -> mCallback.onEmptyViewRetryClick());
         }
 
         @Override

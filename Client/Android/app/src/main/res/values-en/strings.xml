@@ -40,4 +40,6 @@
     <string name="errors_with_connection">Problems with your Internet connection</string>
     <string name="loading">Loading</string>
     <string name="new_post">new_post</string>
+    <string name="empty_chat">You don\'t have any chats at the moment. Fix this</string>
+    <string name="empty_lenta">The feed is empty. Subscribe to someone or something</string>
 </resources>
