@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 
+// Класс для анимации контроллера (Используется для работы с фотографиями)
 public class ScaleFadeChangeHandler extends AnimatorChangeHandler {
 
     public ScaleFadeChangeHandler() {

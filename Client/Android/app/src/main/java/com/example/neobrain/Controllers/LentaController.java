@@ -1,5 +1,6 @@
 package com.example.neobrain.Controllers;
 
+// Импортируем нужные библиотеки
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -13,28 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
-import com.example.neobrain.API.model.Post;
-import com.example.neobrain.API.model.PostModel;
-import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.Adapters.LentaAdapter;
-import com.example.neobrain.Adapters.PostAdapter;
-import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
+// Контроллер ленты
 public class LentaController extends Controller {
     @BindView(R.id.lentaRecycler)
     public RecyclerView lentaRecycler;

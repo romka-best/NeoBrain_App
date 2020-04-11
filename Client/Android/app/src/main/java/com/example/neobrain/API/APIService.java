@@ -1,7 +1,6 @@
 package com.example.neobrain.API;
 
-import androidx.room.Delete;
-
+// Импортируем нужные библиотеки
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.Photo;
@@ -11,20 +10,15 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 
-import java.util.List;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
+// Интерфейс для работы с API NeoBrain
 public interface APIService {
 
     @GET("users/{nickname}")

@@ -6,6 +6,13 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
+# association_table = sqlalchemy.Table('photo_association', SqlAlchemyBase.metadata,
+#                                      sqlalchemy.Column('user', sqlalchemy.Integer,
+#                                                        sqlalchemy.ForeignKey('users.id')),
+#                                      sqlalchemy.Column('photo', sqlalchemy.Integer,
+#                                                        sqlalchemy.ForeignKey('photos.id'))
+#                                      )
+
 
 class Photo(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'photos'

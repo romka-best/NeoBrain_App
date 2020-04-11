@@ -97,8 +97,13 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     # Связь с Chat
     chats = orm.relation("Chat",
-                         secondary="association",
+                         secondary="chat_association",
                          backref="users")
+
+    # Связь с People
+    people = orm.relation("People",
+                          secondary="people_association",
+                          backref="users")
 
     # Связь с Message
     messages_from = orm.relation("Message", back_populates='author')

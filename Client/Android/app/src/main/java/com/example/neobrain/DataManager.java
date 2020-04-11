@@ -1,6 +1,7 @@
 package com.example.neobrain;
 
-import com.example.neobrain.API.APIConfig;
+// Импортируем нужные библиотеки
+
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Chat;
@@ -12,11 +13,9 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 
-import java.util.List;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
+// Класс для работы с API NeoBrain сервера
 public class DataManager {
     private static DataManager instance;
     private APIService mAPIService;

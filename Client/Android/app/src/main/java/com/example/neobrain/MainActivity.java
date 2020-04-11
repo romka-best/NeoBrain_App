@@ -1,11 +1,11 @@
 package com.example.neobrain;
 
+// Импортируем нужные библиотеки
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,14 +14,13 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.Controllers.AuthController;
 import com.example.neobrain.Controllers.HomeController;
-import com.example.neobrain.Controllers.ProfileController;
-import com.example.neobrain.changehandler.FlipChangeHandler;
 
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+// Создаём единственную активность на всё приложение
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.controller_container)
@@ -30,19 +29,22 @@ public class MainActivity extends AppCompatActivity {
     private Router router;
 
     public static final String MY_SETTINGS = "my_settings";
-    SharedPreferences sp; // TODO Сделать так, чтобы везде было доступно
+    SharedPreferences sp;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Перед запуском приложения мы загружаем SplashTheme, для красивой загрузки.
+        // Здесь же мы запускаем тему самого приложения
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
 
+        // Инициализируем роутер
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
+            // Если пользователь уже авторизовался, то запускаем сразу HomeController, иначе AuthController
             sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                     Context.MODE_PRIVATE);
             boolean hasVisited = sp.getBoolean("hasAuthed", false);

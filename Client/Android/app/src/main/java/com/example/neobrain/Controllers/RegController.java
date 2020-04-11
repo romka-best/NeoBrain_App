@@ -1,9 +1,9 @@
 package com.example.neobrain.Controllers;
 
+// Импортируем нужные библиотеки
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
@@ -29,7 +29,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +42,7 @@ import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
+// Контроллер регистрации
 public class RegController extends Controller {
     final MediaPlayer mp = new MediaPlayer();
 
@@ -160,10 +160,10 @@ public class RegController extends Controller {
 //                            er.printStackTrace();
 //                        }
                         // Звук
+                        getRouter().popCurrentController();
                         getRouter().pushController(RouterTransaction.with(new HomeController())
                                 .popChangeHandler(new FlipChangeHandler())
                                 .pushChangeHandler(new FlipChangeHandler()));
-                        getRouter().popCurrentController();
                     } else {
                         assert getView() != null;
                         Snackbar.make(getView(), response.message(), Snackbar.LENGTH_LONG).show();

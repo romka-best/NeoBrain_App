@@ -1,9 +1,12 @@
 package com.example.neobrain.Controllers;
 
+// Импортируем нужные библиотеки
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,6 +15,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,8 +42,8 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +63,7 @@ import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
+// Контроллер для работы с Профилем
 @SuppressLint("ValidController")
 public class ProfileController extends Controller {
 
@@ -69,7 +75,10 @@ public class ProfileController extends Controller {
     private SwipeRefreshLayout swipeContainer;
     private TextView nameAndSurname;
     private TextView nickname;
+    private TextView followersCount;
+    private TextView subscribersCount;
     private FloatingActionButton fabAdd;
+    private ExtendedFloatingActionButton fabEdit;
     private ProgressBar progressBar;
     private ImageView emoji;
     private TextView textError;
@@ -192,17 +201,29 @@ public class ProfileController extends Controller {
 
         nameAndSurname = view.findViewById(R.id.name_surname);
         nickname = view.findViewById(R.id.nickname);
+        followersCount = view.findViewById(R.id.followers_count);
+        subscribersCount = view.findViewById(R.id.subscribe_count);
 
         progressBar = view.findViewById(R.id.progress_circular);
         emoji = view.findViewById(R.id.emoji);
         textError = view.findViewById(R.id.titleError);
 
-        fabAdd = view.findViewById(R.id.fab);
+        fabAdd = view.findViewById(R.id.fabAdd);
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
                     getRouter().pushController(RouterTransaction.with(new PostController()));
                 }
         );
+
+        fabEdit = view.findViewById(R.id.fabEdit);
+        fabEdit.setIconTint(ColorStateList.valueOf(Color.argb(255, 255, 255, 255)));
+        fabEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
@@ -219,6 +240,7 @@ public class ProfileController extends Controller {
         getPosts();
         swipeContainer.setVisibility(View.INVISIBLE);
         fabAdd.setVisibility(View.INVISIBLE);
+        fabEdit.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         return view;
     }
@@ -236,6 +258,8 @@ public class ProfileController extends Controller {
                     assert user != null;
                     nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     nickname.setText(user.getNickname());
+                    followersCount.setText(user.getFollowersCount().toString());
+                    subscribersCount.setText(user.getSubscriptionsCount().toString());
                     setPhotoId(user.getPhotoId());
                     Call<Photo> photoCall = DataManager.getInstance().getPhoto(user.getPhotoId());
                     photoCall.enqueue(new Callback<Photo>() {
@@ -251,6 +275,7 @@ public class ProfileController extends Controller {
                             progressBar.setVisibility(View.INVISIBLE);
                             swipeContainer.setVisibility(View.VISIBLE);
                             fabAdd.setVisibility(View.VISIBLE);
+                            fabEdit.setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -296,7 +321,6 @@ public class ProfileController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
-
             }
         });
     }
@@ -366,5 +390,11 @@ public class ProfileController extends Controller {
                     }
                 }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.post_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

@@ -36,6 +36,7 @@ import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
+// Контроллер чатов
 public class ChatController extends Controller {
     @BindView(R.id.messagesRecycler)
     public RecyclerView messagesRecycler;

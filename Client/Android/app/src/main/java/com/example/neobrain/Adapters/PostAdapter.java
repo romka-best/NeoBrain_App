@@ -1,10 +1,13 @@
 package com.example.neobrain.Adapters;
 
+// Импортируем нужные библиотеки
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,8 +21,6 @@ import com.example.neobrain.API.model.Post;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
+// Адаптер постов
 public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PostAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
@@ -133,7 +134,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                     @Override
                     public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
-                        Log.e("E", "Чёрт...");
+                        Log.e(TAG, "Чёрт...");
                     }
                 });
             }
@@ -146,9 +147,6 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             if (mPost.getCreatedDate() != null) {
                 timeTextView.setText(mPost.getCreatedDate());
             }
-            itemView.setOnClickListener(v -> {
-                // TODO: добавить childController (PostController)
-            });
         }
     }
 
@@ -161,7 +159,6 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         EmptyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            // buttonRetry.setOnClickListener(v -> mCallback.onEmptyViewRetryClick());
         }
 
         @Override

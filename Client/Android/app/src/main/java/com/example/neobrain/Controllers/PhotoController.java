@@ -1,5 +1,6 @@
 package com.example.neobrain.Controllers;
 
+// Импортируем нужные библиотеки
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Контроллер для показа фотографии
 @SuppressLint("ValidController")
 public class PhotoController extends Controller {
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {

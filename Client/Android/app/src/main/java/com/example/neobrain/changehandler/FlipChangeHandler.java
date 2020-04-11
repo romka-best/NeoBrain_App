@@ -3,7 +3,9 @@ package com.example.neobrain.changehandler;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+
 import androidx.annotation.NonNull;
+
 import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 
+// Клас для анимации переворачивания контроллера
 public class FlipChangeHandler extends AnimatorChangeHandler {
 
     private static final long DEFAULT_ANIMATION_DURATION = 300;
@@ -52,7 +55,8 @@ public class FlipChangeHandler extends AnimatorChangeHandler {
         this.animationDuration = animationDuration;
     }
 
-    @Override @NonNull
+    @Override
+    @NonNull
     protected Animator getAnimator(@NonNull ViewGroup container, View from, View to, boolean isPush, boolean toAddedToContainer) {
         AnimatorSet animatorSet = new AnimatorSet();
 

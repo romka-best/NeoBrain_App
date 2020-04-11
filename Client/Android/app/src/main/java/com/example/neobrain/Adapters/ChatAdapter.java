@@ -1,5 +1,6 @@
 package com.example.neobrain.Adapters;
 
+// Импортируем нужные библиотеки
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -13,14 +14,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,15 +28,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
+// Адаптер чатов
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "ChatAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<Chat> mChatsList;
-    private Callback mCallback;
 
     public ChatAdapter(ArrayList<Chat> mChatsList) {
         this.mChatsList = mChatsList;
@@ -93,7 +90,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public void setCallback(Callback callback) {
-        mCallback = callback;
     }
 
     public class ViewHolder extends BaseViewHolder {

@@ -27,6 +27,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,12 +98,12 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     }
 
     @Override
-    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+    public boolean onStartNestedScroll(@NotNull View child, @NotNull View target, int nestedScrollAxes) {
         return (nestedScrollAxes & View.SCROLL_AXIS_VERTICAL) != 0;
     }
 
     @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+    public void onNestedPreScroll(@NotNull View target, int dx, int dy, @NotNull int[] consumed) {
         // if we're in a drag gesture and the user reverses up the we should take those events
         if (draggingDown && dy > 0 || draggingUp && dy < 0) {
             dragScale(dy);
@@ -110,13 +112,13 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     }
 
     @Override
-    public void onNestedScroll(View target, int dxConsumed, int dyConsumed,
+    public void onNestedScroll(@NotNull View target, int dxConsumed, int dyConsumed,
                                int dxUnconsumed, int dyUnconsumed) {
         dragScale(dyUnconsumed);
     }
 
     @Override
-    public void onStopNestedScroll(View child) {
+    public void onStopNestedScroll(@NotNull View child) {
         if (Math.abs(totalDrag) >= dragDismissDistance) {
             dispatchDismissCallback();
         } else { // settle back to natural position
@@ -135,12 +137,12 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     }
 
     @Override
-    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+    public boolean onNestedFling(@NotNull View target, float velocityX, float velocityY, boolean consumed) {
         return false;
     }
 
     @Override
-    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
+    public boolean onNestedPreFling(@NotNull View target, float velocityX, float velocityY) {
         return false;
     }
 
@@ -150,7 +152,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     }
 
     @Override
-    public void onNestedScrollAccepted(View child, View target, int axes) {
+    public void onNestedScrollAccepted(@NotNull View child, @NotNull View target, int axes) {
     }
 
     @Override

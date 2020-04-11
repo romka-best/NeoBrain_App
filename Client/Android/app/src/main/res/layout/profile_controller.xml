@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -19,6 +19,20 @@
         app:borderWidth="0dp"
         app:layout_behavior=".util.FAB_Float_on_Scroll"
         app:srcCompat="@drawable/ic_add" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@color/colorText"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        app:icon="@drawable/ic_edit"
+        android:layout_gravity="bottom|start"
+        tools:layout_editor_absoluteX="167dp"
+        tools:layout_editor_absoluteY="262dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -428,6 +442,57 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat1"
                         tools:listitem="@layout/recycler_view_item_post" />
+
+                    <TextView
+                        android:id="@+id/followers_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text=""
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="@+id/avatar_card"
+                        app:layout_constraintTop_toBottomOf="@+id/avatar_card" />
+
+                    <TextView
+                        android:id="@+id/followers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/followers"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="@+id/followers_count"
+                        app:layout_constraintHorizontal_bias="0.516"
+                        app:layout_constraintStart_toStartOf="@+id/followers_count"
+                        app:layout_constraintTop_toBottomOf="@+id/followers_count" />
+
+                    <TextView
+                        android:id="@+id/subscribe_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="14dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text=""
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="@+id/avatar_card"
+                        app:layout_constraintTop_toBottomOf="@+id/avatar_card" />
+
+                    <TextView
+                        android:id="@+id/subscribe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/subscribers"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="@+id/subscribe_count"
+                        app:layout_constraintStart_toStartOf="@+id/subscribe_count"
+                        app:layout_constraintTop_toBottomOf="@+id/subscribe_count" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

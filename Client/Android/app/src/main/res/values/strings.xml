@@ -14,6 +14,7 @@
     <string name="password_forget">Забыли пароль?</string>
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
     <string name="delete_question">Удалить фотографию?</string>
     <string name="messages">Сообщения</string>
     <string name="achievements">Достижения</string>
@@ -41,4 +42,9 @@
     <string name="new_post">Новый пост</string>
     <string name="empty_chat">На данный момент у вас нет чатов. Исправьте это</string>
     <string name="empty_lenta">Лента пустая. Подпишитесь на кого-то или на что-то</string>
+    <string name="empty_apps">Приложений пока нет</string>
+    <string name="your_apps">Ваши</string>
+    <string name="recommended_apps">Рекомендуемые</string>
+    <string name="followers">Подписчиков</string>
+    <string name="subscribers">Подписок</string>
 </resources>

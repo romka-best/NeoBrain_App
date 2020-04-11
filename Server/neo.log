@@ -1,0 +1,132 @@
+
+2020-04-10 21:07:26,082 DEBUG NeoBrain START
+2020-04-10 21:07:56,480 DEBUG routes Add API resources
+2020-04-10 21:07:56,482 DEBUG NeoBrain START
+2020-04-10 21:09:07,528 DEBUG routes Add API resources
+2020-04-10 21:09:07,530 DEBUG routes Added API resources
+2020-04-10 21:09:07,530 DEBUG NeoBrain START
+2020-04-10 22:20:34,769 DEBUG routes Add API resources
+2020-04-10 22:20:34,770 DEBUG routes Added API resources
+2020-04-10 22:20:34,771 DEBUG NeoBrain START
+2020-04-10 22:20:38,962 ERROR flask.app Exception on /api/users/Test_Nickname [GET]
+Traceback (most recent call last):
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask_restful\__init__.py", line 468, in wrapper
+    resp = resource(*args, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\views.py", line 88, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask_restful\__init__.py", line 583, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "C:\NeoBrain\Server\resources\users_resource.py", line 86, in get
+    abort_if_user_not_found(user_nickname)
+  File "C:\NeoBrain\Server\resources\users_resource.py", line 16, in abort_if_user_not_found
+    user = session.query(User).filter(User.nickname == user_nickname).first()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\session.py", line 1399, in query
+    return self._query_cls(entities, self, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 154, in __init__
+    self._set_entities(entities)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 186, in _set_entities
+    self._set_entity_selectables(self._entities)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 216, in _set_entity_selectables
+    ent.setup_entity(*d[entity])
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 3731, in setup_entity
+    self._with_polymorphic = ext_info.with_polymorphic_mappers
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\util\langhelpers.py", line 767, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 2015, in _with_polymorphic_mappers
+    configure_mappers()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 3033, in configure_mappers
+    mapper._post_configure_properties()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 1832, in _post_configure_properties
+    prop.init()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\interfaces.py", line 183, in init
+    self.do_init()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\relationships.py", line 1659, in do_init
+    self._generate_backref()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\relationships.py", line 1849, in _generate_backref
+    (backref_key, self, m))
+sqlalchemy.exc.ArgumentError: Error creating backref 'users' on relationship 'User.photos': property of that name exists on mapper 'Mapper|Photo|photos'
+2020-04-10 22:20:38,963 ERROR flask.app Exception on /api/posts/Test_Nickname [GET]
+Traceback (most recent call last):
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask_restful\__init__.py", line 468, in wrapper
+    resp = resource(*args, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\views.py", line 88, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask_restful\__init__.py", line 583, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "C:\NeoBrain\Server\resources\posts_resource.py", line 54, in get
+    abort_if_user_not_found(user_nickname)
+  File "C:\NeoBrain\Server\resources\users_resource.py", line 16, in abort_if_user_not_found
+    user = session.query(User).filter(User.nickname == user_nickname).first()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\session.py", line 1399, in query
+    return self._query_cls(entities, self, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 154, in __init__
+    self._set_entities(entities)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 186, in _set_entities
+    self._set_entity_selectables(self._entities)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 216, in _set_entity_selectables
+    ent.setup_entity(*d[entity])
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 3731, in setup_entity
+    self._with_polymorphic = ext_info.with_polymorphic_mappers
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\util\langhelpers.py", line 767, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 2015, in _with_polymorphic_mappers
+    configure_mappers()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 3030, in configure_mappers
+    raise e
+sqlalchemy.exc.InvalidRequestError: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper|User|users'. Original exception was: Error creating backref 'users' on relationship 'User.photos': property of that name exists on mapper 'Mapper|Photo|photos'
+2020-04-10 22:20:38,964 ERROR flask.app Exception on /api/posts/Test_Nickname [GET]
+Traceback (most recent call last):
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask_restful\__init__.py", line 468, in wrapper
+    resp = resource(*args, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask\views.py", line 88, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\flask_restful\__init__.py", line 583, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "C:\NeoBrain\Server\resources\posts_resource.py", line 54, in get
+    abort_if_user_not_found(user_nickname)
+  File "C:\NeoBrain\Server\resources\users_resource.py", line 16, in abort_if_user_not_found
+    user = session.query(User).filter(User.nickname == user_nickname).first()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\session.py", line 1399, in query
+    return self._query_cls(entities, self, **kwargs)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 154, in __init__
+    self._set_entities(entities)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 186, in _set_entities
+    self._set_entity_selectables(self._entities)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 216, in _set_entity_selectables
+    ent.setup_entity(*d[entity])
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\query.py", line 3731, in setup_entity
+    self._with_polymorphic = ext_info.with_polymorphic_mappers
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\util\langhelpers.py", line 767, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 2015, in _with_polymorphic_mappers
+    configure_mappers()
+  File "C:\Users\romar\Anaconda3\lib\site-packages\sqlalchemy\orm\mapper.py", line 3030, in configure_mappers
+    raise e
+sqlalchemy.exc.InvalidRequestError: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper|User|users'. Original exception was: Error creating backref 'users' on relationship 'User.photos': property of that name exists on mapper 'Mapper|Photo|photos'
+2020-04-10 22:22:20,604 DEBUG routes Add API resources
+2020-04-10 22:22:20,606 DEBUG routes Added API resources
+2020-04-10 22:22:20,607 DEBUG NeoBrain START
+2020-04-10 22:23:03,829 DEBUG routes Add API resources
+2020-04-10 22:23:03,831 DEBUG routes Added API resources
+2020-04-10 22:23:03,831 DEBUG NeoBrain START
+2020-04-10 22:23:28,094 DEBUG routes Add API resources
+2020-04-10 22:23:28,095 DEBUG routes Added API resources
+2020-04-10 22:23:28,095 DEBUG NeoBrain START
+2020-04-10 22:24:19,109 DEBUG routes Add API resources
+2020-04-10 22:24:19,111 DEBUG routes Added API resources
+2020-04-10 22:24:19,111 DEBUG NeoBrain START
+2020-04-10 22:27:32,110 DEBUG routes Add API resources
+2020-04-10 22:27:32,113 DEBUG routes Added API resources
+2020-04-10 22:27:32,113 DEBUG NeoBrain START

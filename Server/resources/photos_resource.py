@@ -18,15 +18,6 @@ def abort_if_photo_not_found(photo_id):
 
 # Основной ресурс для работы с Photo
 class PhotoResource(Resource):
-    def __init__(self):
-        # Инициализируем parser, так как доступ к данным,
-        # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
-        self.parser = reqparse.RequestParser()
-        # Фотография типа BLOB
-        self.parser.add_argument('data', required=True)
-        # Описание к фотографии
-        self.parser.add_argument('about', required=False)
-
     def get(self, photo_id):
         if str(photo_id).find("?") != -1:
             photo_id = int(photo_id[:photo_id.find("?")].strip())

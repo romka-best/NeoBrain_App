@@ -1,23 +1,13 @@
 package com.example.neobrain.Controllers;
 
+// Импортируем нужные библиотеки
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import androidx.annotation.NonNull;
 
@@ -26,26 +16,32 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
-import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.Objects;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
+
+// Контроллер авторизации
 public class AuthController extends Controller {
     private TextInputEditText textLogin;
     private TextInputEditText textPassword;
-    private SharedPreferences sp;
     private String login = "";
     private String pass = "";
+
+    private SharedPreferences sp;
 
     public AuthController() {
     }
@@ -71,9 +67,9 @@ public class AuthController extends Controller {
         return view;
     }
 
+    // Запускаем контроллер регистрации
     @OnClick({R.id.regButton})
     void launchReg() {
-        // TODO Исправить баг: При первом переходе, отсутствует анимация
         if (getRouter().getBackstackSize() > 1) {
             Objects.requireNonNull(getActivity()).onBackPressed();
         } else {
@@ -84,6 +80,7 @@ public class AuthController extends Controller {
         }
     }
 
+    // Пользователь заходит
     @OnClick(R.id.authButton)
     void launchAuth() {
         // TODO Корректно обработать вход: Если поля пустые или неправильные, сделать Error message к textLogin и textPassword
@@ -105,10 +102,10 @@ public class AuthController extends Controller {
                         e.putBoolean("hasAuthed", true);
                         e.putString("nickname", post.getText().substring(6, post.getText().length() - 8));
                         e.apply();
-                        getRouter().setRoot(RouterTransaction.with(new HomeController())
+                        getRouter().popCurrentController();
+                        getRouter().pushController(RouterTransaction.with(new HomeController())
                                 .popChangeHandler(new FlipChangeHandler())
                                 .pushChangeHandler(new FlipChangeHandler()));
-                        getRouter().popCurrentController();
                     } else {
                         if (post.getStatus() == 404) {
                             Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_LONG).show(); // TODO Изменить текст на R.string.{}

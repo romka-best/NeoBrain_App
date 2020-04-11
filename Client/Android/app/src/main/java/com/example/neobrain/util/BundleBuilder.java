@@ -7,6 +7,7 @@ import android.util.SparseArray;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+// Класс для упрощения с Bundle
 public class BundleBuilder {
 
     private final Bundle bundle;

@@ -42,4 +42,10 @@
     <string name="new_post">new_post</string>
     <string name="empty_chat">You don\'t have any chats at the moment. Fix this</string>
     <string name="empty_lenta">The feed is empty. Subscribe to someone or something</string>
+    <string name="empty_apps">There are no apps yet</string>
+    <string name="your_apps">Your apps</string>
+    <string name="recommended_apps">Recomended apps</string>
+    <string name="edit">edit</string>
+    <string name="followers">Followers</string>
+    <string name="subscribers">Subscribers</string>
 </resources>

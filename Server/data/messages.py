@@ -31,7 +31,7 @@ class Message(SqlAlchemyBase, SerializerMixin):
     # Автор сообщения
     author = orm.relation("User")
     author_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                  sqlalchemy.ForeignKey("users.id"))
+                                  sqlalchemy.ForeignKey("users.id"), nullable=False)
 
     # Связь с чатом
     chat = orm.relation("Chat")

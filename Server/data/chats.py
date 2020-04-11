@@ -6,7 +6,7 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
-association_table = sqlalchemy.Table('association', SqlAlchemyBase.metadata,
+association_table = sqlalchemy.Table('chat_association', SqlAlchemyBase.metadata,
                                      sqlalchemy.Column('user', sqlalchemy.Integer,
                                                        sqlalchemy.ForeignKey('users.id')),
                                      sqlalchemy.Column('chat', sqlalchemy.Integer,
@@ -22,7 +22,7 @@ class Chat(SqlAlchemyBase, SerializerMixin):
     # id Чата
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     # Имя(Заголовок) чата
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # Тип чата: 0 - UserWithUser, 1 - UserWithUsers, 2 - Chanel, 3 - Бот
     type_of_chat = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     # 0 - Offline, >=1 Количество user-ов онлайн в чате

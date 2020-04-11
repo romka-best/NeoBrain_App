@@ -1,5 +1,6 @@
 package com.example.neobrain.Adapters;
 
+// Импортируем нужные библиотеки
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
+// Адаптер ленты
 public class LentaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "LentaAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
@@ -44,12 +46,12 @@ public class LentaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
-                return new LentaAdapter.ViewHolder(
+                return new ViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item_lenta, parent, false)
                 );
             case VIEW_TYPE_EMPTY:
             default:
-                return new PostAdapter.EmptyViewHolder(
+                return new EmptyViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_empty_item_lenta, parent, false)
                 );
         }

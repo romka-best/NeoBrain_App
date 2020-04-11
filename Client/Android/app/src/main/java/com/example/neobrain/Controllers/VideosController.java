@@ -1,5 +1,6 @@
 package com.example.neobrain.Controllers;
 
+// Импортируем нужные библиотеки
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import com.example.neobrain.R;
 
 import butterknife.ButterKnife;
 
+// Контроллер видео
 public class VideosController extends Controller {
     @NonNull
     @Override

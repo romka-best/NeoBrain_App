@@ -1,5 +1,6 @@
 package com.example.neobrain.Adapters;
 
+// Импортируем нужные библиотеки
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.util.BaseViewHolder;
 
+// Адаптер сообщений (самого чата)
 public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @NonNull
     @Override

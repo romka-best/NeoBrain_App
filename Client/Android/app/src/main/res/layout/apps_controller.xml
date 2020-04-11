@@ -96,16 +96,56 @@
             app:layout_constraintStart_toStartOf="@+id/background_apps"
             app:layout_constraintTop_toTopOf="@+id/background_apps" />
 
+        <TextView
+            android:id="@+id/apps2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/your_apps"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/apps"
+            app:layout_constraintHorizontal_bias="0.162"
+            app:layout_constraintStart_toStartOf="@+id/apps"
+            app:layout_constraintTop_toBottomOf="@+id/apps" />
+
+        <TextView
+            android:id="@+id/apps3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/recommended_apps"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/appsRecycler"
+            app:layout_constraintTop_toBottomOf="@+id/appsRecycler" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/appsRecycler"
             android:layout_width="325dp"
             android:layout_height="194dp"
-            android:layout_marginTop="36dp"
             app:layout_constraintEnd_toEndOf="@+id/background_apps"
             app:layout_constraintStart_toStartOf="@+id/background_apps"
-            app:layout_constraintTop_toBottomOf="@+id/apps"
+            app:layout_constraintTop_toBottomOf="@+id/apps2"
             tools:layoutManager="GridLayoutManager"
             tools:listitem="@layout/recycler_view_item_app"
-            tools:spanCount="5" />
+            tools:spanCount="2">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/appsRecycler2"
+            android:layout_width="325dp"
+            android:layout_height="194dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/background_apps"
+            app:layout_constraintStart_toStartOf="@+id/background_apps"
+            app:layout_constraintTop_toBottomOf="@+id/apps3"
+            tools:layoutManager="GridLayoutManager"
+            tools:listitem="@layout/recycler_view_item_app"
+            tools:spanCount="2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

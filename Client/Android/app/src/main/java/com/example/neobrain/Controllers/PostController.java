@@ -2,7 +2,6 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.annotation.NonNull;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.Status;
-import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
@@ -30,9 +28,8 @@ import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
+// Контроллер для выкладывания/редактирования поста
 public class PostController extends Controller {
-    private ImageButton acceptButton;
-    private TextView title;
     private MultiAutoCompleteTextView postText;
 
     private SharedPreferences sp;
@@ -45,8 +42,8 @@ public class PostController extends Controller {
         ButterKnife.bind(this, view);
 
         ImageButton cancelButton = view.findViewById(R.id.cancelButton);
-        acceptButton = view.findViewById(R.id.acceptButton);
-        title = view.findViewById(R.id.title);
+        ImageButton acceptButton = view.findViewById(R.id.acceptButton);
+        TextView title = view.findViewById(R.id.title);
         postText = view.findViewById(R.id.postText);
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,

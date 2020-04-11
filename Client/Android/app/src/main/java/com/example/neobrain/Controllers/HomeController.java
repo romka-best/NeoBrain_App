@@ -20,6 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.ButterKnife;
 
+// Стартовый класс с BottomNavigation и ControllersContainer
 @SuppressLint("ValidController")
 public class HomeController extends Controller {
 

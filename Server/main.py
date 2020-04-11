@@ -1,5 +1,6 @@
 # Импортируем нужные библиотеки
 import datetime
+import logging
 import os
 
 from flask import Flask, request, redirect
@@ -15,6 +16,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
+# Запись логов
+# logger = logging.getLogger("NeoBrain")
+# logger.setLevel(logging.DEBUG)
+# logging.basicConfig(
+#     filename='neo.log',
+#     format='%(asctime)s %(levelname)s %(name)s %(message)s'
+# )
+
 # Добавляем к приложению API
 generate_routes(app)
 
@@ -25,6 +34,7 @@ login_manager.init_app(app)
 
 # Главный метод для работы с сервером
 def main():
+    # logger.debug("START")
     # Инициализируем базу данных
     db_session.global_init("db/neobrain.db")
     # Если не найден PORT среди файлов, поставь порт 5000
@@ -36,6 +46,7 @@ def main():
 # Загружаем пользователя
 @login_manager.user_loader
 def load_user(user_id):
+    # logger.debug("Отправлен запрос в базу данных на сохранение пользователя")
     session = db_session.create_session()
     return session.query(User).get(user_id)
 
@@ -44,6 +55,7 @@ def load_user(user_id):
 @app.route('/logout')
 @login_required
 def logout():
+    # logger.debug("Отправлен запрос в базу данных на выход пользователя")
     logout_user()
     return redirect("/")
 
