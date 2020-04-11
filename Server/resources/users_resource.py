@@ -88,8 +88,8 @@ class UserResource(Resource):
         session = db_session.create_session()
         user = session.query(User).filter(User.nickname == user_nickname).first()
         return jsonify({'user': user.to_dict(
-            only=('name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'email', 'photo_id'))})
+            only=('id', 'name', 'surname', 'nickname', 'number',
+                  'created_date', 'modified_date', 'email', 'followers_count', 'subscriptions_count', 'photo_id'))})
 
     # @login_required
     # Изменяем пользователя по его nickname
