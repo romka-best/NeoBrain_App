@@ -80,6 +80,12 @@ public class DataManager {
         );
     }
 
+    public Call<UserModel> searchUser(String user_name_surname) {
+        return mAPIService.searchUser(
+                user_name_surname
+        );
+    }
+
     public Call<Status> createChat(Chat chat) {
         return mAPIService.createChat(
                 chat

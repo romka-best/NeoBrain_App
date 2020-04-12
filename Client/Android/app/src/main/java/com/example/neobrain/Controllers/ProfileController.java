@@ -42,6 +42,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -78,10 +79,11 @@ public class ProfileController extends Controller {
     private TextView followersCount;
     private TextView subscribersCount;
     private FloatingActionButton fabAdd;
-    private ExtendedFloatingActionButton fabEdit;
+    private MaterialButton buttonEdit;
     private ProgressBar progressBar;
     private ImageView emoji;
     private TextView textError;
+    private TextView cityAgeGenderText;
 
     private static final int CAMERA_REQUEST = 100;
     private static final int PICK_IMAGE = 101;
@@ -203,6 +205,7 @@ public class ProfileController extends Controller {
         nickname = view.findViewById(R.id.nickname);
         followersCount = view.findViewById(R.id.followers_count);
         subscribersCount = view.findViewById(R.id.subscribe_count);
+        cityAgeGenderText = view.findViewById(R.id.city_age_gender);
 
         progressBar = view.findViewById(R.id.progress_circular);
         emoji = view.findViewById(R.id.emoji);
@@ -215,9 +218,8 @@ public class ProfileController extends Controller {
                 }
         );
 
-        fabEdit = view.findViewById(R.id.fabEdit);
-        fabEdit.setIconTint(ColorStateList.valueOf(Color.argb(255, 255, 255, 255)));
-        fabEdit.setOnClickListener(new View.OnClickListener() {
+        buttonEdit = view.findViewById(R.id.fabEdit);
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -237,10 +239,9 @@ public class ProfileController extends Controller {
                 R.color.colorPrimaryDark);
 
         getProfile();
-        getPosts();
         swipeContainer.setVisibility(View.INVISIBLE);
         fabAdd.setVisibility(View.INVISIBLE);
-        fabEdit.setVisibility(View.INVISIBLE);
+        buttonEdit.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         return view;
     }
@@ -260,8 +261,38 @@ public class ProfileController extends Controller {
                     nickname.setText(user.getNickname());
                     followersCount.setText(user.getFollowersCount().toString());
                     subscribersCount.setText(user.getSubscriptionsCount().toString());
+                    List<String> cityAgeGender = new ArrayList<>();
+                    if (!user.getRepublic().equals("")) {
+                        cityAgeGender.add(user.getRepublic());
+                    }
+                    if (!user.getCity().equals("")) {
+                        cityAgeGender.add(user.getCity());
+                    }
+                    if (user.getAge() != null) {
+                        cityAgeGender.add(user.getAge().toString());
+                    }
+                    if (user.getGender() != null) {
+                        if (user.getGender() == 0) {
+                            cityAgeGender.add(Objects.requireNonNull(getResources()).getString(R.string.gender_w));
+                        } else
+                            cityAgeGender.add(Objects.requireNonNull(getResources()).getString(R.string.gender_m));
+                    }
+                    StringBuffer sb = new StringBuffer();
+                    boolean flag = false;
+                    for (int i = 0; i < cityAgeGender.size(); i++) {
+                        if (sb.length() >= 20 && !flag) {
+                            sb.append("\n");
+                            flag = true;
+                        }
+                        if (i != cityAgeGender.size() - 1) {
+                            sb.append(cityAgeGender.get(i)).append(" | ");
+                        } else {
+                            sb.append(cityAgeGender.get(i));
+                        }
+                    }
+                    cityAgeGenderText.setText(sb);
                     setPhotoId(user.getPhotoId());
-                    Call<Photo> photoCall = DataManager.getInstance().getPhoto(user.getPhotoId());
+                    Call<Photo> photoCall = DataManager.getInstance().getPhoto(getPhotoId());
                     photoCall.enqueue(new Callback<Photo>() {
                         @Override
                         public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
@@ -275,7 +306,7 @@ public class ProfileController extends Controller {
                             progressBar.setVisibility(View.INVISIBLE);
                             swipeContainer.setVisibility(View.VISIBLE);
                             fabAdd.setVisibility(View.VISIBLE);
-                            fabEdit.setVisibility(View.VISIBLE);
+                            buttonEdit.setVisibility(View.VISIBLE);
                         }
 
                         @Override

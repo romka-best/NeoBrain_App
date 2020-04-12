@@ -77,6 +77,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     country = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # Образование пользователя
     education = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    # Пол пользователя: 0 - Женский, 1 - Мужской
+    gender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     # Количество подписанных на пользователя
     followers_count = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     # Количество подписок на других пользователей

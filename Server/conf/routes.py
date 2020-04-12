@@ -2,7 +2,7 @@
 import logging
 
 from resources.people_resource import PeopleResource
-from resources.users_resource import UserResource, UsersListResource, UserLoginResource
+from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UserSearchResource
 from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
 from resources.photos_resource import PhotoResource, PhotoCreateResource
 from resources.posts_resource import PostResource, PostCreateResource, PostsListResource
@@ -23,6 +23,7 @@ def generate_routes(app):
     api.add_resource(UserResource, '/api/users/<string:user_nickname>')
     api.add_resource(UsersListResource, '/api/users')
     api.add_resource(UserLoginResource, '/api/users/login')
+    api.add_resource(UserSearchResource, '/api/users/search/<string:user_name_surname>')
 
     # Ресурсы с Chat
     api.add_resource(ChatResource, '/api/chats/<int:chat_id>')

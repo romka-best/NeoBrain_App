@@ -9,4 +9,5 @@
     <color name="colorOnSurface">#828282</color>
     <color name="background">#dddddd</color>
     <color name="shimmer">#A7A6A6</color>
+    <color name="black">#000</color>
 </resources>

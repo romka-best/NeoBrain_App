@@ -1,6 +1,7 @@
 package com.example.neobrain.API;
 
 // Импортируем нужные библиотеки
+
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.Photo;
@@ -49,6 +50,11 @@ public interface APIService {
     @DELETE("users/{nickname}")
     Call<Status> deleteUser(
             @Path("nickname") String nickname
+    );
+
+    @GET("users/search/{user_name_surname}")
+    Call<UserModel> searchUser(
+            @Path("user_name_surname") String user_name_surname
     );
 
     @GET("chats/{chat_id}")

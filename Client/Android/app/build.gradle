@@ -85,4 +85,8 @@ dependencies {
 
     // Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
+
+    // RXJava
+    def rxjava_version = "2.2.2"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 }

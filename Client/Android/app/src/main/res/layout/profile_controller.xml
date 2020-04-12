@@ -20,20 +20,6 @@
         app:layout_behavior=".util.FAB_Float_on_Scroll"
         app:srcCompat="@drawable/ic_add" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/edit"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:textColor="@color/colorText"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        app:icon="@drawable/ic_edit"
-        android:layout_gravity="bottom|start"
-        tools:layout_editor_absoluteX="167dp"
-        tools:layout_editor_absoluteY="262dp" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -100,12 +86,9 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_alignParentTop="true"
-                        android:layout_marginStart="330dp"
                         android:layout_marginTop="151dp"
                         android:background="@drawable/circle_darkblue"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.941"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <View
@@ -170,12 +153,11 @@
                         android:id="@+id/avatar_card"
                         android:layout_width="142dp"
                         android:layout_height="193dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="40dp"
                         android:focusable="true"
                         app:cardCornerRadius="18dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.193"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/background_profile"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -193,15 +175,31 @@
                         android:layout_alignParentTop="false"
                         android:layout_alignParentEnd="false"
                         android:layout_alignParentBottom="false"
+                        android:layout_marginStart="12dp"
                         android:layout_marginTop="16dp"
                         android:fontFamily="@font/roboto_bold"
                         android:gravity="top"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.073"
                         app:layout_constraintStart_toEndOf="@+id/avatar_card"
                         app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                    <TextView
+                        android:id="@+id/city_age_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="false"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentEnd="false"
+                        android:layout_alignParentBottom="false"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="top"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/avatar_card"
+                        app:layout_constraintTop_toBottomOf="@+id/name_surname" />
 
                     <View
                         android:id="@+id/line"
@@ -211,8 +209,6 @@
                         android:layout_alignParentTop="false"
                         android:layout_marginTop="80dp"
                         android:background="@drawable/line_darkblue"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/avatar_card"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -222,10 +218,9 @@
                         android:layout_height="14dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="22dp"
                         android:background="@drawable/circle_online"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.126"
                         app:layout_constraintStart_toEndOf="@+id/name_surname"
                         app:layout_constraintTop_toBottomOf="@+id/line" />
 
@@ -430,29 +425,16 @@
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/postRecycler"
-                        android:layout_width="391dp"
-                        android:layout_height="370dp"
-                        android:scrollbars="vertical"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat1"
-                        tools:listitem="@layout/recycler_view_item_post" />
-
                     <TextView
                         android:id="@+id/followers_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="24dp"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/roboto_black"
                         android:text=""
                         android:textColor="@android:color/black"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="@+id/avatar_card"
                         app:layout_constraintTop_toBottomOf="@+id/avatar_card" />
 
@@ -463,7 +445,7 @@
                         android:fontFamily="@font/roboto"
                         android:text="@string/followers"
                         android:textColor="@android:color/black"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="@+id/followers_count"
                         app:layout_constraintHorizontal_bias="0.516"
                         app:layout_constraintStart_toStartOf="@+id/followers_count"
@@ -474,11 +456,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:layout_marginEnd="14dp"
+                        android:layout_marginEnd="16dp"
                         android:fontFamily="@font/roboto_black"
                         android:text=""
                         android:textColor="@android:color/black"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="@+id/avatar_card"
                         app:layout_constraintTop_toBottomOf="@+id/avatar_card" />
 
@@ -489,10 +471,53 @@
                         android:fontFamily="@font/roboto"
                         android:text="@string/subscribers"
                         android:textColor="@android:color/black"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="@+id/subscribe_count"
                         app:layout_constraintStart_toStartOf="@+id/subscribe_count"
                         app:layout_constraintTop_toBottomOf="@+id/subscribe_count" />
+
+                    <Button
+                        android:id="@+id/outlinedButton"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                        android:layout_width="170dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="@string/detailed_information"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_info"
+                        app:layout_constraintBottom_toTopOf="@+id/subscribe_count"
+                        app:layout_constraintEnd_toStartOf="@+id/circleDarkblueWithoutCenter"
+                        app:layout_constraintHorizontal_bias="0.588"
+                        app:layout_constraintStart_toEndOf="@+id/avatar_card" />
+
+                    <Button
+                        android:id="@+id/fabEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:backgroundTint="@color/colorPrimaryDark"
+                        android:text="@string/edit"
+                        android:textAllCaps="false"
+
+                        android:textColor="@color/colorText"
+                        app:layout_constraintStart_toEndOf="@+id/subscribe"
+                        app:layout_constraintTop_toBottomOf="@+id/outlinedButton" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/postRecycler"
+                        android:layout_width="391dp"
+                        android:layout_height="370dp"
+                        android:scrollbars="vertical"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat1"
+                        tools:listitem="@layout/recycler_view_item_post" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

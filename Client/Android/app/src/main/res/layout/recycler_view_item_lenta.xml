@@ -41,8 +41,8 @@
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="285dp"
-        android:layout_height="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/imageAvatar"

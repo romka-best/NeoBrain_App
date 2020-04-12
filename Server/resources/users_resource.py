@@ -89,7 +89,10 @@ class UserResource(Resource):
         user = session.query(User).filter(User.nickname == user_nickname).first()
         return jsonify({'user': user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'email', 'followers_count', 'subscriptions_count', 'photo_id'))})
+                  'created_date', 'modified_date', 'is_closed', 'email', 'about',
+                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
+                  'can_write_message', 'city', 'republic', 'country', 'education', 'status',
+                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id'))})
 
     # @login_required
     # Изменяем пользователя по его nickname
@@ -194,6 +197,32 @@ class UserResource(Resource):
         # else:
         #     return jsonify({'status': 403,
         #                     'text': f'User {user.nickname} forbidden'})
+
+
+class UserSearchResource(Resource):
+    # Получаем пользователя по егу nickname
+    def get(self, user_name_surname):
+        if user_name_surname.find("?") != -1:
+            user_name_surname = user_name_surname[:user_name_surname.find("?")].strip()
+        user_name_surname_list = user_name_surname.split("&")
+        if len(user_name_surname_list) == 2:
+            param1, param2 = map(str.title, user_name_surname_list)
+        elif len(user_name_surname_list) == 1:
+            param1, param2 = user_name_surname_list[0].title(), user_name_surname_list[0].title()
+        else:
+            return jsonify({'status': 400,
+                            'text': "Empty request"})
+        # Создаём сессию в БД и находим пользователя
+        session = db_session.create_session()
+        users = session.query(User).filter((User.name.like(f"%{param1}%")) | (User.name.like(f"%{param2}%")) |
+                                           (User.surname.like(f"%{param1}%")) | (
+                                               User.surname.like(f"%{param2}%"))).all()
+        return jsonify({'users': [user.to_dict(
+            only=('id', 'name', 'surname', 'nickname', 'number',
+                  'created_date', 'modified_date', 'is_closed', 'email', 'about',
+                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
+                  'can_write_message', 'city', 'republic', 'country', 'education', 'status',
+                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id')) for user in users]})
 
 
 # Ресурс входа пользователя
@@ -304,9 +333,12 @@ class UsersListResource(Resource):
     def get(self):
         session = db_session.create_session()
         users = session.query(User).all()
-        return jsonify({'users': [item.to_dict(
-            only=('name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'email')) for item in users]})
+        return jsonify({'users': [user.to_dict(
+            only=('id', 'name', 'surname', 'nickname', 'number',
+                  'created_date', 'modified_date', 'is_closed', 'email', 'about',
+                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
+                  'can_write_message', 'city', 'republic', 'country', 'education', 'status',
+                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id')) for user in users]})
 
     # Создаём пользователя
     def post(self):

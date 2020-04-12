@@ -92,6 +92,9 @@ public class User {
     @SerializedName("in_black_list")
     @Expose
     private String inBlackList;
+    @SerializedName("gender")
+    @Expose
+    private Integer gender;
 
     public Integer getId() {
         return id;
@@ -331,5 +334,13 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 }

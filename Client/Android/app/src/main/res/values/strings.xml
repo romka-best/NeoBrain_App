@@ -25,7 +25,7 @@
     <string name="navigation">Обзор</string>
     <string name="people">Люди</string>
     <string name="videos">Видео</string>
-    <string name="empty_posts">Постов пока нет. Исправьте это!)</string>
+    <string name="empty_posts">Постов пока нет. Выложите что-нибудь</string>
     <string name="empty_screen">Тут пока что ничего нет!</string>
     <string name="btn_retry">Обновить</string>
     <string name="email">Почта</string>
@@ -40,11 +40,15 @@
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
     <string name="loading">Идёт загрузка</string>
     <string name="new_post">Новый пост</string>
-    <string name="empty_chat">На данный момент у вас нет чатов. Исправьте это</string>
+    <string name="empty_chat">На данный момент у вас нет чатов. Напишите кому-нибудь</string>
     <string name="empty_lenta">Лента пустая. Подпишитесь на кого-то или на что-то</string>
     <string name="empty_apps">Приложений пока нет</string>
     <string name="your_apps">Ваши</string>
     <string name="recommended_apps">Рекомендуемые</string>
     <string name="followers">Подписчиков</string>
     <string name="subscribers">Подписок</string>
+    <string name="detailed_information">Подробная информация</string>
+    <string name="gender_w">Ж</string>
+    <string name="gender_m">М</string>
+    <string name="empty_people">Вы ещё ни на кого не подписаны</string>
 </resources>
