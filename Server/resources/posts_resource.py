@@ -93,11 +93,11 @@ class PostCreateResource(Resource):
         )
         user = session.query(User).get(args['user_id'])
         post.user_id = args['user_id']
-        if args['photo_id']:
+        if args.get('photo_id', None):
             post.photo_id = args['photo_id']
         else:
             post.photo_id = user.photo_id
-        if args['title']:
+        if args.get('title', None):
             post.title = args['title']
         else:
             post.title = f"{user.name} {user.surname}"

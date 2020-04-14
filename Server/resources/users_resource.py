@@ -111,51 +111,52 @@ class UserResource(Resource):
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         # В зависимости от аргументов, меняем пользователя
-        if args['name']:
+        if args.get('name', None):
             user.name = args['name'].title()
-        if args['surname']:
+        if args.get('surname', None):
             user.surname = args['surname'].title()
-        if args['nickname']:
+        if args.get('nickname', None):
             user.nickname = args['nickname']
-        if args['number']:
+        if args.get('number', None):
             user.number = args['number'].lower()
-        if args['email']:
+        if args.get('email', None):
             user.email = args['email'].lower()
-        if args['hashed_password']:
+        if args.get('hashed_password', None):
             user.set_password(args['hashed_password'])
-        if args['is_closed']:
+        if args.get('is_closed', None) is not None:
             user.is_closed = args['is_closed']
-        if args['about']:
+        if args.get('about', None):
             user.about = args['about']
-        if args['birthday']:
+        if args.get('birthday', None):
             user.birthday = args['birthday']
-        if args['age']:
+        if args.get('age', None):
             user.age = args['age']
-        if args['can_see_audio']:
+        if args.get('can_see_audio', None) is not None:
             user.can_see_audio = args['can_see_audio']
-        if args['can_see_groups']:
+        if args.get('can_see_groups', None) is not None:
             user.can_see_groups = args['can_see_groups']
-        if args['can_see_videos']:
+        if args.get('can_see_videos', None) is not None:
             user.can_see_videos = args['can_see_videos']
-        if args['can_write_message']:
+        if args.get('can_write_message', None) is not None:
             user.can_write_message = args['can_write_message']
-        if args['city']:
+        if args.get('city', None):
             user.city = args['city']
-        if args['republic']:
+        if args.get('republic', None):
             user.republic = args['republic']
-        if args['country']:
+        if args.get('country', None):
             user.country = args['country']
-        if args['education']:
+        if args.get('education', None):
             user.education = args['education']
-        if args['followers_count']:
+        if args.get('followers_count', None) is not None:
             user.followers_count = args['followers_count']
-        if args['subscriptions_count']:
+        if args.get('subscriptions_count', None) is not None:
             user.subscriptions_count = args['subscriptions_count']
-        if args['status']:
+        if args.get('status', None) is not None:
             user.status = args['status']
-        if args['last_seen']:
+            user.last_seen = datetime.datetime.now()
+        if args.get('last_seen', None):
             user.last_seen = args['last_seen']
-        if args['photo']:
+        if args.get('photo', None):
             if user.photo_id != 2:
                 photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
                 photo.data = decodebytes(args['photo'].encode())
@@ -167,7 +168,7 @@ class UserResource(Resource):
                 session.add(photo)
                 session.commit()
                 user.photo_id = photo.id
-        if args['photo_id']:
+        if args.get('photo_id', None):
             user.photo_id = args['photo_id']
         # Обновляем дату модификации пользователя
         user.modified_date = datetime.datetime.now()
@@ -191,8 +192,8 @@ class UserResource(Resource):
                         'text': 'deleted'})
 
 
-class UserSearchResource(Resource):
-    # Получаем пользователя по егу nickname
+class UsersSearchResource(Resource):
+    # Получаем пользователей по имени и фамилии
     def get(self, user_name_surname):
         if user_name_surname.find("?") != -1:
             user_name_surname = user_name_surname[:user_name_surname.find("?")].strip()
@@ -204,7 +205,7 @@ class UserSearchResource(Resource):
         else:
             return jsonify({'status': 400,
                             'text': "Empty request"})
-        # Создаём сессию в БД и находим пользователя
+        # Создаём сессию в БД и находим пользователей
         session = db_session.create_session()
         users = session.query(User).filter((User.name.like(f"%{param1}%")) | (User.name.like(f"%{param2}%")) |
                                            (User.surname.like(f"%{param1}%")) | (
@@ -244,20 +245,20 @@ class UserLoginResource(Resource):
                             'text': "Bad request"})
         # Создаём сессиб и берём пользователя
         session = db_session.create_session()
-        if args['number']:
+        if args.get('number', None):
             user = session.query(User).filter(User.number == args['number'].lower()).first()
-        elif args['nickname']:
+        elif args.get('nickname', None):
             user = session.query(User).filter(User.nickname == args['nickname']).first()
-        elif args['email']:
+        elif args.get('email', None):
             user = session.query(User).filter(User.email == args['email'].lower()).first()
         else:
             return jsonify({'status': 400,
                             'text': 'Bad request'})
         # Проверяем корректен ли пароль пользователя
-        if user and user.check_password(args['hashed_password']):
+        if user and user.check_password(args.get('hashed_password', None)):
             return jsonify({'status': 200,
                             'text': f'Login {user.id} allowed'})
-        elif user and not user.check_password(args['hashed_password']):
+        elif user and not user.check_password(args.get('hashed_password', None)):
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})
         return jsonify({'status': 404,
@@ -356,13 +357,13 @@ class UsersListResource(Resource):
             photo_id=2
         )
         user.set_password(args['hashed_password'])
-        if args['number']:
+        if args.get('number', None):
             # Проверяем занят ли номер телефона
             if session.query(User).filter(User.number == args['number'].lower()).first():
                 return jsonify({'status': 449,
                                 'text': 'Phone number already exists'})
             user.number = args['number'].lower()
-        if args['email']:
+        if args.get('email', None):
             # Проверяем занята ли почта
             if session.query(User).filter(User.email == args['email'].lower()).first():
                 return jsonify({'status': 449,

@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             // Если пользователь уже авторизовался, то запускаем сразу HomeController, иначе AuthController
             boolean hasVisited = sp.getBoolean("hasAuthed", false);
             if (hasVisited) {
-                setOnline();
                 router.setRoot(RouterTransaction.with(new HomeController()));
             } else {
                 router.setRoot(RouterTransaction.with(new AuthController()));

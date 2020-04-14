@@ -262,10 +262,10 @@ public class ProfileController extends Controller {
                     followersCount.setText(user.getFollowersCount().toString());
                     subscribersCount.setText(user.getSubscriptionsCount().toString());
                     List<String> cityAgeGender = new ArrayList<>();
-                    if (!user.getRepublic().equals("")) {
+                    if (user.getRepublic() != null) {
                         cityAgeGender.add(user.getRepublic());
                     }
-                    if (!user.getCity().equals("")) {
+                    if (user.getCity() != null) {
                         cityAgeGender.add(user.getCity());
                     }
                     if (user.getAge() != null) {

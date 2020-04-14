@@ -25,7 +25,7 @@
     <string name="navigation">Обзор</string>
     <string name="people">Люди</string>
     <string name="videos">Видео</string>
-    <string name="empty_posts">Постов пока нет. Выложите что-нибудь</string>
+    <string name="empty_posts">Постов пока нет</string>
     <string name="empty_screen">Тут пока что ничего нет!</string>
     <string name="btn_retry">Обновить</string>
     <string name="email">Почта</string>
@@ -51,9 +51,9 @@
     <string name="gender_w">Ж</string>
     <string name="gender_m">М</string>
     <string name="empty_people">Вы ещё ни на кого не подписаны</string>
-    <string name="empty_photos">У вас ещё нет фотографий</string>
-    <string name="empty_videos">У вас ещё нет видео</string>
-    <string name="empty_music">У вас ещё нет музыки</string>
+    <string name="empty_photos">Здесь ещё нет фотографий</string>
+    <string name="empty_videos">Здесь ещё нет видео</string>
+    <string name="empty_music">Здесь ещё нет музыки</string>
     <string name="empty_achievements">Раздел достижений в разработке</string>
     <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
     <string name="empty_messages">Начните чат первым</string>

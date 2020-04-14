@@ -60,11 +60,11 @@ class MessageResource(Resource):
         session = db_session.create_session()
         message = session.query(Message).get(message_id)
         # В зависимости от аргументов, изменяем сообщение
-        if args['text']:
+        if args.get('text', None):
             message.text = args['text']
-        if args['status']:
+        if args.get('status', None) is not None:
             message.status = args['status']
-        if args['with_attachments']:
+        if args.get('with_attachments', None) is not None:
             message.with_attachments = args['with_attachments']
         message.modified_date = datetime.now()
         session.commit()
@@ -117,7 +117,7 @@ class MessageCreateResource(Resource):
             chat_id=args['chat_id']
         )
         # В зависимости от аргументов добавляем в чат новые
-        if args['with_attachments']:
+        if args.get('with_attachments', None) is not None:
             message.with_attachments = args['with_attachments']
         message.status = 1
         # Добавляем в БД чат

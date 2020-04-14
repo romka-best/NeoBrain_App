@@ -21,6 +21,7 @@ import com.example.neobrain.API.model.Person;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
+import com.example.neobrain.API.model.Users;
 import com.example.neobrain.Adapters.PeopleAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -45,7 +46,6 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер с людьми (Друзьями, подписчиками)
 public class PeopleController extends Controller {
-    private SearchView searchView;
     private RecyclerView peopleRecycler;
     private PeopleAdapter peopleAdapter;
 
@@ -60,27 +60,39 @@ public class PeopleController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
-        searchView = view.findViewById(R.id.searchView);
         peopleRecycler = view.findViewById(R.id.peopleRecycler);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        peopleRecycler.setLayoutManager(mLayoutManager);
+        peopleRecycler.setItemAnimator(new DefaultItemAnimator());
+
+        SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.e("onQueryTextSubmit", "Тута");
                 List<String> strings = Arrays.asList(query.toLowerCase().trim().split(" "));
                 StringJoiner joiner = new StringJoiner("&");
                 for (int i = 0; i < strings.size(); i++) {
                     joiner.add(strings.get(i));
                 }
-                Call<UserModel> call = DataManager.getInstance().searchUser(String.valueOf(joiner));
-                call.enqueue(new Callback<UserModel>() {
+                ArrayList<User> mUsers = new ArrayList<>();
+                Call<Users> call = DataManager.getInstance().searchUser(String.valueOf(joiner));
+                call.enqueue(new Callback<Users>() {
                     @Override
-                    public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                    public void onResponse(@NotNull Call<Users> call, @NotNull Response<Users> response) {
+                        assert response.body() != null;
+                        List<User> users = response.body().getUsers();
+                        for(User user: users){
+                            mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                        }
+                        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext());
+                        peopleRecycler.setAdapter(peopleAdapter);
                     }
 
                     @Override
-                    public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                        Log.e("FAILURE", t.toString());
+                    public void onFailure(@NotNull Call<Users> call, @NotNull Throwable t) {
+
                     }
                 });
                 return false;
@@ -97,9 +109,6 @@ public class PeopleController extends Controller {
     }
 
     private void getPeople() {
-        // TODO
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         Integer userIdSP = sp.getInt("userId", -1);
         Call<People> call = DataManager.getInstance().getPeople(userIdSP);
         call.enqueue(new Callback<People>() {
@@ -109,19 +118,22 @@ public class PeopleController extends Controller {
                     assert response.body() != null;
                     People people = response.body();
                     List<Person> personList = people.getPeople();
+                    ArrayList<User> mUsers = new ArrayList<>();
                     if (personList != null) {
                         for (int i = 0; i < personList.size(); i++) {
-                            Integer userIdSP = sp.getInt("userId", -1);
-                            Call<UserModel> userCall = DataManager.getInstance().getUser(userIdSP);
+                            Call<UserModel> userCall = DataManager.getInstance().getUser(personList.get(i).getUserId());
                             userCall.enqueue(new Callback<UserModel>() {
                                 @Override
                                 public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-
+                                    assert response.body() != null;
+                                    User user = response.body().getUser();
+                                    mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                                    peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext());
+                                    peopleRecycler.setAdapter(peopleAdapter);
                                 }
 
                                 @Override
                                 public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-
                                 }
                             });
                         }
@@ -134,9 +146,5 @@ public class PeopleController extends Controller {
 
             }
         });
-        peopleRecycler.setLayoutManager(mLayoutManager);
-        peopleRecycler.setItemAnimator(new DefaultItemAnimator());
-        peopleAdapter = new PeopleAdapter(new ArrayList<>(), getApplicationContext());
-        peopleRecycler.setAdapter(peopleAdapter);
     }
 }

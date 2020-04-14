@@ -25,7 +25,7 @@
     <string name="people">People</string>
     <string name="videos">Videos</string>
     <string name="achievements">Achievements</string>
-    <string name="empty_posts">There are no posts yet. Post somebody</string>
+    <string name="empty_posts">There are no posts yet</string>
     <string name="empty_screen">You have nothing here!</string>
     <string name="btn_retry">Retry</string>
     <string name="email">E-mail</string>
@@ -52,9 +52,9 @@
     <string name="gender_w">W</string>
     <string name="gender_m">M</string>
     <string name="empty_people">You haven\'t subscribed to anyone yet</string>
-    <string name="empty_photos">You don\'t have any photos yet</string>
-    <string name="empty_videos">You don\'t have any videos yet</string>
-    <string name="empty_music">You don\'t have any music yet</string>
+    <string name="empty_photos">There is no photos here yet</string>
+    <string name="empty_videos">There is no videos here yet</string>
+    <string name="empty_music">There is no music here yet</string>
     <string name="empty_achievements">Section of achievements in development</string>
     <string name="empty_navigation">The \"Navigation\" section is in development.</string>
     <string name="empty_messages">Start the chat first</string>

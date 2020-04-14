@@ -2,11 +2,9 @@
 from base64 import decodebytes
 
 from flask import jsonify
-from flask_restful import reqparse, abort, Resource
+from flask_restful import Resource
 
 from data import db_session
-from data.people import People
-from data.photos import Photo
 from data.users import User
 from .users_resource import abort_if_user_not_found
 

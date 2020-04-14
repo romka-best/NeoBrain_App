@@ -96,6 +96,21 @@ public class User {
     @Expose
     private Integer gender;
 
+    public User() {
+
+    }
+
+    public User(Integer id, Integer photoId, String name, String surname, String republic, String city, Integer age, Integer gender) {
+        this.id = id;
+        this.photoId = photoId;
+        this.name = name;
+        this.surname = surname;
+        this.republic = republic;
+        this.city = city;
+        this.age = age;
+        this.gender = gender;
+    }
+
     public Integer getId() {
         return id;
     }

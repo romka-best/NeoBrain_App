@@ -13,6 +13,7 @@ import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
+import com.example.neobrain.API.model.Users;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -51,7 +52,7 @@ public interface APIService {
     );
 
     @GET("users/search/{user_name_surname}")
-    Call<UserModel> searchUser(
+    Call<Users> searchUser(
             @Path("user_name_surname") String user_name_surname
     );
 

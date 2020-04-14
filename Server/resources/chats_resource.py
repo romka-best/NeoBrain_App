@@ -73,21 +73,21 @@ class ChatResource(Resource):
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
         # В зависимости от аргументов, изменяем чат
-        if args['name']:
+        if args.get('name', None):
             chat.name = args['name']
-        if args['type_of_chat']:
+        if args.get('type_of_chat', None) is not None:
             chat.type_of_chat = args['type_of_chat']
-        if args['status']:
+        if args.get('status', None) is not None:
             chat.status = args['status']
-        if args['last_time_message']:
+        if args.get('last_time_message', None):
             chat.last_time_message = args['last_time_message']
-        if args['last_message']:
+        if args.get('last_message'):
             chat.last_message = args['last_message']
-        if args['count_new_messages']:
+        if args.get('count_new_messages', None) is not None:
             chat.count_new_messages = args['count_new_messages']
-        if args['count_messages']:
+        if args.get('count_messages', None) is not None:
             chat.count_messages = args['count_messages']
-        if args['photo']:
+        if args.get('photo', None) is not None:
             if chat.photo_id != 2:
                 photo = session.query(Photo).filter(Photo.id == chat.photo_id).first()
                 photo.data = decodebytes(args['photo'].encode())
@@ -99,7 +99,7 @@ class ChatResource(Resource):
                 session.add(photo)
                 session.commit()
                 chat.photo_id = photo.id
-        if args['photo_id']:
+        if args.get('photo_id', None):
             chat.photo_id = args['photo_id']
         chat.modified_date = datetime.now()
         session.commit()
@@ -184,11 +184,11 @@ class ChatCreateResource(Resource):
             last_message=args['last_message']
         )
         # В зависимости от аргументов добавляем в чат новые
-        if args['photo_id']:
+        if args.get('photo_id', None):
             chat.photo_id = args['photo_id']
-        if args['count_new_messages']:
+        if args.get('count_new_messages', None) is not None:
             chat.count_new_messages = args['count_new_messages']
-        if args['count_messages']:
+        if args.get('count_messages', None) is not None:
             chat.count_messages = args['count_messages']
         # Добавляем в БД чат
         session.add(chat)

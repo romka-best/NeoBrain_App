@@ -95,7 +95,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.avatar)
         ImageView avatarImageView;
 
-        @BindView(R.id.text)
+        @BindView(R.id.city_age_gender)
         TextView textTextView;
 
         ViewHolder(@NonNull View itemView) {
@@ -136,13 +136,13 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 });
             }
             if (mUser.getName() != null && mUser.getSurname() != null) {
-                titleTextView.setText(mUser.getName() + mUser.getSurname());
+                titleTextView.setText(mUser.getName() + " " + mUser.getSurname());
             }
             List<String> cityAgeGender = new ArrayList<>();
-            if (!mUser.getRepublic().equals("")) {
+            if (mUser.getRepublic() != null) {
                 cityAgeGender.add(mUser.getRepublic());
             }
-            if (!mUser.getCity().equals("")) {
+            if (mUser.getCity() != null) {
                 cityAgeGender.add(mUser.getCity());
             }
             if (mUser.getAge() != null) {
