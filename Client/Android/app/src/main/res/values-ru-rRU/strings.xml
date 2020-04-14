@@ -52,4 +52,10 @@
     <string name="gender_w">Ж</string>
     <string name="gender_m">М</string>
     <string name="empty_people">Вы ещё ни на кого не подписаны</string>
+    <string name="empty_photos">У вас ещё нет фотографий</string>
+    <string name="empty_videos">У вас ещё нет видео</string>
+    <string name="empty_music">У вас ещё нет музыки</string>
+    <string name="empty_achievements">Раздел достижений в разработке</string>
+    <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
+    <string name="empty_messages">Начните чат первым</string>
 </resources>

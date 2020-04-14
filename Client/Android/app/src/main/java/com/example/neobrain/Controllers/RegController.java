@@ -1,6 +1,7 @@
 package com.example.neobrain.Controllers;
 
 // Импортируем нужные библиотеки
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -146,7 +147,7 @@ public class RegController extends Controller {
                         assert post != null;
                         SharedPreferences.Editor e = sp.edit();
                         e.putBoolean("hasAuthed", true);
-                        e.putString("nickname", nickname);
+                        e.putInt("userId", Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
                         e.apply();
                         // Звук
 //                        try {

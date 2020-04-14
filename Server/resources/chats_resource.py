@@ -111,7 +111,6 @@ class ChatResource(Resource):
         # Создаём сессию в БД и получаем чат, а затем его удаляем
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
-        user = session.query(User).filter()
         session.delete(chat)
         session.commit()
         return jsonify({'status': 200,
@@ -120,13 +119,13 @@ class ChatResource(Resource):
 
 # Ресурс для получения чатов
 class ChatsListResource(Resource):
-    # Получаем чаты user-a по его никнейму
-    def get(self, user_nickname):
+    # Получаем чаты user-a по его id
+    def get(self, user_id):
         # Проверяем, есть ли пользователь
-        abort_if_user_not_found(user_nickname)
+        abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем чаты
         session = db_session.create_session()
-        user = session.query(User).filter(User.nickname == user_nickname).first()
+        user = session.query(User).get(user_id)
         chats = user.chats
         return jsonify({'chats': [chat.to_dict(
             only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
@@ -139,6 +138,8 @@ class ChatCreateResource(Resource):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
         self.parser = reqparse.RequestParser()
+        # Id user-а
+        self.parser.add_argument('user_id', required=True, type=str)
         # Имя чата
         self.parser.add_argument('name', required=True, type=str)
         # Тип чата: 0 - UserWithUser, 1 - UserWithUsers, 2 - Chanel, 3 - Бот
@@ -156,7 +157,7 @@ class ChatCreateResource(Resource):
         # Дата создания чата
         self.parser.add_argument('created_date', required=False)
         # Чат user-a
-        self.parser.add_argument('user_nickname', required=True, type=str)
+        self.parser.add_argument('user_nickname', required=False, type=str)
         # Фото чата
         self.parser.add_argument('photo_id', required=False, type=int)
 
@@ -170,8 +171,8 @@ class ChatCreateResource(Resource):
                             'text': "Empty request"})
         # Создаём сессию в БД
         session = db_session.create_session()
-        abort_if_user_not_found(args['user_nickname'])
-        user = session.query(User).filter(User.nickname == args['user_nickname']).first()
+        abort_if_user_not_found(args['user_id'])
+        user = session.query(User).get(args['user_id'])
         # Создаём чат
         chat = Chat(
             name=args['name'],

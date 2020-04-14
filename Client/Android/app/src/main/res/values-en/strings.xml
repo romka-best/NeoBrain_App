@@ -39,17 +39,23 @@
     <string name="undo">Hide</string>
     <string name="errors_with_connection">Problems with your Internet connection</string>
     <string name="loading">Loading</string>
-    <string name="new_post">new_post</string>
+    <string name="new_post">New_post</string>
     <string name="empty_chat">You don\'t have any chats at the moment. Write to someone</string>
     <string name="empty_lenta">The feed is empty. Subscribe to someone or something</string>
     <string name="empty_apps">There are no apps yet</string>
     <string name="your_apps">Your</string>
-    <string name="recommended_apps">Recomended</string>
-    <string name="edit">edit</string>
+    <string name="recommended_apps">Recommended</string>
+    <string name="edit">Edit</string>
     <string name="followers">Followers</string>
     <string name="subscribers">Subscribers</string>
     <string name="detailed_information">Detailed information</string>
     <string name="gender_w">W</string>
     <string name="gender_m">M</string>
     <string name="empty_people">You haven\'t subscribed to anyone yet</string>
+    <string name="empty_photos">You don\'t have any photos yet</string>
+    <string name="empty_videos">You don\'t have any videos yet</string>
+    <string name="empty_music">You don\'t have any music yet</string>
+    <string name="empty_achievements">Section of achievements in development</string>
+    <string name="empty_navigation">The \"Navigation\" section is in development.</string>
+    <string name="empty_messages">Start the chat first</string>
 </resources>

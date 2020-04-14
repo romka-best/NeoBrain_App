@@ -57,10 +57,10 @@ public class PostController extends Controller {
     }
 
     private void setPost() {
-        String nicknameSP = sp.getString("nickname", "");
+        Integer userIdSP = sp.getInt("userId", -1);
         Post post = new Post();
         post.setText(postText.getText().toString());
-        post.setUserNickname(nicknameSP);
+        post.setUserId(userIdSP);
         Call<Status> call = DataManager.getInstance().createPost(post);
         call.enqueue(new Callback<Status>() {
             @Override

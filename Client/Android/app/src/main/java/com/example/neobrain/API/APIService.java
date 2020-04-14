@@ -4,6 +4,7 @@ package com.example.neobrain.API;
 
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
@@ -22,9 +23,9 @@ import retrofit2.http.Path;
 // Интерфейс для работы с API NeoBrain
 public interface APIService {
 
-    @GET("users/{nickname}")
+    @GET("users/{user_id}")
     Call<UserModel> getUser(
-            @Path("nickname") String nickname);
+            @Path("user_id") Integer user_id);
 
     @POST("users")
     Call<Status> createUser(
@@ -36,20 +37,15 @@ public interface APIService {
             @Body User user
     );
 
-    @POST("users/logout")
-    Call<Status> logout(
-            @Body User user
-    );
-
-    @PUT("users/{nickname}")
+    @PUT("users/{user_id}")
     Call<Status> editUser(
-            @Path("nickname") String nickname,
+            @Path("user_id") Integer user_id,
             @Body User user
     );
 
-    @DELETE("users/{nickname}")
+    @DELETE("users/{user_id}")
     Call<Status> deleteUser(
-            @Path("nickname") String nickname
+            @Path("user_id") Integer user_id
     );
 
     @GET("users/search/{user_name_surname}")
@@ -57,14 +53,19 @@ public interface APIService {
             @Path("user_name_surname") String user_name_surname
     );
 
+    @GET("people/{user_id}")
+    Call<People> getPeople(
+            @Path("user_id") Integer user_id
+    );
+
     @GET("chats/{chat_id}")
     Call<Chat> getChat(
             @Path("chat_id") Integer chat_id
     );
 
-    @GET("chats/{nickname}")
+    @GET("chats/users/{user_id}")
     Call<ChatModel> getChats(
-            @Path("nickname") String nickname
+            @Path("user_id") Integer user_id
     );
 
     @PUT("chats/{chat_id}")
@@ -94,9 +95,9 @@ public interface APIService {
             @Path("photo_id") Integer photo_id
     );
 
-    @GET("posts/{nickname}")
+    @GET("posts/users/{user_id}")
     Call<PostModel> getPosts(
-            @Path("nickname") String nickname
+            @Path("user_id") Integer user_id
     );
 
     @GET("posts/{post_id}")

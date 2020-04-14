@@ -49,13 +49,12 @@ class PostResource(Resource):
 # Ресурс для получения постов
 class PostsListResource(Resource):
     # Получаем посты user-a по его никнейму
-    def get(self, user_nickname):
+    def get(self, user_id):
         # Проверяем, есть ли пользователь
-        abort_if_user_not_found(user_nickname)
+        abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем чаты
         session = db_session.create_session()
-        user = session.query(User).filter(User.nickname == user_nickname).first()
-        posts = session.query(Post).filter(Post.user_id == user.id).all()
+        posts = session.query(Post).filter(Post.user_id == user_id).all()
         return jsonify({'posts': [post.to_dict(
             only=('id', 'title', 'text', 'created_date', 'user_id', 'photo_id')) for post in posts]})
 
@@ -92,12 +91,8 @@ class PostCreateResource(Resource):
         post = Post(
             text=args['text']
         )
-        if args['user_id']:
-            user = session.query(User).get(args['user_id'])
-            post.user_id = args['user_id']
-        elif args['user_nickname']:
-            user = session.query(User).filter(User.nickname == args['user_nickname']).first()
-            post.user_id = user.id
+        user = session.query(User).get(args['user_id'])
+        post.user_id = args['user_id']
         if args['photo_id']:
             post.photo_id = args['photo_id']
         else:

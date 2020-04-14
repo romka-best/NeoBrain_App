@@ -5,6 +5,7 @@ package com.example.neobrain;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,13 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
 import com.example.neobrain.Controllers.AuthController;
 import com.example.neobrain.Controllers.HomeController;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 // Создаём единственную активность на всё приложение
 public class MainActivity extends AppCompatActivity {
@@ -41,14 +49,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
+
         // Инициализируем роутер
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
             // Если пользователь уже авторизовался, то запускаем сразу HomeController, иначе AuthController
-            sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
-                    Context.MODE_PRIVATE);
             boolean hasVisited = sp.getBoolean("hasAuthed", false);
             if (hasVisited) {
+                setOnline();
                 router.setRoot(RouterTransaction.with(new HomeController()));
             } else {
                 router.setRoot(RouterTransaction.with(new AuthController()));
@@ -63,9 +73,57 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setOnline() {
+        Integer userIdSP = sp.getInt("userId", -1);
+        User user = new User();
+        user.setStatus(1);
+        Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
+        call.enqueue(new Callback<Status>() {
+            @Override
+            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+            }
+        });
+    }
+
+    private void setOffline() {
+        Integer userIdSP = sp.getInt("userId", -1);
+        User user = new User();
+        user.setStatus(0);
+        Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
+        call.enqueue(new Callback<Status>() {
+            @Override
+            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+            }
+        });
+    }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // TODO Изменить статус с online на offline через минуту
+    protected void onStart() {
+        super.onStart();
+        boolean hasVisited = sp.getBoolean("hasAuthed", false);
+        if (hasVisited) {
+            setOnline();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        boolean hasVisited = sp.getBoolean("hasAuthed", false);
+        if (hasVisited) {
+            setOffline();
+        }
     }
 }

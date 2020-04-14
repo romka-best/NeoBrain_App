@@ -13,12 +13,12 @@ from .users_resource import abort_if_user_not_found
 
 # Основной ресурс для работы с Photo
 class PeopleResource(Resource):
-    def get(self, user_nickname):
+    def get(self, user_id):
         # Проверяем, есть ли пользователь
-        abort_if_user_not_found(user_nickname)
+        abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем чаты
         session = db_session.create_session()
-        user = session.query(User).filter(User.nickname == user_nickname).first()
+        user = session.query(User).get(user_id)
         people = user.people
         return jsonify({'people': [profile.to_dict(
             only=('id', 'user_id')) for profile in people]})

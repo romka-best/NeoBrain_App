@@ -172,10 +172,10 @@ public class ProfileController extends Controller {
                                             call.enqueue(new Callback<Status>() {
                                                 @Override
                                                 public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                    String nicknameSP = sp.getString("nickname", null);
+                                                    Integer userIdSP = sp.getInt("userId", -1);
                                                     User user = new User();
                                                     user.setPhotoId(2);
-                                                    Call<Status> userCall = DataManager.getInstance().editUser(nicknameSP, user);
+                                                    Call<Status> userCall = DataManager.getInstance().editUser(userIdSP, user);
                                                     userCall.enqueue(new Callback<Status>() {
                                                         @Override
                                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
@@ -247,8 +247,8 @@ public class ProfileController extends Controller {
     }
 
     private void getProfile() {
-        String nicknameSP = sp.getString("nickname", "");
-        Call<UserModel> call = DataManager.getInstance().getUser(nicknameSP);
+        Integer userIdSP = sp.getInt("userId", -1);
+        Call<UserModel> call = DataManager.getInstance().getUser(userIdSP);
         call.enqueue(new Callback<UserModel>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -333,8 +333,8 @@ public class ProfileController extends Controller {
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         postRecycler.setLayoutManager(mLayoutManager);
         postRecycler.setItemAnimator(new DefaultItemAnimator());
-        String nicknameSP = sp.getString("nickname", "");
-        Call<PostModel> call = DataManager.getInstance().getPosts(nicknameSP);
+        Integer userIdSP = sp.getInt("userId", -1);
+        Call<PostModel> call = DataManager.getInstance().getPosts(userIdSP);
         call.enqueue(new Callback<PostModel>() {
             @Override
             public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
@@ -371,10 +371,10 @@ public class ProfileController extends Controller {
 
                     avatar.setImageBitmap(thumbnailBitmap);
 
-                    String nicknameSP = sp.getString("nickname", null);
+                    Integer userIdSP = sp.getInt("userId", -1);
                     User user = new User();
                     user.setPhoto(new String(encoded));
-                    Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
+                    Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
                     call.enqueue(new Callback<Status>() {
                         @Override
                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
@@ -403,10 +403,10 @@ public class ProfileController extends Controller {
                         byte[] byteArray = stream.toByteArray();
                         byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
 
-                        String nicknameSP = sp.getString("nickname", null);
+                        Integer userIdSP = sp.getInt("userId", -1);
                         User user = new User();
                         user.setPhoto(new String(encoded));
-                        Call<Status> call = DataManager.getInstance().editUser(nicknameSP, user);
+                        Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
                         call.enqueue(new Callback<Status>() {
                             @Override
                             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {

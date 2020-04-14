@@ -83,8 +83,8 @@ public class ChatController extends Controller {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
-        String nicknameSP = sp.getString("nickname", "");
-        Call<ChatModel> call = DataManager.getInstance().getChats(nicknameSP);
+        Integer userIdSP = sp.getInt("userId", -1);
+        Call<ChatModel> call = DataManager.getInstance().getChats(userIdSP);
         call.enqueue(new Callback<ChatModel>() {
             @Override
             public void onResponse(@NotNull Call<ChatModel> call, @NotNull Response<ChatModel> response) {

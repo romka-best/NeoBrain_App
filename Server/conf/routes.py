@@ -20,7 +20,7 @@ def generate_routes(app):
 
     # Добавляем к api ресурсы
     # Ресурсы с User
-    api.add_resource(UserResource, '/api/users/<string:user_nickname>')
+    api.add_resource(UserResource, '/api/users/<int:user_id>')
     api.add_resource(UsersListResource, '/api/users')
     api.add_resource(UserLoginResource, '/api/users/login')
     api.add_resource(UserSearchResource, '/api/users/search/<string:user_name_surname>')
@@ -28,7 +28,7 @@ def generate_routes(app):
     # Ресурсы с Chat
     api.add_resource(ChatResource, '/api/chats/<int:chat_id>')
     api.add_resource(ChatCreateResource, '/api/chats')
-    api.add_resource(ChatsListResource, '/api/chats/<string:user_nickname>')
+    api.add_resource(ChatsListResource, '/api/chats/users/<int:user_id>')
 
     # Ресурсы с Photo
     api.add_resource(PhotoResource, '/api/photos/<int:photo_id>')
@@ -37,12 +37,12 @@ def generate_routes(app):
     # Ресурсы с Post
     api.add_resource(PostResource, '/api/posts/<int:post_id>')
     api.add_resource(PostCreateResource, '/api/posts')
-    api.add_resource(PostsListResource, '/api/posts/<string:user_nickname>')
+    api.add_resource(PostsListResource, '/api/posts/users/<int:user_id>')
 
     # Ресурсы с Lenta
-    # api.add_resource(LentaResource, '/api/lenta/<string:user_nickname>')
+    # api.add_resource(LentaResource, '/api/lenta/<int:user_id>')
 
     # Ресурсы с People
-    api.add_resource(PeopleResource, '/api/people/<string:user_nickname>')
+    api.add_resource(PeopleResource, '/api/people/<int:user_id>')
 
     # logger.debug("Added API resources")

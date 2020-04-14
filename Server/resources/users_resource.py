@@ -11,11 +11,11 @@ from data.users import User
 
 
 # Если user не найден, то приходит ответа сервера
-def abort_if_user_not_found(user_nickname):
+def abort_if_user_not_found(user_id):
     session = db_session.create_session()
-    user = session.query(User).filter(User.nickname == user_nickname).first()
+    user = session.query(User).get(user_id)
     if not user:
-        abort(404, message=f"User {user_nickname} not found")
+        abort(404, message=f"User {user_id} not found")
 
 
 # Основной ресурс для работы с User
@@ -79,14 +79,14 @@ class UserResource(Resource):
 
     # @login_required
     # Получаем пользователя по егу nickname
-    def get(self, user_nickname):
-        if user_nickname.find("?") != -1:
-            user_nickname = user_nickname[:user_nickname.find("?")].strip()
+    def get(self, user_id):
+        if str(user_id).find("?") != -1:
+            user_id = int(user_id[:str(user_id).find("?")].strip())
         # Проверяем, есть ли пользователь
-        abort_if_user_not_found(user_nickname)
+        abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем пользователя
         session = db_session.create_session()
-        user = session.query(User).filter(User.nickname == user_nickname).first()
+        user = session.query(User).get(user_id)
         return jsonify({'user': user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
@@ -96,23 +96,21 @@ class UserResource(Resource):
 
     # @login_required
     # Изменяем пользователя по его nickname
-    def put(self, user_nickname):
-        if user_nickname.find("?") != -1:
-            user_nickname = user_nickname[:user_nickname.find("?")].strip()
+    def put(self, user_id):
+        if str(user_id).find("?") != -1:
+            user_id = int(user_id[:str(user_id).find("?")].strip())
         # Проверяем, есть ли пользователь
-        abort_if_user_not_found(user_nickname)
+        abort_if_user_not_found(user_id)
         # Получаем аргументы
         args = self.parser.parse_args()
+        print(args)
         # Если нет аргументов, передаём статус 400
         if not args:
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Создаём сессию в БД и получаем пользователя
         session = db_session.create_session()
-        user = session.query(User).filter(User.nickname == user_nickname).first()
-        # if user != current_user:
-        #     return jsonify({'status': 403,
-        #                     'text': f'User {user.nickname} forbidden'})
+        user = session.query(User).get(user_id)
         # В зависимости от аргументов, меняем пользователя
         if args['name']:
             user.name = args['name'].title()
@@ -178,25 +176,20 @@ class UserResource(Resource):
         return jsonify({'status': 200,
                         'text': 'edited'})
 
-    # @login_required
     # Удаляем пользователя по егу nickname
-    def delete(self, user_nickname):
-        if user_nickname.find("?") != -1:
-            user_nickname = user_nickname[:user_nickname.find("?")].strip()
+    def delete(self, user_id):
+        if str(user_id).find("?") != -1:
+            user_id = int(user_id[:str(user_id).find("?")].strip())
         # Ищем пользователя
-        abort_if_user_not_found(user_nickname)
+        abort_if_user_not_found(user_id)
         # Создаём сессию и получаем user
         session = db_session.create_session()
-        user = session.query(User).filter(User.nickname == user_nickname).first()
-        # if user == current_user:
+        user = session.query(User).get(user_id)
         # Удаляем пользователя из БД
         session.delete(user)
         session.commit()
         return jsonify({'status': 200,
                         'text': 'deleted'})
-        # else:
-        #     return jsonify({'status': 403,
-        #                     'text': f'User {user.nickname} forbidden'})
 
 
 class UserSearchResource(Resource):
@@ -263,9 +256,8 @@ class UserLoginResource(Resource):
                             'text': 'Bad request'})
         # Проверяем корректен ли пароль пользователя
         if user and user.check_password(args['hashed_password']):
-            # login_user(user, remember=True)
             return jsonify({'status': 200,
-                            'text': f'Login {user.nickname} allowed'})
+                            'text': f'Login {user.id} allowed'})
         elif user and not user.check_password(args['hashed_password']):
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})
