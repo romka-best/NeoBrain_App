@@ -103,7 +103,6 @@ class UserResource(Resource):
         abort_if_user_not_found(user_id)
         # Получаем аргументы
         args = self.parser.parse_args()
-        print(args)
         # Если нет аргументов, передаём статус 400
         if not args:
             return jsonify({'status': 400,

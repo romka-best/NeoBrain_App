@@ -1,5 +1,6 @@
 # Импортируем нужные библиотеки
 from base64 import decodebytes
+from datetime import datetime
 
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
@@ -14,7 +15,7 @@ from .users_resource import abort_if_user_not_found
 # Если чат не найден, то приходит ответа сервера
 def abort_if_chat_not_found(chat_id):
     session = db_session.create_session()
-    chat = session.query(Chat).filter(Chat.id == chat_id).first()
+    chat = session.query(Chat).get(chat_id)
     if not chat:
         abort(404, message=f"Chat {chat_id} not found")
 
@@ -100,6 +101,7 @@ class ChatResource(Resource):
                 chat.photo_id = photo.id
         if args['photo_id']:
             chat.photo_id = args['photo_id']
+        chat.modified_date = datetime.now()
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited'})

@@ -4,6 +4,8 @@ package com.example.neobrain.API;
 
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.Message;
+import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
@@ -98,6 +100,16 @@ public interface APIService {
     @GET("posts/users/{user_id}")
     Call<PostModel> getPosts(
             @Path("user_id") Integer user_id
+    );
+
+    @GET("messages/<int:message_id>")
+    Call<Message> getMessage(
+            @Path("message_id") Integer message_id
+    );
+
+    @GET("chats/<int:chat_id>/messages")
+    Call<Messages> getMessages(
+            @Path("chat_id") Integer chat_id
     );
 
     @GET("posts/{post_id}")

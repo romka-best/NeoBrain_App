@@ -6,6 +6,8 @@ import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.Message;
+import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
@@ -109,5 +111,13 @@ public class DataManager {
         return mAPIService.createPost(
                 post
         );
+    }
+
+    public Call<Message> getMessage(Integer message_id) {
+        return mAPIService.getMessage(message_id);
+    }
+
+    public Call<Messages> getMessages(Integer chat_id) {
+        return mAPIService.getMessages(chat_id);
     }
 }
