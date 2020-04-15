@@ -1,8 +1,12 @@
 package com.example.neobrain.Controllers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.Message;
 import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.util.BundleBuilder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,18 +44,16 @@ import retrofit2.Response;
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер чатов
+@SuppressLint("ValidController")
 public class ChatController extends Controller {
     @BindView(R.id.messagesRecycler)
     public RecyclerView messagesRecycler;
     private ChatAdapter chatAdapter;
-
     private FloatingActionButton floatingActionButton;
     private ShimmerFrameLayout shimmerViewContainer;
-
     private SwipeRefreshLayout swipeContainer;
-
     private SharedPreferences sp;
-
+    private LayoutInflater inflater;
 
     @NonNull
     @Override
@@ -57,10 +62,9 @@ public class ChatController extends Controller {
         ButterKnife.bind(this, view);
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-
+        this.inflater = inflater;
         floatingActionButton = view.findViewById(R.id.fab);
         floatingActionButton.setColorFilter(Color.argb(255, 255, 255, 255));
-
         shimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
         shimmerViewContainer.startShimmer();
 
@@ -97,14 +101,13 @@ public class ChatController extends Controller {
                     }
                     shimmerViewContainer.stopShimmer();
                     shimmerViewContainer.setVisibility(View.GONE);
-                    chatAdapter = new ChatAdapter(mChats);
+                    chatAdapter = new ChatAdapter(mChats, getRouter());
                     messagesRecycler.setAdapter(chatAdapter);
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
-
             }
         });
     }

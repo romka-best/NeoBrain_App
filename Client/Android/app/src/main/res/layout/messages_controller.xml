@@ -37,10 +37,18 @@
                 android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
 
-        <View
-            android:id="@+id/footer_chat"
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/avatar_card"
+            app:layout_constraintTop_toTopOf="parent">
+        </ImageButton>
+
+        <EditText
+            android:id="@+id/footer_chat_edit_text"
             android:layout_width="300dp"
             android:layout_height="40dp"
+            android:inputType="text"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="15dp"
             android:background="@drawable/footer_chat"
@@ -48,15 +56,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageButton
+            android:id="@+id/attach"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#FFFFFF"
+            android:tint="@android:color/primary_text_light"
+            app:layout_constraintEnd_toStartOf="@+id/footer_chat_edit_text"
+            app:layout_constraintTop_toBottomOf="@+id/swipeContainer"
+            tools:src="@drawable/ic_add">
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#FFFFFF"
+            android:tint="@android:color/primary_text_light"
+            app:layout_constraintStart_toEndOf="@+id/footer_chat_edit_text"
+            app:layout_constraintTop_toBottomOf="@+id/swipeContainer"
+            tools:src="@android:drawable/ic_menu_send"></ImageButton>
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_bold"
-            app:layout_constraintBottom_toBottomOf="@+id/header"
-            app:layout_constraintStart_toEndOf="@+id/avatar_card"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.39" />
+            app:layout_constraintStart_toStartOf="@+id/footer_chat_edit_text"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeContainer"
@@ -64,7 +91,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="55dp"
-            app:layout_constraintBottom_toTopOf="@+id/footer_chat"
+            app:layout_constraintBottom_toTopOf="@+id/footer_chat_edit_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header">
@@ -73,7 +100,7 @@
                 android:id="@+id/messagesRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/recycler_view_item_message">
+                tools:listitem="@layout/recycler_view_item_outgoing_message">
 
             </androidx.recyclerview.widget.RecyclerView>
 
