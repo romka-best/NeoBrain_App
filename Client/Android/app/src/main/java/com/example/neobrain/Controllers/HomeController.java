@@ -19,6 +19,7 @@ import com.example.neobrain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 // Стартовый класс с BottomNavigation и ControllersContainer
 @SuppressLint("ValidController")
@@ -37,11 +38,14 @@ public class HomeController extends Controller {
         View view = inflater.inflate(R.layout.home_controller, container, false);
         ButterKnife.bind(this, view);
         ViewGroup childContainer = view.findViewById(R.id.container);
-        routerStates = new SparseArray<>();
+        if(routerStates == null){
+            routerStates = new SparseArray<>();
+        }
 
         childRouter = getChildRouter(childContainer);
 
         if (routerStates.size() == 0) {
+
             currentSelectedItemId = R.id.action_lenta;
             childRouter.setRoot(RouterTransaction.with(new LentaController()));
         } else {
@@ -54,6 +58,9 @@ public class HomeController extends Controller {
     }
 
     private boolean onNavigationItemSelected(MenuItem menuItem) {
+        if(currentSelectedItemId == menuItem.getItemId()){
+            return true;
+        }
         saveStateFromCurrentTab(currentSelectedItemId);
         currentSelectedItemId = menuItem.getItemId();
         clearStateFromChildRouter();
@@ -101,15 +108,15 @@ public class HomeController extends Controller {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
+        super.onSaveViewState(view, outState);
         saveStateFromCurrentTab(currentSelectedItemId);
         outState.putSparseParcelableArray("STATE", routerStates);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        routerStates = savedInstanceState.getSparseParcelableArray("STATE");
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        super.onRestoreViewState(view, savedViewState);
+        routerStates = savedViewState.getSparseParcelableArray("STATE");
     }
 }

@@ -83,10 +83,10 @@ public class PeopleController extends Controller {
                     public void onResponse(@NotNull Call<Users> call, @NotNull Response<Users> response) {
                         assert response.body() != null;
                         List<User> users = response.body().getUsers();
-                        for(User user: users){
+                        for (User user : users) {
                             mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
                         }
-                        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext());
+                        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
                         peopleRecycler.setAdapter(peopleAdapter);
                     }
 
@@ -128,8 +128,6 @@ public class PeopleController extends Controller {
                                     assert response.body() != null;
                                     User user = response.body().getUser();
                                     mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
-                                    peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext());
-                                    peopleRecycler.setAdapter(peopleAdapter);
                                 }
 
                                 @Override
@@ -138,6 +136,8 @@ public class PeopleController extends Controller {
                             });
                         }
                     }
+                    peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
+                    peopleRecycler.setAdapter(peopleAdapter);
                 }
             }
 

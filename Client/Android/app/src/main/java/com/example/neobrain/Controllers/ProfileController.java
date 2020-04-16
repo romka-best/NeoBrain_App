@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +44,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.util.BundleBuilder;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -58,6 +61,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,6 +78,7 @@ public class ProfileController extends Controller {
 
     private ImageView avatar;
     private SwipeRefreshLayout swipeContainer;
+    private View statusCircle;
     private TextView nameAndSurname;
     private TextView nickname;
     private TextView followersCount;
@@ -85,11 +90,15 @@ public class ProfileController extends Controller {
     private TextView textError;
     private TextView cityAgeGenderText;
 
+    private SharedPreferences sp;
+
     private static final int CAMERA_REQUEST = 100;
     private static final int PICK_IMAGE = 101;
     private static final int RESULT_OK = -1;
 
     private int photoId;
+    private int userId = -1;
+    private Integer userIdSP;
 
     public int getPhotoId() {
         return photoId;
@@ -99,7 +108,21 @@ public class ProfileController extends Controller {
         this.photoId = photoId;
     }
 
-    private SharedPreferences sp;
+    public ProfileController() {
+
+    }
+
+    public ProfileController(int userId) {
+        this(new BundleBuilder(new Bundle())
+                .putInt("userId", userId)
+                .build());
+    }
+
+    public ProfileController(@Nullable Bundle args) {
+        super(args);
+        assert args != null;
+        this.userId = args.getInt("userId");
+    }
 
     @SuppressLint("SetTextI18n")
     @NonNull
@@ -141,71 +164,16 @@ public class ProfileController extends Controller {
 
         CardView avatarCard = view.findViewById(R.id.avatar_card);
         avatarCard.setPreventCornerOverlap(false);
-        avatarCard.setOnClickListener(v -> {
-            String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"}; // TODO Изменить на R.string.{}
-            new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
-                    .setTitle("Фотография") // TODO Изменить на R.string.{}
-                    .setItems(testArray, (dialog, which) -> {
-                        switch (which) {
-                            case 0:
-                                Intent i = new Intent(Intent.ACTION_PICK);
-                                i.setType("image/*");
-                                startActivityForResult(i, PICK_IMAGE);
-                                break;
-                            case 1:
-                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(intent, CAMERA_REQUEST);
-                                break;
-                            case 2:
-                                getRouter().pushController(RouterTransaction.with(new PhotoController(photoId))
-                                        .popChangeHandler(new VerticalChangeHandler(false))
-                                        .pushChangeHandler(new VerticalChangeHandler()));
-                                break;
-                            case 3:
-                                new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
-                                        .setMessage(R.string.delete_question)
-                                        .setPositiveButton(R.string.delete, (dialog1, which1) -> {
-                                            if (photoId == 2) {
-                                                return;
-                                            }
-                                            Call<Status> call = DataManager.getInstance().deletePhoto(photoId);
-                                            call.enqueue(new Callback<Status>() {
-                                                @Override
-                                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                    Integer userIdSP = sp.getInt("userId", -1);
-                                                    User user = new User();
-                                                    user.setPhotoId(2);
-                                                    Call<Status> userCall = DataManager.getInstance().editUser(userIdSP, user);
-                                                    userCall.enqueue(new Callback<Status>() {
-                                                        @Override
-                                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                            setPhotoId(2);
-                                                        }
+        avatarCard.setOnClickListener(v -> launchPhoto());
 
-                                                        @Override
-                                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                                                        }
-                                                    });
-                                                }
-
-                                                @Override
-                                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                                                }
-                                            });
-                                        })
-                                        .setNegativeButton(R.string.cancel, null)
-                                        .show();
-                                break;
-                        }
-                    })
-                    .show();
-        });
+        userIdSP = sp.getInt("userId", -1);
 
         nameAndSurname = view.findViewById(R.id.name_surname);
         nickname = view.findViewById(R.id.nickname);
         followersCount = view.findViewById(R.id.followers_count);
         subscribersCount = view.findViewById(R.id.subscribe_count);
         cityAgeGenderText = view.findViewById(R.id.city_age_gender);
+        statusCircle = view.findViewById(R.id.status_circle);
 
         progressBar = view.findViewById(R.id.progress_circular);
         emoji = view.findViewById(R.id.emoji);
@@ -219,11 +187,7 @@ public class ProfileController extends Controller {
         );
 
         buttonEdit = view.findViewById(R.id.fabEdit);
-        buttonEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        buttonEdit.setOnClickListener(v -> {
         });
 
 
@@ -247,8 +211,12 @@ public class ProfileController extends Controller {
     }
 
     private void getProfile() {
-        Integer userIdSP = sp.getInt("userId", -1);
-        Call<UserModel> call = DataManager.getInstance().getUser(userIdSP);
+        Call<UserModel> call;
+        if (userId == -1 || userId == 0) {
+            call = DataManager.getInstance().getUser(userIdSP);
+        } else {
+            call = DataManager.getInstance().getUser(userId);
+        }
         call.enqueue(new Callback<UserModel>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -261,6 +229,11 @@ public class ProfileController extends Controller {
                     nickname.setText(user.getNickname());
                     followersCount.setText(user.getFollowersCount().toString());
                     subscribersCount.setText(user.getSubscriptionsCount().toString());
+                    if (user.getStatus() == 0) {
+                        statusCircle.setBackgroundResource(R.drawable.circle_offline);
+                    } else {
+                        statusCircle.setBackgroundResource(R.drawable.circle_online);
+                    }
                     List<String> cityAgeGender = new ArrayList<>();
                     if (user.getRepublic() != null) {
                         cityAgeGender.add(user.getRepublic());
@@ -305,8 +278,13 @@ public class ProfileController extends Controller {
                             }
                             progressBar.setVisibility(View.INVISIBLE);
                             swipeContainer.setVisibility(View.VISIBLE);
-                            fabAdd.setVisibility(View.VISIBLE);
-                            buttonEdit.setVisibility(View.VISIBLE);
+                            if (userId == -1) {
+                                fabAdd.setVisibility(View.VISIBLE);
+                                buttonEdit.setVisibility(View.VISIBLE);
+                            } else {
+                                fabAdd.setVisibility(View.GONE);
+                                buttonEdit.setVisibility(View.GONE);
+                            }
                         }
 
                         @Override
@@ -318,11 +296,9 @@ public class ProfileController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                if (t.toString().startsWith("java.net.SocketTimeoutException")) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    emoji.setVisibility(View.VISIBLE);
-                    textError.setVisibility(View.VISIBLE);
-                }
+                progressBar.setVisibility(View.INVISIBLE);
+                emoji.setVisibility(View.VISIBLE);
+                textError.setVisibility(View.VISIBLE);
             }
         });
         getPosts();
@@ -333,8 +309,12 @@ public class ProfileController extends Controller {
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         postRecycler.setLayoutManager(mLayoutManager);
         postRecycler.setItemAnimator(new DefaultItemAnimator());
-        Integer userIdSP = sp.getInt("userId", -1);
-        Call<PostModel> call = DataManager.getInstance().getPosts(userIdSP);
+        Call<PostModel> call;
+        if (userId == -1 || userId == 0) {
+            call = DataManager.getInstance().getPosts(userIdSP);
+        } else {
+            call = DataManager.getInstance().getPosts(userId);
+        }
         call.enqueue(new Callback<PostModel>() {
             @Override
             public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
@@ -393,13 +373,13 @@ public class ProfileController extends Controller {
                         assert imageUri != null;
                         final InputStream imageStream = Objects.requireNonNull(getApplicationContext()).getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        Matrix matrix = new Matrix();
-                        matrix.postRotate(90);
-                        Bitmap newSelectedImage = Bitmap.createBitmap(selectedImage, 0, 0, selectedImage.getWidth(), selectedImage.getHeight(), matrix, true);
-                        avatar.setImageBitmap(newSelectedImage);
+//                        Matrix matrix = new Matrix();
+//                        matrix.postRotate(90);
+//                        Bitmap newSelectedImage = Bitmap.createBitmap(selectedImage, 0, 0, selectedImage.getWidth(), selectedImage.getHeight(), matrix, true);
+                        avatar.setImageBitmap(selectedImage);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        newSelectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                         byte[] byteArray = stream.toByteArray();
                         byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
 
@@ -427,5 +407,72 @@ public class ProfileController extends Controller {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.post_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @OnClick(R.id.avatar_card)
+    void launchPhoto() {
+        if (userId == -1 || userId == 0) {
+            String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"}; // TODO Изменить на R.string.{}
+            new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
+                    .setTitle("Фотография") // TODO Изменить на R.string.{}
+                    .setItems(testArray, (dialog, which) -> {
+                        switch (which) {
+                            case 0:
+                                Intent i = new Intent(Intent.ACTION_PICK);
+                                i.setType("image/*");
+                                startActivityForResult(i, PICK_IMAGE);
+                                break;
+                            case 1:
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, CAMERA_REQUEST);
+                                break;
+                            case 2:
+                                getRouter().pushController(RouterTransaction.with(new PhotoController(photoId))
+                                        .popChangeHandler(new VerticalChangeHandler(false))
+                                        .pushChangeHandler(new VerticalChangeHandler()));
+                                break;
+                            case 3:
+                                new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
+                                        .setMessage(R.string.delete_question)
+                                        .setPositiveButton(R.string.delete, (dialog1, which1) -> {
+                                            if (photoId == 2) {
+                                                return;
+                                            }
+                                            Call<Status> call = DataManager.getInstance().deletePhoto(photoId);
+                                            call.enqueue(new Callback<Status>() {
+                                                @Override
+                                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                                    Integer userIdSP = sp.getInt("userId", -1);
+                                                    User user = new User();
+                                                    user.setPhotoId(2);
+                                                    Call<Status> userCall = DataManager.getInstance().editUser(userIdSP, user);
+                                                    userCall.enqueue(new Callback<Status>() {
+                                                        @Override
+                                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                                            setPhotoId(2);
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                }
+                                            });
+                                        })
+                                        .setNegativeButton(R.string.cancel, null)
+                                        .show();
+                                break;
+                        }
+                    })
+                    .show();
+        } else {
+            getRouter().pushController(RouterTransaction.with(new PhotoController(photoId))
+                    .popChangeHandler(new VerticalChangeHandler(false))
+                    .pushChangeHandler(new VerticalChangeHandler()));
+        }
     }
 }

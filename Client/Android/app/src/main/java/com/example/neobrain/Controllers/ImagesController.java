@@ -17,7 +17,7 @@ public class ImagesController extends Controller {
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.images_controller, container, false);
+        View view = inflater.inflate(R.layout.photos_controller, container, false);
         ButterKnife.bind(this, view);
         return view;
     }

@@ -78,7 +78,7 @@ class UserResource(Resource):
         self.parser.add_argument('photo_id', required=False, type=int)
 
     # @login_required
-    # Получаем пользователя по егу nickname
+    # Получаем пользователя по егу id
     def get(self, user_id):
         if str(user_id).find("?") != -1:
             user_id = int(user_id[:str(user_id).find("?")].strip())
@@ -94,8 +94,7 @@ class UserResource(Resource):
                   'can_write_message', 'city', 'republic', 'country', 'education', 'status',
                   'last_seen', 'followers_count', 'subscriptions_count', 'photo_id'))})
 
-    # @login_required
-    # Изменяем пользователя по его nickname
+    # Изменяем пользователя по его id
     def put(self, user_id):
         if str(user_id).find("?") != -1:
             user_id = int(user_id[:str(user_id).find("?")].strip())
@@ -176,7 +175,7 @@ class UserResource(Resource):
         return jsonify({'status': 200,
                         'text': 'edited'})
 
-    # Удаляем пользователя по егу nickname
+    # Удаляем пользователя по егу id
     def delete(self, user_id):
         if str(user_id).find("?") != -1:
             user_id = int(user_id[:str(user_id).find("?")].strip())
@@ -243,7 +242,7 @@ class UserLoginResource(Resource):
         elif not any(key in args for key in ['number', 'nickname', 'email']):
             return jsonify({'status': 400,
                             'text': "Bad request"})
-        # Создаём сессиб и берём пользователя
+        # Создаём сессию и берём пользователя
         session = db_session.create_session()
         if args.get('number', None):
             user = session.query(User).filter(User.number == args['number'].lower()).first()
@@ -320,7 +319,6 @@ class UsersListResource(Resource):
         # Последний вход пользователя в формате YYYY-MM-DD HH:MM:SS
         self.parser.add_argument('last_seen', required=False, type=str)
 
-    # @login_required
     # Получаем всех пользователей
     def get(self):
         session = db_session.create_session()
@@ -373,4 +371,4 @@ class UsersListResource(Resource):
         session.add(user)
         session.commit()
         return jsonify({'status': 201,
-                        'text': 'created'})
+                        'text': f'User {user.id} created'})

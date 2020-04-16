@@ -2,13 +2,13 @@
 import logging
 
 from resources.messages_resource import MessageListResource, MessageCreateResource, MessageResource
+from resources.music_resource import MusicResource, MusicListResource
 from resources.people_resource import PeopleResource
 from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UsersSearchResource
 from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
 from resources.photos_resource import PhotoResource, PhotoCreateResource
 from resources.posts_resource import PostResource, PostCreateResource, PostsListResource
 from flask_restful import Api
-
 
 # logger = logging.getLogger("routes")
 # logger.setLevel(logging.DEBUG)
@@ -51,5 +51,9 @@ def generate_routes(app):
 
     # Ресурсы с People
     api.add_resource(PeopleResource, '/api/people/<int:user_id>')
+
+    # Ресурсы с Music
+    api.add_resource(MusicResource, '/api/music/<int:music_id>')
+    api.add_resource(MusicListResource, '/api/music/users/<int:user_id>')
 
     # logger.debug("Added API resources")

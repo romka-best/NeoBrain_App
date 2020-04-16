@@ -12,7 +12,7 @@ from resources.users_resource import abort_if_user_not_found
 # Если пост не найден, то приходит ответа сервера
 def abort_if_post_not_found(post_id):
     session = db_session.create_session()
-    post = session.query(Post).filter(Post.id == post_id).first()
+    post = session.query(Post).get(post_id)
     if not post:
         abort(404, message=f"Post {post_id} not found")
 
@@ -101,7 +101,7 @@ class PostCreateResource(Resource):
             post.title = args['title']
         else:
             post.title = f"{user.name} {user.surname}"
-        # Добавляем в БД чат
+        # Добавляем в БД пост
         session.add(post)
         session.commit()
         return jsonify({'status': 201,

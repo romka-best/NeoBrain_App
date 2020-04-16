@@ -6,9 +6,12 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
+# Добавляем ассоциативную таблицу с user и chat
 association_table = sqlalchemy.Table('chat_association', SqlAlchemyBase.metadata,
+                                     # Внешний ключ пользователя
                                      sqlalchemy.Column('user', sqlalchemy.Integer,
                                                        sqlalchemy.ForeignKey('users.id')),
+                                     # Внешний ключ чата
                                      sqlalchemy.Column('chat', sqlalchemy.Integer,
                                                        sqlalchemy.ForeignKey('chats.id'))
                                      )

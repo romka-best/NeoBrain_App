@@ -3,7 +3,7 @@ import datetime
 import logging
 import os
 
-from flask import Flask, request, redirect
+from flask import Flask, redirect
 from flask_login import LoginManager, logout_user, login_required
 
 from conf.routes import generate_routes
@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'NeoBrainKey'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
-# Запись логов
+# # Запись логов
 # logger = logging.getLogger("NeoBrain")
 # logger.setLevel(logging.DEBUG)
 # logging.basicConfig(
@@ -69,8 +69,7 @@ def register():
 # Авторизация
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        pass
+    pass
 
 
 # Landing-page

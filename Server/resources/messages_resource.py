@@ -5,13 +5,13 @@ from flask_restful import abort, Resource, reqparse
 
 from data import db_session
 from data.messages import Message
-
-# Если сообщение не найдено, то приходит ответа сервера
 from data.users import User
+
 from resources.chats_resource import abort_if_chat_not_found
 from resources.users_resource import abort_if_user_not_found
 
 
+# Если сообщение не найдено, то приходит ответа сервера
 def abort_if_message_not_found(message_id):
     session = db_session.create_session()
     message = session.query(Message).get(message_id)
@@ -109,18 +109,17 @@ class MessageCreateResource(Resource):
         # Создаём сессию в БД
         session = db_session.create_session()
         abort_if_user_not_found(args['author_id'])
-        user = session.query(User).get(args['author_id'])
         # Создаём сообщение
         message = Message(
             text=args['text'],
             author_id=args['author_id'],
             chat_id=args['chat_id']
         )
-        # В зависимости от аргументов добавляем в чат новые
+        # В зависимости от аргументов добавляем в сообщение аргументы
         if args.get('with_attachments', None) is not None:
             message.with_attachments = args['with_attachments']
         message.status = 1
-        # Добавляем в БД чат
+        # Добавляем в БД сообщение
         session.add(message)
         session.commit()
         return jsonify({'status': 201,

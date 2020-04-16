@@ -55,7 +55,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     is_closed = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     # Статус пользователя
     about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    # Дата рождения пользователя в формате YYYY-MM-DD
+    # Дата рождения пользователя в формате YYYY-MM-DD или MM-DD
     birthday = sqlalchemy.Column(sqlalchemy.DateTime, nullable=True)
     # Возраст пользователя
     age = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
@@ -96,6 +96,21 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     # Дата изменения пользователя
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
+
+    # связь с Achievement
+    achievements = orm.relation("Achievement",
+                                secondary="achievement_association",
+                                backref="users")
+
+    # Связь с App
+    apps = orm.relation("App",
+                        secondary="app_association",
+                        backref="users")
+
+    # Связь с Music
+    music = orm.relation("Music",
+                         secondary="music_association",
+                         backref="users")
 
     # Связь с Chat
     chats = orm.relation("Chat",

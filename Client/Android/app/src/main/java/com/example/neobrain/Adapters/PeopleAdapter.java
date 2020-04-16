@@ -15,8 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.User;
+import com.example.neobrain.Controllers.ProfileController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
@@ -38,10 +42,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<User> mUsersList;
     private Context context;
+    private Router ChildRouter;
 
-    public PeopleAdapter(ArrayList<User> mUsersList, Context context) {
+    public PeopleAdapter(ArrayList<User> mUsersList, Context context, Router ChildRouter) {
         this.mUsersList = mUsersList;
         this.context = context;
+        this.ChildRouter = ChildRouter;
     }
 
     @NonNull
@@ -163,6 +169,13 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             }
             textTextView.setText(sb);
+
+            itemView.setOnClickListener(v -> {
+                Log.e("НАЖАЛ", mUser.getId().toString());
+                ChildRouter.pushController(RouterTransaction.with(new ProfileController(mUser.getId()))
+                        .popChangeHandler(new FadeChangeHandler())
+                        .pushChangeHandler(new FadeChangeHandler()));
+            });
         }
     }
 

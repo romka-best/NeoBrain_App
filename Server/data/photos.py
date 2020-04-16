@@ -6,13 +6,6 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
-# association_table = sqlalchemy.Table('photo_association', SqlAlchemyBase.metadata,
-#                                      sqlalchemy.Column('user', sqlalchemy.Integer,
-#                                                        sqlalchemy.ForeignKey('users.id')),
-#                                      sqlalchemy.Column('photo', sqlalchemy.Integer,
-#                                                        sqlalchemy.ForeignKey('photos.id'))
-#                                      )
-
 
 class Photo(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'photos'
@@ -24,6 +17,9 @@ class Photo(SqlAlchemyBase, SerializerMixin):
     # данные фото типа BLOB
     data = sqlalchemy.Column(sqlalchemy.BLOB, nullable=False)
 
-    # Отношения User и Chat
+    # Отношения фогографии с другими таблицами
     users = orm.relation("User", back_populates='photo')
     chats = orm.relation("Chat", back_populates='photo')
+    apps = orm.relation("App", back_populates='photo')
+    music = orm.relation("Music", back_populates='photo')
+    achievements = orm.relation("Achievement", back_populates='photo')
