@@ -5,6 +5,7 @@ package com.example.neobrain.Controllers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,11 @@ public class AuthController extends Controller {
         if (isPasswordValid(password)) {
             User user = new User();
             // TODO Проверка на логин, в зависимости от логина, отправляем разные значения
-            user.setNumber(number);
+            if (isEmailValid(number)) {
+                user.setEmail(number);
+            } else {
+                user.setNumber(number);
+            }
             user.setHashedPassword(password);
             Call<Status> call = DataManager.getInstance().login(user);
             call.enqueue(new Callback<Status>() {
@@ -147,5 +152,9 @@ public class AuthController extends Controller {
         super.onRestoreInstanceState(savedInstanceState);
         textLogin.setText(savedInstanceState.getString("login"));
         textPassword.setText(savedInstanceState.getString("password"));
+    }
+
+    private boolean isEmailValid(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

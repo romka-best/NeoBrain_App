@@ -147,7 +147,7 @@ public class RegController extends Controller {
                         assert post != null;
                         SharedPreferences.Editor e = sp.edit();
                         e.putBoolean("hasAuthed", true);
-                        e.putInt("userId", Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
+                        e.putInt("userId", Integer.parseInt(post.getText().substring(5, post.getText().length() - 8)));
                         e.apply();
                         // Звук
 //                        try {

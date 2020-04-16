@@ -37,7 +37,7 @@
         android:layout_width="240dp"
         android:layout_height="55dp"
         android:layout_marginTop="8dp"
-        android:hint="@string/hint_number"
+        android:hint="@string/hint_username"
         android:textColor="@color/colorText"
         android:textColorHint="#80F6F6F6"
         app:boxStrokeColor="@color/colorText"
@@ -54,7 +54,7 @@
             android:id="@+id/login_text"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:inputType="phone"
+            android:inputType="textEmailAddress"
             android:textColor="@color/colorText" />
 
     </com.google.android.material.textfield.TextInputLayout>
