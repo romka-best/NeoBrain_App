@@ -134,7 +134,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                     @Override
                     public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
-                        Log.e(TAG, "Чёрт...");
+                        Log.e(TAG, t.toString() + "");
                     }
                 });
             }

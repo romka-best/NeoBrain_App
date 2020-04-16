@@ -1,6 +1,8 @@
 package com.example.neobrain.Adapters;
 
 // Импортируем нужные библиотеки
+
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -14,16 +16,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.Controllers.ChatController;
+import com.example.neobrain.Controllers.HomeController;
+import com.example.neobrain.Controllers.MessagesController;
+import com.example.neobrain.Controllers.RegController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,9 +47,11 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<Chat> mChatsList;
+    private Router ChildRouter;
 
-    public ChatAdapter(ArrayList<Chat> mChatsList) {
+    public ChatAdapter(ArrayList<Chat> mChatsList, Router ChildRouter) {
         this.mChatsList = mChatsList;
+        this.ChildRouter = ChildRouter;
     }
 
     @NonNull
@@ -47,14 +60,12 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
-                return new ViewHolder(
-                        LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.recycler_view_item_chat, parent, false));
+                return new ViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.recycler_view_item_chat, parent, false));
             case VIEW_TYPE_EMPTY:
             default:
-                return new EmptyViewHolder(
-                        LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.recycler_view_empty_item_chat, parent, false));
+                return new EmptyViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.recycler_view_empty_item_chat, parent, false));
         }
     }
 
@@ -114,6 +125,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             timeTextView.setText("");
         }
 
+        @SuppressLint("ResourceType")
         public void onBind(int position) {
             super.onBind(position);
             final Chat mChat = mChatsList.get(position);
@@ -149,7 +161,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 titleTextView.setText(mChat.getName());
             }
             itemView.setOnClickListener(v -> {
-                // TODO: реализовать переход на MessagesController!
+                //  TODO
+                ChildRouter.pushController(RouterTransaction.with(new MessagesController())
+                        .popChangeHandler(new FadeChangeHandler())
+                        .pushChangeHandler(new FadeChangeHandler()));
             });
         }
     }
