@@ -3,7 +3,7 @@ import datetime
 import logging
 import os
 
-from flask import Flask, redirect
+from flask import Flask, redirect, render_template
 from flask_login import LoginManager, logout_user, login_required
 
 from conf.routes import generate_routes
@@ -75,7 +75,7 @@ def login():
 # Landing-page
 @app.route("/")
 def index():
-    return "NeoHello!"
+    return render_template('index.html')
 
 
 if __name__ == '__main__':

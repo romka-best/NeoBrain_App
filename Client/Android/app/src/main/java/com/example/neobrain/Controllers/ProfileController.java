@@ -6,11 +6,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -47,7 +45,6 @@ import com.example.neobrain.R;
 import com.example.neobrain.util.BundleBuilder;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -97,7 +94,7 @@ public class ProfileController extends Controller {
     private static final int RESULT_OK = -1;
 
     private int photoId;
-    private int userId = -1;
+    private int userId = 0;
     private Integer userIdSP;
 
     public int getPhotoId() {
@@ -135,7 +132,7 @@ public class ProfileController extends Controller {
                 Context.MODE_PRIVATE);
 
         View imagesButton = view.findViewById(R.id.button_first);
-        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new ImagesController())
+        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PhotosController())
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
@@ -212,7 +209,7 @@ public class ProfileController extends Controller {
 
     private void getProfile() {
         Call<UserModel> call;
-        if (userId == -1 || userId == 0) {
+        if (userId == 0) {
             call = DataManager.getInstance().getUser(userIdSP);
         } else {
             call = DataManager.getInstance().getUser(userId);
@@ -278,7 +275,7 @@ public class ProfileController extends Controller {
                             }
                             progressBar.setVisibility(View.INVISIBLE);
                             swipeContainer.setVisibility(View.VISIBLE);
-                            if (userId == -1) {
+                            if (userId == 0) {
                                 fabAdd.setVisibility(View.VISIBLE);
                                 buttonEdit.setVisibility(View.VISIBLE);
                             } else {
@@ -310,7 +307,7 @@ public class ProfileController extends Controller {
         postRecycler.setLayoutManager(mLayoutManager);
         postRecycler.setItemAnimator(new DefaultItemAnimator());
         Call<PostModel> call;
-        if (userId == -1 || userId == 0) {
+        if (userId == 0) {
             call = DataManager.getInstance().getPosts(userIdSP);
         } else {
             call = DataManager.getInstance().getPosts(userId);
@@ -358,6 +355,13 @@ public class ProfileController extends Controller {
                     call.enqueue(new Callback<Status>() {
                         @Override
                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            if (response.isSuccessful()) {
+                                Status post = response.body();
+                                assert post != null;
+                                setPhotoId(Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
+                                getProfile();
+                                getPosts();
+                            }
                         }
 
                         @Override
@@ -390,6 +394,13 @@ public class ProfileController extends Controller {
                         call.enqueue(new Callback<Status>() {
                             @Override
                             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    Status post = response.body();
+                                    assert post != null;
+                                    setPhotoId(Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
+                                    getProfile();
+                                    getPosts();
+                                }
                             }
 
                             @Override
@@ -411,7 +422,7 @@ public class ProfileController extends Controller {
 
     @OnClick(R.id.avatar_card)
     void launchPhoto() {
-        if (userId == -1 || userId == 0) {
+        if (userId == 0) {
             String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"}; // TODO Изменить на R.string.{}
             new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
                     .setTitle("Фотография") // TODO Изменить на R.string.{}
@@ -442,20 +453,26 @@ public class ProfileController extends Controller {
                                             call.enqueue(new Callback<Status>() {
                                                 @Override
                                                 public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                    Integer userIdSP = sp.getInt("userId", -1);
-                                                    User user = new User();
-                                                    user.setPhotoId(2);
-                                                    Call<Status> userCall = DataManager.getInstance().editUser(userIdSP, user);
-                                                    userCall.enqueue(new Callback<Status>() {
-                                                        @Override
-                                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                            setPhotoId(2);
-                                                        }
+                                                    if (response.isSuccessful()) {
+                                                        Integer userIdSP = sp.getInt("userId", -1);
+                                                        User user = new User();
+                                                        user.setPhotoId(2);
+                                                        Call<Status> userCall = DataManager.getInstance().editUser(userIdSP, user);
+                                                        userCall.enqueue(new Callback<Status>() {
+                                                            @Override
+                                                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                                                if (response.isSuccessful()) {
+                                                                    setPhotoId(2);
+                                                                    getProfile();
+                                                                    getPosts();
+                                                                }
+                                                            }
 
-                                                        @Override
-                                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                                                        }
-                                                    });
+                                                            @Override
+                                                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                            }
+                                                        });
+                                                    }
                                                 }
 
                                                 @Override

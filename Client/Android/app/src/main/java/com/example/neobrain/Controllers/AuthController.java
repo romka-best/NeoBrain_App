@@ -108,7 +108,9 @@ public class AuthController extends Controller {
                         e.putBoolean("hasAuthed", true);
                         e.putInt("userId", Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
                         e.apply();
-                        getRouter().popCurrentController();
+                        for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+                            routerTransaction.controller().getRouter().popCurrentController();
+                        }
                         getRouter().pushController(RouterTransaction.with(new HomeController())
                                 .popChangeHandler(new FlipChangeHandler())
                                 .pushChangeHandler(new FlipChangeHandler()));

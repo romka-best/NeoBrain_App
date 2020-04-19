@@ -20,6 +20,7 @@ class Photo(SqlAlchemyBase, SerializerMixin):
     # Отношения фогографии с другими таблицами
     users = orm.relation("User", back_populates='photo')
     chats = orm.relation("Chat", back_populates='photo')
+    posts = orm.relation("Post", back_populates='photo')
     apps = orm.relation("App", back_populates='photo')
     music = orm.relation("Music", back_populates='photo')
     achievements = orm.relation("Achievement", back_populates='photo')

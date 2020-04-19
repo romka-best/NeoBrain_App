@@ -90,8 +90,8 @@ public class MusicAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public static class EmptyViewHolder extends BaseViewHolder {
-        @BindView(R.id.titlePost)
-        TextView titlePostTextView;
+        @BindView(R.id.titleMusic)
+        TextView titleMusicTextView;
         @BindView(R.id.emoji)
         ImageView emojiImageView;
 

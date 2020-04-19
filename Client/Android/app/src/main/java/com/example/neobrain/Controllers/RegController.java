@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,7 +162,9 @@ public class RegController extends Controller {
 //                            er.printStackTrace();
 //                        }
                         // Звук
-                        getRouter().popCurrentController();
+                        for(RouterTransaction routerTransaction: getRouter().getBackstack()){
+                            routerTransaction.controller().getRouter().popCurrentController();
+                        }
                         getRouter().pushController(RouterTransaction.with(new HomeController())
                                 .popChangeHandler(new FlipChangeHandler())
                                 .pushChangeHandler(new FlipChangeHandler()));

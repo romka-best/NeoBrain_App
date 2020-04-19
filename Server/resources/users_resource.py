@@ -206,15 +206,17 @@ class UsersSearchResource(Resource):
                             'text': "Empty request"})
         # Создаём сессию в БД и находим пользователей
         session = db_session.create_session()
-        users = session.query(User).filter((User.name.like(f"%{param1}%")) | (User.name.like(f"%{param2}%")) |
-                                           (User.surname.like(f"%{param1}%")) | (
-                                               User.surname.like(f"%{param2}%"))).all()
+        users = session.query(User).filter((User.name.like(f"%{param1}%")) |
+                                           (User.name.like(f"%{param2}%")) |
+                                           (User.surname.like(f"%{param1}%")) |
+                                           (User.surname.like(f"%{param2}%"))).all()
         return jsonify({'users': [user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
                   'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
                   'can_write_message', 'city', 'republic', 'country', 'education', 'status',
-                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id')) for user in users]})
+                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id'))
+            for user in users]})
 
 
 # Ресурс входа пользователя
@@ -326,9 +328,11 @@ class UsersListResource(Resource):
         return jsonify({'users': [user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
-                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
-                  'can_write_message', 'city', 'republic', 'country', 'education', 'status',
-                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id')) for user in users]})
+                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups',
+                  'can_see_videos', 'can_write_message', 'city', 'republic',
+                  'country', 'education', 'status', 'last_seen',
+                  'followers_count', 'subscriptions_count', 'photo_id'))
+            for user in users]})
 
     # Создаём пользователя
     def post(self):

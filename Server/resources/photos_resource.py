@@ -5,7 +5,11 @@ from flask import jsonify
 from flask_restful import reqparse, Resource, abort
 
 from data import db_session
+from data.chats import Chat
+from data.music import Music
 from data.photos import Photo
+from data.posts import Post
+from data.users import User
 
 
 # Если photo не найдено, то приходит ответа сервера
@@ -36,6 +40,23 @@ class PhotoResource(Resource):
         # Создаём сессию и получаем фото
         session = db_session.create_session()
         photo = session.query(Photo).get(photo_id)
+        # Изменяем картинки на стандартные, когда удаляем
+        users = session.query(User).filter(User.photo_id == photo_id).all()
+        if users:
+            for user in users:
+                user.photo_id = 2
+        posts = session.query(Post).filter(Post.photo_id == photo_id).all()
+        if posts:
+            for post in posts:
+                post.photo_id = photo_id
+        chats = session.query(Chat).filter(Chat.photo_id == photo_id).all()
+        if chats:
+            for chat in chats:
+                chat.photo_id = 2
+        music = session.query(Music).filter(Music.photo_id == photo_id).all()
+        if music:
+            for sound in music:
+                sound.photo_id = 10
         session.delete(photo)
         session.commit()
         return jsonify({'status': 200,
@@ -65,4 +86,4 @@ class PhotoCreateResource(Resource):
         session.add(photo)
         session.commit()
         return jsonify({'status': 201,
-                        'text': f'created'})
+                        'text': f'Photo {photo.id} created'})

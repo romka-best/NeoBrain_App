@@ -5,7 +5,6 @@ from flask_restful import abort, Resource, reqparse
 
 from data import db_session
 from data.messages import Message
-from data.users import User
 
 from resources.chats_resource import abort_if_chat_not_found
 from resources.users_resource import abort_if_user_not_found
@@ -82,8 +81,9 @@ class MessageListResource(Resource):
         session = db_session.create_session()
         messages = session.query(Message).filter(Message.chat_id == chat_id).all()
         return jsonify({'messages': [message.to_dict(
-            only=('id', 'text', 'status', 'with_attachments', 'created_date', 'modified_date', 'author_id')) for message
-            in messages]})
+            only=('id', 'text', 'status', 'with_attachments',
+                  'created_date', 'modified_date', 'author_id'))
+            for message in messages]})
 
 
 class MessageCreateResource(Resource):
