@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Message {
-
     @SerializedName("text")
     @Expose
     private String text;
@@ -26,6 +25,12 @@ public class Message {
     @SerializedName("chat_id")
     @Expose
     private Integer chatId;
+
+    public Message(String text, String createdDate, Integer authorId) {
+        this.text = text;
+        this.createdDate = createdDate;
+        this.authorId = authorId;
+    }
 
     public String getText() {
         return text;

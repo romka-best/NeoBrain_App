@@ -48,6 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<Chat> mChatsList;
     private Router ChildRouter;
+    private Chat chat;
 
     public ChatAdapter(ArrayList<Chat> mChatsList, Router ChildRouter) {
         this.mChatsList = mChatsList;
@@ -129,7 +130,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onBind(int position) {
             super.onBind(position);
             final Chat mChat = mChatsList.get(position);
-
             if (mChat.getPhotoId() != null) {
                 Call<Photo> call = DataManager.getInstance().getPhoto(mChat.getPhotoId());
                 call.enqueue(new retrofit2.Callback<Photo>() {
@@ -161,8 +161,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 titleTextView.setText(mChat.getName());
             }
             itemView.setOnClickListener(v -> {
-                //  TODO
-                ChildRouter.pushController(RouterTransaction.with(new MessagesController())
+                chat = mChatsList.get(this.getCurrentPosition());
+                BottomNavigationView bottomNavigationView = ChildRouter.getActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+                ChildRouter.pushController(RouterTransaction.with(new MessagesController(chat))
                         .popChangeHandler(new FadeChangeHandler())
                         .pushChangeHandler(new FadeChangeHandler()));
             });

@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.Router;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
-import com.example.neobrain.API.model.Message;
 import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BundleBuilder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -46,7 +40,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 // Контроллер чатов
 @SuppressLint("ValidController")
 public class ChatController extends Controller {
-    @BindView(R.id.messagesRecycler)
+    @BindView(R.id.ChatsRecycler)
     public RecyclerView messagesRecycler;
     private ChatAdapter chatAdapter;
     private FloatingActionButton floatingActionButton;

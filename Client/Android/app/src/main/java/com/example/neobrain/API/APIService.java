@@ -103,12 +103,12 @@ public interface APIService {
             @Path("user_id") Integer user_id
     );
 
-    @GET("messages/<int:message_id>")
+    @GET("messages/{message_id}")
     Call<Message> getMessage(
             @Path("message_id") Integer message_id
     );
 
-    @GET("chats/<int:chat_id>/messages")
+    @GET("chats/{chat_id}/messages")
     Call<Messages> getMessages(
             @Path("chat_id") Integer chat_id
     );

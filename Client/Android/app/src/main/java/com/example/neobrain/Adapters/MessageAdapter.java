@@ -190,8 +190,8 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public static class EmptyViewHolder extends BaseViewHolder {
         @BindView(R.id.emoji)
         ImageView emoji;
-        @BindView(R.id.titlePost)
-        TextView titlePost;
+        @BindView(R.id.titleMessage)
+        TextView titleMessage;
 
         EmptyViewHolder(View itemView) {
             super(itemView);
