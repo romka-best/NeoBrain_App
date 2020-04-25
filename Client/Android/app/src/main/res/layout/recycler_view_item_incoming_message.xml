@@ -4,25 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <View
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/background_message"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_alignParentTop="true"
         android:background="@drawable/background_message_online"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@id/time"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/background"
-        app:layout_constraintBottom_toTopOf="@+id/message"
-        app:layout_constraintStart_toStartOf="@id/message">
-    </TextView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/background"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/background_message"
+            app:layout_constraintTop_toBottomOf="@+id/message">
+        </TextView>
 
     <TextView
         android:id="@+id/message"
@@ -33,5 +33,7 @@
         app:layout_constraintStart_toStartOf="@+id/background_message"
         app:layout_constraintTop_toTopOf="@+id/background_message"
         tools:text="@tools:sample/lorem[4:10]" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

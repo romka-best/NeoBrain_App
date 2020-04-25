@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.Adapters.MessageAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.util.SpacesItemDecoration;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,10 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
+import butterknife.OnItemClick;
+import butterknife.OnTouch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +55,8 @@ public class MessagesController extends Controller {
     ImageView coverImageView;
     @BindView(R.id.MessagesRecycler)
     RecyclerView messagesRecycler;
+    @BindView(R.id.footer_chat_edit_text)
+    EditText FooterChatEditText;
 
     public MessagesController() {}
     public MessagesController(Chat chat) {
@@ -87,8 +95,7 @@ public class MessagesController extends Controller {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
-        Log.e("RRRRRRRRRRRR", chat.getId() + "");
-        Call<Messages> call = DataManager.getInstance().getMessages(7);
+        Call<Messages> call = DataManager.getInstance().getMessages(chat.getId());
         call.enqueue(new Callback<Messages>() {
             @Override
             public void onResponse(Call<Messages> call, Response<Messages> response) {
@@ -101,6 +108,10 @@ public class MessagesController extends Controller {
                     }
                     messageAdapter = new MessageAdapter(mMessages, getApplicationContext());
                     messagesRecycler.setAdapter(messageAdapter);
+                    messagesRecycler.addItemDecoration(new SpacesItemDecoration(20));
+                    if (mMessages.size() > 0) {
+                        messagesRecycler.smoothScrollToPosition(mMessages.size() - 1);
+                    }
                 }
             }
             @Override
@@ -109,9 +120,16 @@ public class MessagesController extends Controller {
         });
     }
 
-
     @OnClick(R.id.send)
     public void sendMessage() {
+        // TODO: реализовать отправку сообщения
+        FooterChatEditText.setText("");
+    }
+
+    // TODO: проматывать сообщения вниз при нажатии на edit text
+    @OnClick(R.id.footer_chat_edit_text)
+    public void typeText() {
+        messagesRecycler.smoothScrollToPosition(Objects.requireNonNull(messagesRecycler.getAdapter()).getItemCount() - 1);
     }
 
     @Override

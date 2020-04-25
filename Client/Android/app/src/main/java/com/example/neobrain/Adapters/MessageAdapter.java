@@ -43,6 +43,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_MESSAGE_INCOMING = 1;
     private static final int VIEW_TYPE_MESSAGE_OUTGOING = 2;
     private User user;
+    private Integer userId;
     private List<Message> mMessageList;
     private Callback mCallback;
     private SharedPreferences sp;
@@ -52,15 +53,16 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.mMessageList = mMessageList;
         sp = Objects.requireNonNull(context).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-        Integer userIdSP = sp.getInt("userId", -1);
-        Call<UserModel> userCall = DataManager.getInstance().getUser(userIdSP);
+        Integer userId = sp.getInt("userId", -1);
+        Call<UserModel> userCall = DataManager.getInstance().getUser(userId);
         userCall.enqueue(new retrofit2.Callback<UserModel>() {
             @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+            public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                assert response.body() != null;
                 user = response.body().getUser();
             }
             @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
             }
         });
    }
@@ -93,7 +95,8 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public int getItemViewType(int position) {
         if (mMessageList != null && mMessageList.size() > 0) {
-            if (mMessageList.get(position).getAuthorId().equals(user.getId())){
+            // TODO: заменить 5 на id текущего пользователя
+            if (mMessageList.get(position).getAuthorId().equals(5)){
                 return VIEW_TYPE_MESSAGE_OUTGOING;
             } else {
                 return VIEW_TYPE_MESSAGE_INCOMING;
@@ -184,6 +187,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             itemView.setOnClickListener(v -> {
                 // Сделать что-нибудь
             });
+            Log.e("STRING", messageTextView.getText().toString().length() + "");
         }
     }
 

@@ -37,6 +37,21 @@
                 android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/MessagesRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="65dp"
+            android:layout_marginBottom="60dp"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/footer_chat_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            tools:listitem="@layout/recycler_view_item_outgoing_message">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,56 +62,39 @@
         <EditText
             android:id="@+id/footer_chat_edit_text"
             android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="15dp"
-            android:inputType="text|textMultiLine|textCapSentences"
+            android:layout_height="wrap_content"
             android:background="@drawable/footer_chat"
+            android:gravity="bottom|left"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:minLines="1"
             android:padding="10dp"
-            android:drawablePadding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:scrollbars="vertical"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/send"/>
 
         <ImageButton
             android:id="@+id/attach"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="10dp"
             android:background="@null"
             android:src="@drawable/ic_add"
             app:layout_constraintEnd_toStartOf="@+id/footer_chat_edit_text"
-            app:layout_constraintTop_toBottomOf="@+id/swipeContainer">
+            app:layout_constraintTop_toBottomOf="@+id/MessagesRecycler">
         </ImageButton>
 
         <ImageButton
             android:id="@+id/send"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="10dp"
             android:background="@null"
             android:src="@android:drawable/ic_menu_send"
             app:layout_constraintStart_toEndOf="@+id/footer_chat_edit_text"
-            app:layout_constraintTop_toBottomOf="@+id/swipeContainer">
+            app:layout_constraintTop_toBottomOf="@+id/MessagesRecycler">
         </ImageButton>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="60dp"
-            android:layout_marginBottom="55dp"
-            app:layout_constraintBottom_toTopOf="@+id/footer_chat_edit_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/MessagesRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/recycler_view_item_outgoing_message">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
