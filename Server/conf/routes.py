@@ -5,7 +5,7 @@ from resources.messages_resource import MessageListResource, MessageCreateResour
 from resources.music_resource import MusicResource, MusicListResource
 from resources.people_resource import PeopleResource
 from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UsersSearchResource
-from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource
+from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource, ChatFindUsersResource
 from resources.photos_resource import PhotoResource, PhotoCreateResource
 from resources.posts_resource import PostResource, PostCreateResource, PostsListResource
 from flask_restful import Api
@@ -31,6 +31,7 @@ def generate_routes(app):
     api.add_resource(ChatResource, '/api/chats/<int:chat_id>')
     api.add_resource(ChatCreateResource, '/api/chats')
     api.add_resource(ChatsListResource, '/api/chats/users/<int:user_id>')
+    api.add_resource(ChatFindUsersResource, '/api/chats/search/<int:chat_id>')
 
     # Ресурсы с Message
     api.add_resource(MessageResource, '/api/messages/<int:message_id>')

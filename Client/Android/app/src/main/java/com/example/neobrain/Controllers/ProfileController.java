@@ -43,6 +43,7 @@ import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BundleBuilder;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -179,6 +180,8 @@ public class ProfileController extends Controller {
         fabAdd = view.findViewById(R.id.fabAdd);
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
                     getRouter().pushController(RouterTransaction.with(new PostController()));
                 }
         );
@@ -397,7 +400,6 @@ public class ProfileController extends Controller {
                                 if (response.isSuccessful()) {
                                     Status post = response.body();
                                     assert post != null;
-                                    setPhotoId(Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
                                     getProfile();
                                     getPosts();
                                 }

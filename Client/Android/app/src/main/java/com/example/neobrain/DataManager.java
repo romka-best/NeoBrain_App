@@ -6,6 +6,7 @@ import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
@@ -48,6 +49,12 @@ public class DataManager {
 
     public Call<Chat> getChat(Integer chat_id) {
         return mAPIService.getChat(
+                chat_id
+        );
+    }
+
+    public Call<ChatUsers> searchUsersInChat(Integer chat_id) {
+        return mAPIService.searchUsersInChat(
                 chat_id
         );
     }

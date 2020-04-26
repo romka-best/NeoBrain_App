@@ -4,6 +4,7 @@ package com.example.neobrain.API;
 
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
@@ -79,8 +80,12 @@ public interface APIService {
 
     @DELETE("chats/{chat_id}")
     Call<Status> deleteChat(
-            @Path("chat_id") Integer chat_id,
-            @Body Chat chat
+            @Path("chat_id") Integer chat_id
+    );
+
+    @GET("chats/search/{chat_id}")
+    Call<ChatUsers> searchUsersInChat(
+            @Path("chat_id") Integer chat_id
     );
 
     @POST("chats")

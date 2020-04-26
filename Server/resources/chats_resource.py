@@ -57,7 +57,7 @@ class ChatResource(Resource):
         return jsonify({'chat': chat.to_dict(
             only=('name', 'type_of_chat', 'status', 'last_time_message',
                   'last_message', 'count_new_messages', 'count_messages',
-                  'created_date', 'user_id', 'photo_id'))})
+                  'created_date', 'photo_id'))})
 
     # Изменяем чат по его id
     def put(self, chat_id):
@@ -133,6 +133,18 @@ class ChatsListResource(Resource):
             only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
                   'last_message', 'count_new_messages', 'count_messages',
                   'created_date', 'photo_id')) for chat in chats]})
+
+
+class ChatFindUsersResource(Resource):
+    # Получаем юзеров по id чата
+    def get(self, chat_id):
+        if str(chat_id).find("?") != -1:
+            chat_id = int(chat_id[:chat_id.find("?")].strip())
+        # Создаём сессию и получаем чат
+        session = db_session.create_session()
+        chat = session.query(Chat).get(chat_id)
+        users = chat.users
+        return jsonify({'users': [user.id for user in users]})
 
 
 class ChatCreateResource(Resource):

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.ChatUsers;
+import com.example.neobrain.API.model.User;
+import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -48,6 +52,9 @@ public class ChatController extends Controller {
     private SwipeRefreshLayout swipeContainer;
     private SharedPreferences sp;
     private LayoutInflater inflater;
+
+    private String curNameChat;
+    private Integer curPhotoId;
 
     @NonNull
     @Override
@@ -91,7 +98,52 @@ public class ChatController extends Controller {
                     List<Chat> chats = response.body().getChats();
                     ArrayList<Chat> mChats = new ArrayList<>();
                     for (Chat chat : chats) {
-                        mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
+                        curNameChat = "";
+                        curPhotoId = 2;
+                        if (chat.getTypeOfChat() == 0) {
+                            Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
+                            chatUsersCall.enqueue(new Callback<ChatUsers>() {
+                                @Override
+                                public void onResponse(@NotNull Call<ChatUsers> call, @NotNull Response<ChatUsers> response) {
+                                    if (response.isSuccessful()) {
+                                        assert response.body() != null;
+                                        List<Integer> users = response.body().getUsers();
+                                        for (Integer userId : users) {
+                                            if (userId.equals(userIdSP)) {
+                                                continue;
+                                            }
+                                            Call<UserModel> userCall = DataManager.getInstance().getUser(userId);
+                                            userCall.enqueue(new Callback<UserModel>() {
+                                                @Override
+                                                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                                                    if (response.isSuccessful()) {
+                                                        assert response.body() != null;
+                                                        User user = response.body().getUser();
+                                                        curNameChat = user.getName() + " " + user.getSurname();
+                                                        curPhotoId = user.getPhotoId();
+                                                        mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), curNameChat, curPhotoId));
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
+
+                                }
+                            });
+                        } else {
+                            curNameChat = chat.getName();
+                            curPhotoId = chat.getPhotoId();
+                            mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), curNameChat, curPhotoId));
+                        }
                     }
                     shimmerViewContainer.stopShimmer();
                     shimmerViewContainer.setVisibility(View.GONE);
