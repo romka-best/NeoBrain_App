@@ -1,16 +1,21 @@
 package com.example.neobrain.Controllers;
 
 // Импортируем нужные библиотеки
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -18,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.Message;
@@ -38,10 +44,6 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnEditorAction;
-import butterknife.OnFocusChange;
-import butterknife.OnItemClick;
-import butterknife.OnTouch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,8 +59,22 @@ public class MessagesController extends Controller {
     RecyclerView messagesRecycler;
     @BindView(R.id.footer_chat_edit_text)
     EditText FooterChatEditText;
+    @BindView(R.id.nameAndSurname)
+    TextView nameAndSurname;
+    @BindView(R.id.textStatus)
+    TextView textStatus;
+    @BindView(R.id.backButton)
+    ImageButton backButton;
+    @BindView(R.id.callButton)
+    ImageButton callButton;
+    @BindView(R.id.attach)
+    ImageButton attachButton;
+    @BindView(R.id.send)
+    ImageButton sendButton;
 
-    public MessagesController() {}
+    public MessagesController() {
+    }
+
     public MessagesController(Chat chat) {
         this.chat = chat;
     }
@@ -68,6 +84,13 @@ public class MessagesController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.messages_controller, container, false);
         ButterKnife.bind(this, view);
+        backButton.setColorFilter(Color.argb(255, 255, 255, 255));
+        backButton.setOnClickListener(v -> {
+                    BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    getRouter().popCurrentController();
+                }
+        );
         if (chat.getPhotoId() != null) {
             Call<Photo> call = DataManager.getInstance().getPhoto(chat.getPhotoId());
             call.enqueue(new retrofit2.Callback<Photo>() {
@@ -83,22 +106,25 @@ public class MessagesController extends Controller {
                 }
 
                 @Override
-                public void onFailure(Call<Photo> call, Throwable t) {
+                public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
                 }
             });
+        }
+        if (chat.getName() != null) {
+            nameAndSurname.setText(chat.getName());
         }
         getMessages();
         return view;
     }
 
-    public void getMessages() {
+    private void getMessages() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
         Call<Messages> call = DataManager.getInstance().getMessages(chat.getId());
         call.enqueue(new Callback<Messages>() {
             @Override
-            public void onResponse(Call<Messages> call, Response<Messages> response) {
+            public void onResponse(@NotNull Call<Messages> call, @NotNull Response<Messages> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     List<Message> messages = response.body().getMessages();
@@ -114,21 +140,22 @@ public class MessagesController extends Controller {
                     }
                 }
             }
+
             @Override
-            public void onFailure(Call<Messages> call, Throwable t) {
+            public void onFailure(@NotNull Call<Messages> call, @NotNull Throwable t) {
             }
         });
     }
 
     @OnClick(R.id.send)
-    public void sendMessage() {
+    void sendMessage() {
         // TODO: реализовать отправку сообщения
         FooterChatEditText.setText("");
     }
 
     // TODO: проматывать сообщения вниз при нажатии на edit text
     @OnClick(R.id.footer_chat_edit_text)
-    public void typeText() {
+    void typeText() {
         messagesRecycler.smoothScrollToPosition(Objects.requireNonNull(messagesRecycler.getAdapter()).getItemCount() - 1);
     }
 

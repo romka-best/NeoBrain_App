@@ -16,6 +16,7 @@ import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +50,11 @@ public class PostController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
-        cancelButton.setOnClickListener(v -> getRouter().popCurrentController());
+        cancelButton.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.VISIBLE);
+            getRouter().popCurrentController();
+        });
         acceptButton.setOnClickListener(v -> setPost());
 
 
@@ -65,6 +70,8 @@ public class PostController extends Controller {
         call.enqueue(new Callback<Status>() {
             @Override
             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.VISIBLE);
                 getRouter().popCurrentController();
             }
 
@@ -74,5 +81,12 @@ public class PostController extends Controller {
             }
         });
 
+    }
+
+    @Override
+    public boolean handleBack() {
+        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+        return super.handleBack();
     }
 }

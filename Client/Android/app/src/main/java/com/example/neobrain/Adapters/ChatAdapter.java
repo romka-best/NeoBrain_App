@@ -162,7 +162,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             itemView.setOnClickListener(v -> {
                 chat = mChatsList.get(this.getCurrentPosition());
-                BottomNavigationView bottomNavigationView = ChildRouter.getActivity().findViewById(R.id.bottom_navigation);
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(ChildRouter.getActivity()).findViewById(R.id.bottom_navigation);
                 bottomNavigationView.setVisibility(View.GONE);
                 ChildRouter.pushController(RouterTransaction.with(new MessagesController(chat))
                         .popChangeHandler(new FadeChangeHandler())

@@ -53,7 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.mMessageList = mMessageList;
         sp = Objects.requireNonNull(context).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-        Integer userId = sp.getInt("userId", -1);
+        userId = sp.getInt("userId", -1);
         Call<UserModel> userCall = DataManager.getInstance().getUser(userId);
         userCall.enqueue(new retrofit2.Callback<UserModel>() {
             @Override
@@ -95,8 +95,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public int getItemViewType(int position) {
         if (mMessageList != null && mMessageList.size() > 0) {
-            // TODO: заменить 5 на id текущего пользователя
-            if (mMessageList.get(position).getAuthorId().equals(5)){
+            if (mMessageList.get(position).getAuthorId().equals(userId)) {
                 return VIEW_TYPE_MESSAGE_OUTGOING;
             } else {
                 return VIEW_TYPE_MESSAGE_INCOMING;

@@ -1,7 +1,14 @@
 package com.example.neobrain.API.model;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
 
 public class Post {
 
@@ -95,4 +102,24 @@ public class Post {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
+    public static final Comparator<Post> COMPARE_BY_TIME = new Comparator<Post>() {
+        @Override
+        public int compare(Post post1, Post post2) {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date1 = null;
+            Date date2 = null;
+            try {
+                date1 = format.parse(post1.getCreatedDate());
+                date2 = format.parse(post2.getCreatedDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            assert date1 != null;
+            assert date2 != null;
+            Long timestamp1 = date1.getTime();
+            Long timestamp2 = date2.getTime();
+            return (int) (timestamp2 - timestamp1);
+        }
+    };
 }
