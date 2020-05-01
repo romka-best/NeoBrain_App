@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.sorts.SortByTime;
 import com.example.neobrain.util.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -53,7 +55,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -296,6 +300,13 @@ public class ProfileController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                long mills = 1000L;
+                Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
+
+                assert vibrator != null;
+                if (vibrator.hasVibrator()) {
+                    vibrator.vibrate(mills);
+                }
                 progressBar.setVisibility(View.INVISIBLE);
                 emoji.setVisibility(View.VISIBLE);
                 textError.setVisibility(View.VISIBLE);
@@ -325,6 +336,8 @@ public class ProfileController extends Controller {
                     for (Post post : posts) {
                         mPosts.add(new Post(post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
                     }
+
+                    Collections.sort(mPosts, Post.COMPARE_BY_TIME);
                     postAdapter = new PostAdapter(mPosts);
                     postRecycler.setAdapter(postAdapter);
                 }

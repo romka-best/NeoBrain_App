@@ -26,12 +26,20 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +51,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер чатов
 @SuppressLint("ValidController")
-public class ChatController extends Controller {
+public class ChatController extends Controller implements Runnable {
     @BindView(R.id.ChatsRecycler)
     public RecyclerView messagesRecycler;
     private ChatAdapter chatAdapter;
@@ -52,6 +60,7 @@ public class ChatController extends Controller {
     private SwipeRefreshLayout swipeContainer;
     private SharedPreferences sp;
     private LayoutInflater inflater;
+    private ArrayList<Chat> mChats = new ArrayList<>();
 
     private String curNameChat;
     private Integer curPhotoId;
@@ -81,6 +90,8 @@ public class ChatController extends Controller {
                 R.color.colorPrimaryDark);
 
         getChats();
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
         return view;
     }
 
@@ -89,6 +100,7 @@ public class ChatController extends Controller {
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
         Integer userIdSP = sp.getInt("userId", -1);
+        //TODO Пофиксить, работает не так как надо
         Call<ChatModel> call = DataManager.getInstance().getChats(userIdSP);
         call.enqueue(new Callback<ChatModel>() {
             @Override
@@ -96,7 +108,7 @@ public class ChatController extends Controller {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     List<Chat> chats = response.body().getChats();
-                    ArrayList<Chat> mChats = new ArrayList<>();
+                    mChats = new ArrayList<>();
                     for (Chat chat : chats) {
                         curNameChat = "";
                         curPhotoId = 2;
@@ -147,6 +159,9 @@ public class ChatController extends Controller {
                     }
                     shimmerViewContainer.stopShimmer();
                     shimmerViewContainer.setVisibility(View.GONE);
+                    if (mChats.size() > 0) {
+                        Collections.sort(mChats, Chat.COMPARE_BY_TIME);
+                    }
                     chatAdapter = new ChatAdapter(mChats, getRouter());
                     messagesRecycler.setAdapter(chatAdapter);
                 }
@@ -156,5 +171,12 @@ public class ChatController extends Controller {
             public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
             }
         });
+    }
+
+    //TODO Исправить
+    @Override
+    public void run() {
+        assert getView() != null;
+        Snackbar.make(getView(), "run", Snackbar.LENGTH_LONG).show();
     }
 }
