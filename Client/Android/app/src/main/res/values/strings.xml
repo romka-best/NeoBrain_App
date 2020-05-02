@@ -57,4 +57,19 @@
     <string name="empty_achievements">Раздел достижений в разработке</string>
     <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
     <string name="empty_messages">Начните чат первым</string>
+    <string name="less_than_one_minute">Меньше 1 минуты назад</string>
+    <string name="n_minutes_before"> мин. назад</string>
+    <string name="n_hours_before"> час. назад</string>
+    <string name="n_days_before"> дн. назад</string>
+    <string name="n_years_before"> года назад</string>
+    <string name="m_years_before"> лет назад</string>
+    <string name="week_before">Неделю назад</string>
+    <string name="Mn">Пн</string>
+    <string name="Tu">Вт</string>
+    <string name="Wd">Ср</string>
+    <string name="Th">Чт</string>
+    <string name="Fr">Пт</string>
+    <string name="Su">Сб</string>
+    <string name="St">Вс</string>
+    <string name="error_in_date">Что-то не так!</string>
 </resources>

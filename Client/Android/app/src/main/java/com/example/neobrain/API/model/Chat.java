@@ -149,8 +149,8 @@ public class Chat {
             Date date1 = null;
             Date date2 = null;
             try {
-                date1 = format.parse(chat1.getCreatedDate());
-                date2 = format.parse(chat2.getCreatedDate());
+                date1 = format.parse(chat1.getLastTimeMessage());
+                date2 = format.parse(chat2.getLastTimeMessage());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
