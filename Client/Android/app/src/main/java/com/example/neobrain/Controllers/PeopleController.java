@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Person;
 import com.example.neobrain.API.model.Photo;
@@ -66,44 +69,49 @@ public class PeopleController extends Controller {
         peopleRecycler.setLayoutManager(mLayoutManager);
         peopleRecycler.setItemAnimator(new DefaultItemAnimator());
 
-        SearchView searchView = view.findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        ImageButton searchButton = view.findViewById(R.id.search_people_button);
+        searchButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController())
+                .popChangeHandler(new HorizontalChangeHandler())
+                .pushChangeHandler(new HorizontalChangeHandler())));
 
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                List<String> strings = Arrays.asList(query.toLowerCase().trim().split(" "));
-                StringJoiner joiner = new StringJoiner("&");
-                for (int i = 0; i < strings.size(); i++) {
-                    joiner.add(strings.get(i));
-                }
-                ArrayList<User> mUsers = new ArrayList<>();
-                Call<Users> call = DataManager.getInstance().searchUser(String.valueOf(joiner));
-                call.enqueue(new Callback<Users>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Users> call, @NotNull Response<Users> response) {
-                        assert response.body() != null;
-                        List<User> users = response.body().getUsers();
-                        for (User user : users) {
-                            mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
-                        }
-                        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
-                        peopleRecycler.setAdapter(peopleAdapter);
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Users> call, @NotNull Throwable t) {
-
-                    }
-                });
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String searchQuery) {
-                Log.e("onQueryTextChange", searchQuery.toLowerCase().trim());
-                return true;
-            }
-        });
+//        SearchView searchView = view.findViewById(R.id.);
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                List<String> strings = Arrays.asList(query.toLowerCase().trim().split(" "));
+//                StringJoiner joiner = new StringJoiner("&");
+//                for (int i = 0; i < strings.size(); i++) {
+//                    joiner.add(strings.get(i));
+//                }
+//                ArrayList<User> mUsers = new ArrayList<>();
+//                Call<Users> call = DataManager.getInstance().searchUser(String.valueOf(joiner));
+//                call.enqueue(new Callback<Users>() {
+//                    @Override
+//                    public void onResponse(@NotNull Call<Users> call, @NotNull Response<Users> response) {
+//                        assert response.body() != null;
+//                        List<User> users = response.body().getUsers();
+//                        for (User user : users) {
+//                            mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+//                        }
+//                        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
+//                        peopleRecycler.setAdapter(peopleAdapter);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@NotNull Call<Users> call, @NotNull Throwable t) {
+//
+//                    }
+//                });
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String searchQuery) {
+//                Log.e("onQueryTextChange", searchQuery.toLowerCase().trim());
+//                return true;
+//            }
+//        });
         getPeople();
         return view;
     }

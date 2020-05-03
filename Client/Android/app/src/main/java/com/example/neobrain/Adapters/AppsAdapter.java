@@ -84,13 +84,6 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         notifyDataSetChanged();
     }
 
-    public interface Callback {
-        void onEmptyViewRetryClick();
-    }
-
-    public void setCallback(ChatAdapter.Callback callback) {
-    }
-
     public class ViewHolder extends BaseViewHolder {
         @BindView(R.id.image)
         ImageView coverImageView;

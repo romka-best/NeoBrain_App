@@ -83,6 +83,7 @@ class ChatResource(Resource):
             chat.last_time_message = args['last_time_message']
         if args.get('last_message'):
             chat.last_message = args['last_message']
+            chat.last_time_message = datetime.now()
         if args.get('count_new_messages', None) is not None:
             chat.count_new_messages = args['count_new_messages']
         if args.get('count_messages', None) is not None:
@@ -208,3 +209,41 @@ class ChatCreateResource(Resource):
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{chat.id} created'})
+
+
+class ChatsSearchResource(Resource):
+    # Получаем чаты с поиском
+    def get(self, user_id, name_surname):
+        pass
+        # if name_surname.find("?") != -1:
+        #     name_surname = name_surname[:name_surname.find("?")].strip()
+        # user_name_surname_list = name_surname.split("&")
+        # if len(user_name_surname_list) == 2:
+        #     param1, param2 = map(str.title, user_name_surname_list)
+        # elif len(user_name_surname_list) == 1:
+        #     param1, param2 = user_name_surname_list[0].title(), user_name_surname_list[0].title()
+        # else:
+        #     return jsonify({'status': 400,
+        #                     'text': "Empty request"})
+        # # Создаём сессию в БД и находим чаты
+        # session = db_session.create_session()
+        # user = session.query(User).get(user_id)
+        # chats = []
+        # for chat in user.chats:
+        #     chat = session.query(Chat).get(chat.id)
+        #     users = chat.users
+        #     for user_chat in users:
+        #         cur_users = session.query(User).filter((User.name.like(f"%{param1}%")) |
+        #                                                (User.name.like(f"%{param2}%")) |
+        #                                                (User.surname.like(f"%{param1}%")) |
+        #                                                (User.surname.like(f"%{param2}%"))).all()
+        #         for cur_user in cur_users:
+        #             if user_chat == cur_user:
+        #                 chats.extend(users)
+        # return jsonify({'users': [user.to_dict(
+        #     only=('id', 'name', 'surname', 'nickname', 'number',
+        #           'created_date', 'modified_date', 'is_closed', 'email', 'about',
+        #           'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
+        #           'can_write_message', 'city', 'republic', 'country', 'education', 'status',
+        #           'last_seen', 'followers_count', 'subscriptions_count', 'photo_id'))
+        #     for user in chats]})

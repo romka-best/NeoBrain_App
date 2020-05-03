@@ -58,4 +58,8 @@
     <string name="empty_achievements">Раздел достижений в разработке</string>
     <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
     <string name="empty_messages">Начните чат первым</string>
+    <string name="all">Все</string>
+    <string name="groups">Группы</string>
+    <string name="chats">Чаты</string>
+    <string name="edit_information">Редактировать информацию</string>
 </resources>

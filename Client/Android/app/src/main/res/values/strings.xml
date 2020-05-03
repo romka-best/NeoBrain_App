@@ -48,6 +48,7 @@
     <string name="followers">Подписчиков</string>
     <string name="subscribers">Подписок</string>
     <string name="detailed_information">Подробная информация</string>
+    <string name="edit_information">Редактировать инвормацию</string>
     <string name="gender_w">Ж</string>
     <string name="gender_m">М</string>
     <string name="empty_people">Вы ещё ни на кого не подписаны</string>
@@ -57,4 +58,7 @@
     <string name="empty_achievements">Раздел достижений в разработке</string>
     <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
     <string name="empty_messages">Начните чат первым</string>
+    <string name="all">Все</string>
+    <string name="groups">Группы</string>
+    <string name="chats">Чаты</string>
 </resources>

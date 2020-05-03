@@ -26,6 +26,9 @@ class App(SqlAlchemyBase, SerializerMixin):
     secondary_text = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # Описание приложения
     description = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    # Ссылки на приложение
+    link_android = sqlalchemy.Column(sqlalchemy.String)
+    link_ios = sqlalchemy.Column(sqlalchemy.String)
 
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")

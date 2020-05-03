@@ -10,6 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/MessagesRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/footer_chat_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:itemCount="9"
+            tools:listitem="@layout/recycler_view_item_outgoing_message">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
         <View
             android:id="@+id/header"
             android:layout_width="match_parent"
@@ -37,21 +52,6 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/MessagesRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:overScrollMode="never"
-            app:layout_constraintBottom_toTopOf="@+id/footer_chat_edit_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:listitem="@layout/recycler_view_item_outgoing_message">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
         <EditText
             android:id="@+id/footer_chat_edit_text"
             android:layout_width="300dp"

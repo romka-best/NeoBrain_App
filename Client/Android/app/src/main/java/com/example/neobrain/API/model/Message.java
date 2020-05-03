@@ -39,6 +39,16 @@ public class Message {
         this.authorId = authorId;
     }
 
+    public Message(String text, Integer authorId, Integer chatId) {
+        this.text = text;
+        this.authorId = authorId;
+        this.chatId = chatId;
+    }
+
+    public Message() {
+
+    }
+
     public String getText() {
         return text;
     }

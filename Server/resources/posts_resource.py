@@ -106,3 +106,7 @@ class PostCreateResource(Resource):
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{post.id} created'})
+
+
+class PostsSearchResource(Resource):
+    pass

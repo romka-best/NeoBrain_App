@@ -18,7 +18,7 @@ class Music(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'music'
 
     # Формат даты
-    datetime_format = '%Y-%m-%d %H:%M:%S'
+    datetime_format = '%Y-%m-%d %H:%M'
 
     # id музыки
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)

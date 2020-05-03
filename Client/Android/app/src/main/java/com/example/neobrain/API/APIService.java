@@ -127,4 +127,15 @@ public interface APIService {
     Call<Status> createPost(
             @Body Post post
     );
+
+    @POST("messages")
+    Call<Status> createMessage(
+            @Body Message message
+    );
+
+    @PUT("messages/{message_id}")
+    Call<Status> editMessage(
+            @Path("message_id") Integer message_id,
+            @Body Message message
+    );
 }

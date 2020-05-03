@@ -54,6 +54,9 @@ public class Chat {
         this.photoId = photoId;
     }
 
+    public Chat() {
+    }
+
     public Integer getCountMessages() {
         return countMessages;
     }

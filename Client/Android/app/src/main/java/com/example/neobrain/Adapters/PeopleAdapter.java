@@ -171,7 +171,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             textTextView.setText(sb);
 
             itemView.setOnClickListener(v -> {
-                Log.e("НАЖАЛ", mUser.getId().toString());
                 ChildRouter.pushController(RouterTransaction.with(new ProfileController(mUser.getId()))
                         .popChangeHandler(new FadeChangeHandler())
                         .pushChangeHandler(new FadeChangeHandler()));

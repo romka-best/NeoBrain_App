@@ -27,8 +27,6 @@ class MessageResource(Resource):
         self.parser.add_argument('text', required=False, type=str)
         # статус сообщения: 0 - Неудачная отправка, 1 - Отправлено, 2 - Доставлено, 3 - Прочитано
         self.parser.add_argument('status', required=False, type=int)
-        # есть ли приложения
-        self.parser.add_argument('with_attachments', required=False, type=bool)
         # дата редактирования сообщения в формате YYYY-mm-dd HH:MM:SS
         self.parser.add_argument('modified_date', required=False, type=str)
         # Id автора сообщения
@@ -42,8 +40,8 @@ class MessageResource(Resource):
         session = db_session.create_session()
         message = session.query(Message).get(message_id)
         return jsonify({'message': message.to_dict(
-            only=('id', 'text', 'status', 'with_attachments',
-                  'created_date', 'modified_date', 'author_id', 'chat_id'))})
+            only=('id', 'text', 'status', 'created_date',
+                  'modified_date', 'author_id', 'chat_id'))})
 
     # Изменяем сообщение по его id
     def put(self, message_id):
@@ -63,8 +61,6 @@ class MessageResource(Resource):
             message.text = args['text']
         if args.get('status', None) is not None:
             message.status = args['status']
-        if args.get('with_attachments', None) is not None:
-            message.with_attachments = args['with_attachments']
         message.modified_date = datetime.now()
         session.commit()
         return jsonify({'status': 200,
@@ -81,7 +77,7 @@ class MessageListResource(Resource):
         session = db_session.create_session()
         messages = session.query(Message).filter(Message.chat_id == chat_id).all()
         return jsonify({'messages': [message.to_dict(
-            only=('id', 'text', 'status', 'with_attachments',
+            only=('id', 'text', 'status',
                   'created_date', 'modified_date', 'author_id'))
             for message in messages]})
 
@@ -95,8 +91,6 @@ class MessageCreateResource(Resource):
         self.parser.add_argument('text', required=True, type=str)
         # статус сообщения: 0 - Неудачная отправка, 1 - Отправлено, 2 - Доставлено, 3 - Прочитано
         self.parser.add_argument('status', required=False, type=int)
-        # есть ли приложения
-        self.parser.add_argument('with_attachments', required=False, type=bool)
         # Id автора сообщения
         self.parser.add_argument('author_id', required=True, type=int)
         # Id чата
@@ -115,12 +109,14 @@ class MessageCreateResource(Resource):
             author_id=args['author_id'],
             chat_id=args['chat_id']
         )
-        # В зависимости от аргументов добавляем в сообщение аргументы
-        if args.get('with_attachments', None) is not None:
-            message.with_attachments = args['with_attachments']
+        # Обновляем статус
         message.status = 1
         # Добавляем в БД сообщение
         session.add(message)
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{message.id} created'})
+
+
+class MessagesSearchResource(Resource):
+    pass

@@ -15,7 +15,7 @@ public class ProfileInfoController extends Controller {
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.chat_controller, container, false);
+        View view = inflater.inflate(R.layout.profile_info_controller, container, false);
         ButterKnife.bind(this, view);
         return view;
     }

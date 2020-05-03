@@ -64,3 +64,7 @@ class MusicListResource(Resource):
         return jsonify({'music': [music.to_dict(
             only=('id', 'title', 'author', 'duration', 'created_date',
                   'photo_id'), rules='get_music') for music in music_user]})
+
+
+class MusicSearchResource(Resource):
+    pass

@@ -58,4 +58,8 @@
     <string name="empty_achievements">Section of achievements in development</string>
     <string name="empty_navigation">The \"Navigation\" section is in development.</string>
     <string name="empty_messages">Start the chat first</string>
+    <string name="all">All</string>
+    <string name="groups">Groups</string>
+    <string name="chats">Chats</string>
+    <string name="edit_information">Edit information</string>
 </resources>

@@ -8,3 +8,4 @@ from . import people
 from . import achievements
 from . import apps
 from . import music
+from . import groups

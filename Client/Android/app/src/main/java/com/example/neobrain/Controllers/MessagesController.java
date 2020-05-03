@@ -3,6 +3,8 @@ package com.example.neobrain.Controllers;
 // Импортируем нужные библиотеки
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,16 +27,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Status;
 import com.example.neobrain.Adapters.MessageAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.SpacesItemDecoration;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +55,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
+
 // Контроллер с сообщениями(Именно сам чат)
 public class MessagesController extends Controller {
 
@@ -58,7 +67,7 @@ public class MessagesController extends Controller {
     @BindView(R.id.MessagesRecycler)
     RecyclerView messagesRecycler;
     @BindView(R.id.footer_chat_edit_text)
-    EditText FooterChatEditText;
+    EditText footerChatEditText;
     @BindView(R.id.nameAndSurname)
     TextView nameAndSurname;
     @BindView(R.id.textStatus)
@@ -71,6 +80,8 @@ public class MessagesController extends Controller {
     ImageButton attachButton;
     @BindView(R.id.send)
     ImageButton sendButton;
+
+    private SharedPreferences sp;
 
     public MessagesController() {
     }
@@ -86,6 +97,9 @@ public class MessagesController extends Controller {
         ButterKnife.bind(this, view);
         backButton.setColorFilter(Color.argb(255, 255, 255, 255));
         backButton.setOnClickListener(v -> {
+            InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(backButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
                     bottomNavigationView.setVisibility(View.VISIBLE);
                     getRouter().popCurrentController();
@@ -113,6 +127,38 @@ public class MessagesController extends Controller {
         if (chat.getName() != null) {
             nameAndSurname.setText(chat.getName());
         }
+
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
+        coverImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer userIdSP = sp.getInt("userId", -1);
+                Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
+                chatUsersCall.enqueue(new Callback<ChatUsers>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ChatUsers> call, @NotNull Response<ChatUsers> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            List<Integer> users = response.body().getUsers();
+                            for (Integer userId : users) {
+                                if (userId.equals(userIdSP)) {
+                                    continue;
+                                }
+                                getRouter().pushController(RouterTransaction.with(new ProfileController(userId))
+                                        .popChangeHandler(new FadeChangeHandler())
+                                        .pushChangeHandler(new FadeChangeHandler()));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
+
+                    }
+                });
+            }
+        });
         getMessages();
         return view;
     }
@@ -150,7 +196,55 @@ public class MessagesController extends Controller {
     @OnClick(R.id.send)
     void sendMessage() {
         // TODO: реализовать отправку сообщения
-        FooterChatEditText.setText("");
+        if (!footerChatEditText.getText().toString().equals("")) {
+            Integer userIdSP = sp.getInt("userId", -1);
+            Message message = new Message(footerChatEditText.getText().toString(), userIdSP, chat.getId());
+            Call<Status> call = DataManager.getInstance().createMessage(message);
+            call.enqueue(new Callback<Status>() {
+                @Override
+                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                    if (response.isSuccessful()) {
+                        Status status = response.body();
+                        Message updateMessage = new Message();
+                        updateMessage.setStatus(2);
+                        assert status != null;
+                        Call<Status> updateMessageCall = DataManager.getInstance().editMessage(Integer.parseInt(status.getText().substring(0, status.getText().length() - 8)), updateMessage);
+                        updateMessageCall.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                            }
+                        });
+                        Chat chat1 = new Chat();
+                        chat1.setLastMessage(footerChatEditText.getText().toString());
+                        Call<Status> updateChatCall = DataManager.getInstance().editChat(chat.getId(), chat1);
+                        updateChatCall.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                            }
+                        });
+                        getMessages();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                }
+            });
+        }
+        footerChatEditText.setText("");
     }
 
     // TODO: проматывать сообщения вниз при нажатии на edit text

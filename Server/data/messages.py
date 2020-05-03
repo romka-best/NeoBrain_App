@@ -18,8 +18,6 @@ class Message(SqlAlchemyBase, SerializerMixin):
     text = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # статус сообщения: 0 - Неудачная отправка, 1 - Отправлено, 2 - Доставлено, 3 - Прочитано
     status = sqlalchemy.Column(sqlalchemy.Integer, nullable=False, default=0)
-    # Есть ли приложения
-    with_attachments = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     # Дата создания сообщения
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,

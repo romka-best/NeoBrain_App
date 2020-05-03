@@ -150,18 +150,6 @@ public class RegController extends Controller {
                         e.putBoolean("hasAuthed", true);
                         e.putInt("userId", Integer.parseInt(post.getText().substring(5, post.getText().length() - 8)));
                         e.apply();
-                        // Звук
-//                        try {
-//                            mp.reset();
-//                            AssetFileDescriptor afd;
-//                            afd = Objects.requireNonNull(getApplicationContext()).getAssets().openFd("reg_complete.wav");
-//                            mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-//                            mp.prepare();
-//                            mp.start();
-//                        } catch (IllegalStateException | IOException er) {
-//                            er.printStackTrace();
-//                        }
-                        // Звук
                         for(RouterTransaction routerTransaction: getRouter().getBackstack()){
                             routerTransaction.controller().getRouter().popCurrentController();
                         }

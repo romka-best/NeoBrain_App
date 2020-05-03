@@ -85,8 +85,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     subscriptions_count = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     # Статус пользователя 0 - Offline, 1 - Online
     status = sqlalchemy.Column(sqlalchemy.Integer, default=1)
-    # Вошёл ли пользователь
-    authenticated = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
+
     # Последний вход пользователя в формате YYYY-MM-DD HH:MM:SS
     last_seen = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
@@ -106,6 +105,11 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     apps = orm.relation("App",
                         secondary="app_association",
                         backref="users")
+
+    # Связь с Group
+    groups = orm.relation("Group",
+                          secondary="group_association",
+                          backref="users")
 
     # Связь с Music
     music = orm.relation("Music",
@@ -136,10 +140,6 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     # Для проверки пароля
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
-
-    # Зашёл ли пользователь
-    def is_authenticated(self):
-        return self.authenticated
 
     # Активный ли пользователь
     def is_active(self):

@@ -14,11 +14,15 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +30,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +48,6 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.sorts.SortByTime;
 import com.example.neobrain.util.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -55,7 +59,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,19 +81,37 @@ public class ProfileController extends Controller {
     public RecyclerView postRecycler;
     private PostAdapter postAdapter;
 
-    private ImageView avatar;
-    private SwipeRefreshLayout swipeContainer;
-    private View statusCircle;
-    private TextView nameAndSurname;
-    private TextView nickname;
-    private TextView followersCount;
-    private TextView subscribersCount;
-    private FloatingActionButton fabAdd;
-    private MaterialButton buttonEdit;
-    private ProgressBar progressBar;
-    private ImageView emoji;
-    private TextView textError;
-    private TextView cityAgeGenderText;
+    @BindView(R.id.coordinatorLayout)
+    public CoordinatorLayout coordinatorLayout;
+
+    @BindView(R.id.avatar)
+    public ImageView avatar;
+    @BindView(R.id.swipeContainer)
+    public SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.status_circle)
+    public View statusCircle;
+    @BindView(R.id.name_surname)
+    public TextView nameAndSurname;
+    @BindView(R.id.nickname)
+    public TextView nickname;
+    @BindView(R.id.followers_count)
+    public TextView followersCount;
+    @BindView(R.id.subscribe_count)
+    public TextView subscribersCount;
+    @BindView(R.id.fabAdd)
+    public FloatingActionButton fabAdd;
+    @BindView(R.id.fabEdit)
+    public MaterialButton buttonEdit;
+    @BindView(R.id.moreButton)
+    public ImageButton moreButton;
+    @BindView(R.id.progress_circular)
+    public ProgressBar progressBar;
+    @BindView(R.id.emoji)
+    public ImageView emoji;
+    @BindView(R.id.titleError)
+    public TextView textError;
+    @BindView(R.id.city_age_gender)
+    public TextView cityAgeGenderText;
 
     private SharedPreferences sp;
 
@@ -101,6 +122,7 @@ public class ProfileController extends Controller {
     private int photoId;
     private int userId = 0;
     private Integer userIdSP;
+    private int count = 0;
 
     public int getPhotoId() {
         return photoId;
@@ -161,27 +183,12 @@ public class ProfileController extends Controller {
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
-
-        avatar = view.findViewById(R.id.avatar);
-
         CardView avatarCard = view.findViewById(R.id.avatar_card);
         avatarCard.setPreventCornerOverlap(false);
         avatarCard.setOnClickListener(v -> launchPhoto());
 
         userIdSP = sp.getInt("userId", -1);
 
-        nameAndSurname = view.findViewById(R.id.name_surname);
-        nickname = view.findViewById(R.id.nickname);
-        followersCount = view.findViewById(R.id.followers_count);
-        subscribersCount = view.findViewById(R.id.subscribe_count);
-        cityAgeGenderText = view.findViewById(R.id.city_age_gender);
-        statusCircle = view.findViewById(R.id.status_circle);
-
-        progressBar = view.findViewById(R.id.progress_circular);
-        emoji = view.findViewById(R.id.emoji);
-        textError = view.findViewById(R.id.titleError);
-
-        fabAdd = view.findViewById(R.id.fabAdd);
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
@@ -190,12 +197,22 @@ public class ProfileController extends Controller {
                 }
         );
 
-        buttonEdit = view.findViewById(R.id.fabEdit);
         buttonEdit.setOnClickListener(v -> {
         });
 
+//        moreButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) coordinatorLayout.getLayoutParams();
+//                // узнаем размеры экрана из класса Display
+//                Display display = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay();
+//                DisplayMetrics metricsB = new DisplayMetrics();
+//                display.getMetrics(metricsB);
+//                params.setMarginEnd(metricsB.widthPixels / 100 * 75);
+//                coordinatorLayout.setLayoutParams(params);
+//            }
+//        });
 
-        swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
             getProfile();

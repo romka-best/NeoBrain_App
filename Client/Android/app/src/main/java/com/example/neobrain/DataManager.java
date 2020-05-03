@@ -109,6 +109,13 @@ public class DataManager {
         );
     }
 
+    public Call<Status> editChat(Integer chat_id, Chat chat) {
+        return mAPIService.editChat(
+                chat_id,
+                chat
+        );
+    }
+
     public Call<Status> deletePhoto(Integer photo_id) {
         return mAPIService.deletePhoto(
                 photo_id
@@ -121,8 +128,21 @@ public class DataManager {
         );
     }
 
+    public Call<Status> createMessage(Message message) {
+        return mAPIService.createMessage(
+                message
+        );
+    }
+
     public Call<Message> getMessage(Integer message_id) {
         return mAPIService.getMessage(message_id);
+    }
+
+    public Call<Status> editMessage(Integer message_id, Message message) {
+        return mAPIService.editMessage(
+                message_id,
+                message
+        );
     }
 
     public Call<Messages> getMessages(Integer chat_id) {

@@ -3,6 +3,7 @@ package com.example.neobrain.Adapters;
 // Импортируем нужные библиотеки
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -20,6 +21,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.Controllers.ChatController;
 import com.example.neobrain.Controllers.HomeController;
@@ -39,7 +41,10 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Адаптер чатов
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -95,13 +100,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void addItems(List<Chat> ChatList) {
         mChatsList.addAll(ChatList);
         notifyDataSetChanged();
-    }
-
-    public interface Callback {
-        void onEmptyViewRetryClick();
-    }
-
-    public void setCallback(Callback callback) {
     }
 
     public class ViewHolder extends BaseViewHolder {

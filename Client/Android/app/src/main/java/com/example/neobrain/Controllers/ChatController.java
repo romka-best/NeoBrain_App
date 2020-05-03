@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -58,6 +62,7 @@ public class ChatController extends Controller implements Runnable {
     private FloatingActionButton floatingActionButton;
     private ShimmerFrameLayout shimmerViewContainer;
     private SwipeRefreshLayout swipeContainer;
+    private ImageButton searchChatsButton;
     private SharedPreferences sp;
     private LayoutInflater inflater;
     private ArrayList<Chat> mChats = new ArrayList<>();
@@ -75,6 +80,7 @@ public class ChatController extends Controller implements Runnable {
         this.inflater = inflater;
         floatingActionButton = view.findViewById(R.id.fab);
         floatingActionButton.setColorFilter(Color.argb(255, 255, 255, 255));
+        searchChatsButton = view.findViewById(R.id.search_chats_button);
         shimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
         shimmerViewContainer.startShimmer();
 
@@ -88,6 +94,10 @@ public class ChatController extends Controller implements Runnable {
         swipeContainer.setColorSchemeResources(
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
+
+        searchChatsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController())
+                .popChangeHandler(new HorizontalChangeHandler())
+                .pushChangeHandler(new HorizontalChangeHandler())));
 
         getChats();
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
