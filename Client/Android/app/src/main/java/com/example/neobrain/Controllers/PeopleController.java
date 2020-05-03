@@ -21,7 +21,6 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Person;
-import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.API.model.Users;
@@ -35,12 +34,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Observable;
 import java.util.StringJoiner;
 
 import butterknife.ButterKnife;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,7 +47,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 public class PeopleController extends Controller {
     private RecyclerView peopleRecycler;
     private PeopleAdapter peopleAdapter;
-
+    private ArrayList<User> mUsers = new ArrayList<>();
     private SharedPreferences sp;
 
     @NonNull
@@ -126,7 +122,11 @@ public class PeopleController extends Controller {
                     assert response.body() != null;
                     People people = response.body();
                     List<Person> personList = people.getPeople();
-                    ArrayList<User> mUsers = new ArrayList<>();
+                    if (personList.size() == 0) {
+                        allPeopleSearched();
+                        return;
+                    }
+                    mUsers = new ArrayList<>();
                     if (personList != null) {
                         for (int i = 0; i < personList.size(); i++) {
                             Call<UserModel> userCall = DataManager.getInstance().getUser(personList.get(i).getUserId());
@@ -135,7 +135,15 @@ public class PeopleController extends Controller {
                                 public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                                     assert response.body() != null;
                                     User user = response.body().getUser();
+                                    for (User queueUser: mUsers) {
+                                        if (queueUser.getId().equals(user.getId())) {
+                                            return;
+                                        }
+                                    }
                                     mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                                    if (mUsers.size() == personList.size()) {
+                                        allPeopleSearched();
+                                    }
                                 }
 
                                 @Override
@@ -144,8 +152,6 @@ public class PeopleController extends Controller {
                             });
                         }
                     }
-                    peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
-                    peopleRecycler.setAdapter(peopleAdapter);
                 }
             }
 
@@ -154,5 +160,10 @@ public class PeopleController extends Controller {
 
             }
         });
+    }
+
+    public void allPeopleSearched(){
+        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
+        peopleRecycler.setAdapter(peopleAdapter);
     }
 }

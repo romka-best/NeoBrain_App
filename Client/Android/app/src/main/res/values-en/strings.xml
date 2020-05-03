@@ -62,4 +62,19 @@
     <string name="groups">Groups</string>
     <string name="chats">Chats</string>
     <string name="edit_information">Edit information</string>
+    <string name="less_than_one_minute">less than one minute ago</string>
+    <string name="n_minutes_before"> min before</string>
+    <string name="n_hours_before"> hours before</string>
+    <string name="n_days_before"> days before</string>
+    <string name="n_years_before"> years ago</string>
+    <string name="m_years_before"> years ago</string>
+    <string name="week_before">Week ago</string>
+    <string name="Mn">Mn</string>
+    <string name="Tu">Tu</string>
+    <string name="Wd">Wd</string>
+    <string name="Th">Th</string>
+    <string name="Fr">Fr</string>
+    <string name="Su">Su</string>
+    <string name="St">St</string>
+    <string name="error_in_date">Something is wrong!</string>
 </resources>

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +35,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -66,7 +62,6 @@ public class ChatController extends Controller implements Runnable {
     private SharedPreferences sp;
     private LayoutInflater inflater;
     private ArrayList<Chat> mChats = new ArrayList<>();
-
     private String curNameChat;
     private Integer curPhotoId;
 
@@ -77,13 +72,15 @@ public class ChatController extends Controller implements Runnable {
         ButterKnife.bind(this, view);
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+
         this.inflater = inflater;
+
         floatingActionButton = view.findViewById(R.id.fab);
         floatingActionButton.setColorFilter(Color.argb(255, 255, 255, 255));
         searchChatsButton = view.findViewById(R.id.search_chats_button);
+
         shimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
         shimmerViewContainer.startShimmer();
-
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
@@ -100,6 +97,7 @@ public class ChatController extends Controller implements Runnable {
                 .pushChangeHandler(new HorizontalChangeHandler())));
 
         getChats();
+
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
         return view;
@@ -110,14 +108,17 @@ public class ChatController extends Controller implements Runnable {
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
         Integer userIdSP = sp.getInt("userId", -1);
-        //TODO Пофиксить, работает не так как надо
         Call<ChatModel> call = DataManager.getInstance().getChats(userIdSP);
         call.enqueue(new Callback<ChatModel>() {
             @Override
             public void onResponse(@NotNull Call<ChatModel> call, @NotNull Response<ChatModel> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    List<Chat> chats = response.body().getChats();
+                    final List<Chat> chats = response.body().getChats();
+                    if (chats.size() == 0) {
+                        allChatsSearched();
+                        return;
+                    }
                     mChats = new ArrayList<>();
                     for (Chat chat : chats) {
                         curNameChat = "";
@@ -143,37 +144,41 @@ public class ChatController extends Controller implements Runnable {
                                                         User user = response.body().getUser();
                                                         curNameChat = user.getName() + " " + user.getSurname();
                                                         curPhotoId = user.getPhotoId();
+                                                        for (Chat queueChat : mChats) {
+                                                            if (queueChat.getId().equals(chat.getId())) {
+                                                                return;
+                                                            }
+                                                        }
                                                         mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), curNameChat, curPhotoId));
+
+                                                    }
+                                                    if (mChats.size() == chats.size()) {
+                                                        allChatsSearched();
                                                     }
                                                 }
 
                                                 @Override
                                                 public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-
                                                 }
                                             });
                                         }
                                     }
                                 }
 
+
                                 @Override
                                 public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
-
                                 }
                             });
                         } else {
                             curNameChat = chat.getName();
                             curPhotoId = chat.getPhotoId();
                             mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), curNameChat, curPhotoId));
+                            if (mChats.size() == chats.size()) {
+                                allChatsSearched();
+                            }
                         }
                     }
-                    shimmerViewContainer.stopShimmer();
-                    shimmerViewContainer.setVisibility(View.GONE);
-                    if (mChats.size() > 0) {
-                        Collections.sort(mChats, Chat.COMPARE_BY_TIME);
-                    }
-                    chatAdapter = new ChatAdapter(mChats, getRouter());
-                    messagesRecycler.setAdapter(chatAdapter);
                 }
             }
 
@@ -181,6 +186,16 @@ public class ChatController extends Controller implements Runnable {
             public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
             }
         });
+    }
+
+    public void allChatsSearched() {
+        if (mChats.size() >= 2) {
+            Collections.sort(mChats, Chat.COMPARE_BY_TIME);
+        }
+        chatAdapter = new ChatAdapter(mChats, getRouter());
+        messagesRecycler.setAdapter(chatAdapter);
+        shimmerViewContainer.stopShimmer();
+        shimmerViewContainer.setVisibility(View.GONE);
     }
 
     //TODO Исправить
