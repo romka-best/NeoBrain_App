@@ -1,8 +1,10 @@
 package com.example.neobrain.Adapters;
 
 // Импортируем нужные библиотеки
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,12 +49,14 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<Message> mMessageList;
     private Callback mCallback;
     private SharedPreferences sp;
+    private Context context;
 
 
     public MessageAdapter(ArrayList<Message> mMessageList, Context context) {
         this.mMessageList = mMessageList;
         sp = Objects.requireNonNull(context).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+        this.context = context;
         userId = sp.getInt("userId", -1);
         Call<UserModel> userCall = DataManager.getInstance().getUser(userId);
         userCall.enqueue(new retrofit2.Callback<UserModel>() {
@@ -61,11 +65,12 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 assert response.body() != null;
                 user = response.body().getUser();
             }
+
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
             }
         });
-   }
+    }
 
     @NonNull
     @Override
@@ -186,7 +191,16 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             itemView.setOnClickListener(v -> {
                 // Сделать что-нибудь
             });
-            Log.e("STRING", messageTextView.getText().toString().length() + "");
+            itemView.setOnLongClickListener(v -> {
+                long mills = 100L;
+                Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+                assert vibrator != null;
+                if (vibrator.hasVibrator()) {
+                    vibrator.vibrate(mills);
+                }
+                return false;
+            });
         }
     }
 

@@ -51,7 +51,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер чатов
 @SuppressLint("ValidController")
-public class ChatController extends Controller implements Runnable {
+public class ChatController extends Controller {
     @BindView(R.id.ChatsRecycler)
     public RecyclerView messagesRecycler;
     private ChatAdapter chatAdapter;
@@ -97,9 +97,6 @@ public class ChatController extends Controller implements Runnable {
                 .pushChangeHandler(new HorizontalChangeHandler())));
 
         getChats();
-
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
         return view;
     }
 
@@ -188,7 +185,7 @@ public class ChatController extends Controller implements Runnable {
         });
     }
 
-    public void allChatsSearched() {
+    private void allChatsSearched() {
         if (mChats.size() >= 2) {
             Collections.sort(mChats, Chat.COMPARE_BY_TIME);
         }
@@ -196,12 +193,5 @@ public class ChatController extends Controller implements Runnable {
         messagesRecycler.setAdapter(chatAdapter);
         shimmerViewContainer.stopShimmer();
         shimmerViewContainer.setVisibility(View.GONE);
-    }
-
-    //TODO Исправить
-    @Override
-    public void run() {
-        assert getView() != null;
-        Snackbar.make(getView(), "run", Snackbar.LENGTH_LONG).show();
     }
 }

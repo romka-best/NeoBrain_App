@@ -77,4 +77,10 @@
     <string name="Su">Su</string>
     <string name="St">St</string>
     <string name="error_in_date">Something is wrong!</string>
+    <string name="photo">Photo</string>
+    <string name="load_device">Upload from your device</string>
+    <string name="do_photo">Take a photo</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="write_message">Write a message</string>
 </resources>

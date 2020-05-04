@@ -35,6 +35,8 @@ import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
+import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.MessageAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -47,6 +49,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +63,7 @@ import retrofit2.Response;
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер с сообщениями(Именно сам чат)
-public class MessagesController extends Controller {
+public class MessagesController extends Controller implements Runnable {
 
     private MessageAdapter messageAdapter;
     private Chat chat;
@@ -80,7 +85,10 @@ public class MessagesController extends Controller {
     ImageButton attachButton;
     @BindView(R.id.send)
     ImageButton sendButton;
+    @BindView(R.id.header)
+    View header;
 
+    private int userId = 0;
     private SharedPreferences sp;
 
     public MessagesController() {
@@ -130,35 +138,15 @@ public class MessagesController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-        coverImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer userIdSP = sp.getInt("userId", -1);
-                Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
-                chatUsersCall.enqueue(new Callback<ChatUsers>() {
-                    @Override
-                    public void onResponse(@NotNull Call<ChatUsers> call, @NotNull Response<ChatUsers> response) {
-                        if (response.isSuccessful()) {
-                            assert response.body() != null;
-                            List<Integer> users = response.body().getUsers();
-                            for (Integer userId : users) {
-                                if (userId.equals(userIdSP)) {
-                                    continue;
-                                }
-                                getRouter().pushController(RouterTransaction.with(new ProfileController(userId))
-                                        .popChangeHandler(new FadeChangeHandler())
-                                        .pushChangeHandler(new FadeChangeHandler()));
-                            }
-                        }
-                    }
+        coverImageView.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new ProfileController(userId))
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler())));
 
-                    @Override
-                    public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
 
-                    }
-                });
-            }
-        });
+        getUserId();
+        getProfile();
         getMessages();
         return view;
     }
@@ -189,6 +177,56 @@ public class MessagesController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<Messages> call, @NotNull Throwable t) {
+            }
+        });
+    }
+
+    private void getUserId() {
+        Integer userIdSP = sp.getInt("userId", -1);
+        Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
+        chatUsersCall.enqueue(new Callback<ChatUsers>() {
+            @Override
+            public void onResponse(@NotNull Call<ChatUsers> call, @NotNull Response<ChatUsers> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    List<Integer> users = response.body().getUsers();
+                    for (Integer curUserId : users) {
+                        if (curUserId.equals(userIdSP)) {
+                            continue;
+                        }
+                        userId = curUserId;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
+
+            }
+        });
+    }
+
+    private void getProfile() {
+        Call<UserModel> call = DataManager.getInstance().getUser(userId);
+        call.enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    User user = response.body().getUser();
+                    assert user != null;
+                    // TODO
+                    if (user.getStatus() == 0) {
+                        header.setBackground(Objects.requireNonNull(getResources()).getDrawable(R.drawable.header_chat_offline, Objects.requireNonNull(getActivity()).getTheme()));
+                    } else {
+                        header.setBackground(Objects.requireNonNull(getResources()).getDrawable(R.drawable.header_chat_online, Objects.requireNonNull(getActivity()).getTheme()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+
             }
         });
     }
@@ -258,5 +296,10 @@ public class MessagesController extends Controller {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
+    }
+
+    @Override
+    public void run() {
+
     }
 }

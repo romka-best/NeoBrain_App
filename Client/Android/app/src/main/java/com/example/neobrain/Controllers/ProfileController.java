@@ -6,22 +6,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -102,6 +102,8 @@ public class ProfileController extends Controller {
     public FloatingActionButton fabAdd;
     @BindView(R.id.fabEdit)
     public MaterialButton buttonEdit;
+    @BindView(R.id.infoButton)
+    public MaterialButton buttonInfo;
     @BindView(R.id.moreButton)
     public ImageButton moreButton;
     @BindView(R.id.progress_circular)
@@ -191,13 +193,30 @@ public class ProfileController extends Controller {
 
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
-            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setVisibility(View.GONE);
-                    getRouter().pushController(RouterTransaction.with(new PostController()));
+            if (userId == 0) {
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+                getRouter().pushController(RouterTransaction.with(new PostController()));
+            } else {
+                //TODO
+            }
                 }
         );
 
         buttonEdit.setOnClickListener(v -> {
+            if (userId == 0) {
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+                getRouter().pushController(RouterTransaction.with(new ProfileEditController()));
+            } else {
+                //TODO
+            }
+        });
+
+        buttonInfo.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
+            getRouter().pushController(RouterTransaction.with(new ProfileInfoController()));
         });
 
 //        moreButton.setOnClickListener(new View.OnClickListener() {
@@ -299,12 +318,12 @@ public class ProfileController extends Controller {
                             }
                             progressBar.setVisibility(View.INVISIBLE);
                             swipeContainer.setVisibility(View.VISIBLE);
-                            if (userId == 0) {
-                                fabAdd.setVisibility(View.VISIBLE);
-                                buttonEdit.setVisibility(View.VISIBLE);
-                            } else {
-                                fabAdd.setVisibility(View.GONE);
-                                buttonEdit.setVisibility(View.GONE);
+                            fabAdd.setVisibility(View.VISIBLE);
+                            buttonEdit.setVisibility(View.VISIBLE);
+                            // TODO
+                            if (userId != 0) {
+                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
+                                buttonEdit.setText(getResources().getString(R.string.write_message));
                             }
                         }
 
@@ -391,9 +410,8 @@ public class ProfileController extends Controller {
                             if (response.isSuccessful()) {
                                 Status post = response.body();
                                 assert post != null;
-                                setPhotoId(Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
+                                setPhotoId(Integer.parseInt(post.getMessage()));
                                 getProfile();
-                                getPosts();
                             }
                         }
 
@@ -410,13 +428,14 @@ public class ProfileController extends Controller {
                         assert imageUri != null;
                         final InputStream imageStream = Objects.requireNonNull(getApplicationContext()).getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-//                        Matrix matrix = new Matrix();
-//                        matrix.postRotate(90);
-//                        Bitmap newSelectedImage = Bitmap.createBitmap(selectedImage, 0, 0, selectedImage.getWidth(), selectedImage.getHeight(), matrix, true);
-                        avatar.setImageBitmap(selectedImage);
+
+                        int rotation = getBitmapOrientation(getRealPathFromURI(imageUri));
+                        Bitmap newSelectedImage = rotateBitmap(selectedImage, rotation);
+                        assert newSelectedImage != null;
+                        avatar.setImageBitmap(newSelectedImage);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        newSelectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                         byte[] byteArray = stream.toByteArray();
                         byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
 
@@ -431,7 +450,6 @@ public class ProfileController extends Controller {
                                     Status post = response.body();
                                     assert post != null;
                                     getProfile();
-                                    getPosts();
                                 }
                             }
 
@@ -455,9 +473,9 @@ public class ProfileController extends Controller {
     @OnClick(R.id.avatar_card)
     void launchPhoto() {
         if (userId == 0) {
-            String[] testArray = new String[]{"Загрузить с устройства", "Сделать снимок", "Открыть", "Удалить"}; // TODO Изменить на R.string.{}
+            String[] testArray = new String[]{Objects.requireNonNull(getResources()).getString(R.string.load_device), Objects.requireNonNull(getResources()).getString(R.string.do_photo), Objects.requireNonNull(getResources()).getString(R.string.open), Objects.requireNonNull(getResources()).getString(R.string.delete)};
             new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
-                    .setTitle("Фотография") // TODO Изменить на R.string.{}
+                    .setTitle(Objects.requireNonNull(getResources()).getString(R.string.photo))
                     .setItems(testArray, (dialog, which) -> {
                         switch (which) {
                             case 0:
@@ -486,24 +504,8 @@ public class ProfileController extends Controller {
                                                 @Override
                                                 public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                                     if (response.isSuccessful()) {
-                                                        Integer userIdSP = sp.getInt("userId", -1);
-                                                        User user = new User();
-                                                        user.setPhotoId(2);
-                                                        Call<Status> userCall = DataManager.getInstance().editUser(userIdSP, user);
-                                                        userCall.enqueue(new Callback<Status>() {
-                                                            @Override
-                                                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                                if (response.isSuccessful()) {
-                                                                    setPhotoId(2);
-                                                                    getProfile();
-                                                                    getPosts();
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                                                            }
-                                                        });
+                                                        setPhotoId(2);
+                                                        getProfile();
                                                     }
                                                 }
 
@@ -523,5 +525,69 @@ public class ProfileController extends Controller {
                     .popChangeHandler(new VerticalChangeHandler(false))
                     .pushChangeHandler(new VerticalChangeHandler()));
         }
+    }
+
+    private static int getBitmapOrientation(String path) {
+        ExifInterface exif = null;
+        int orientation = 0;
+        try {
+            exif = new ExifInterface(path);
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orientation;
+    }
+
+    private static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotated;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String getRealPathFromURI(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = Objects.requireNonNull(getActivity()).managedQuery(uri, projection, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 }

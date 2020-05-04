@@ -4,7 +4,7 @@ from requests import get, post, put, delete
 
 
 def test():
-    print(get("http://192.168.1.115:5000/api/chats/search/1"))
+    print(get("http://192.168.1.115:5000/api/chats/search/2/Роман").json())
     # print(post("http://192.168.1.84:5000/api/chats", json={
     #     "name": "Test_Name_Chat",
     #     "type_of_chat": 0,

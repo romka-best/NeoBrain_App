@@ -78,6 +78,12 @@ public class DataManager {
         );
     }
 
+    public Call<PostModel> getLenta(Integer user_id) {
+        return mAPIService.getLenta(
+                user_id
+        );
+    }
+
     public Call<Status> editUser(Integer user_id, User user) {
         return mAPIService.editUser(
                 user_id,

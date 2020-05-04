@@ -74,7 +74,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/ic_add"
             app:layout_constraintEnd_toStartOf="@+id/footer_chat_edit_text"
             app:layout_constraintTop_toTopOf="@+id/footer_chat_edit_text" />
@@ -85,7 +85,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/ic_send"
             app:layout_constraintStart_toEndOf="@+id/footer_chat_edit_text"
             app:layout_constraintTop_toTopOf="@+id/footer_chat_edit_text" />
@@ -94,13 +94,12 @@
             android:id="@+id/backButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
             android:layout_marginStart="20dp"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="@+id/header"
             app:layout_constraintStart_toStartOf="@+id/header"
-            app:layout_constraintTop_toTopOf="@+id/header"
-            app:srcCompat="@drawable/ic_arrow_back" />
+            app:layout_constraintTop_toTopOf="@+id/header" />
 
         <TextView
             android:id="@+id/nameAndSurname"
@@ -119,11 +118,11 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="20dp"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_phone"
             app:layout_constraintBottom_toBottomOf="@+id/header"
             app:layout_constraintEnd_toEndOf="@+id/header"
-            app:layout_constraintTop_toTopOf="@+id/header"
-            app:srcCompat="@drawable/ic_phone" />
+            app:layout_constraintTop_toTopOf="@+id/header" />
 
         <TextView
             android:id="@+id/textStatus"

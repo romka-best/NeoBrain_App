@@ -1,6 +1,7 @@
 package com.example.neobrain.Controllers;
 
 // Импортируем нужные библиотеки
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -14,14 +15,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
+import com.example.neobrain.API.model.Post;
+import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.Adapters.LentaAdapter;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
@@ -64,6 +75,31 @@ public class LentaController extends Controller {
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         lentaRecycler.setLayoutManager(mLayoutManager);
         lentaRecycler.setItemAnimator(new DefaultItemAnimator());
+
+        Integer userIdSP = sp.getInt("userId", -1);
+        Call<PostModel> call = DataManager.getInstance().getLenta(userIdSP);
+        call.enqueue(new Callback<PostModel>() {
+            @Override
+            public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    List<Post> posts = response.body().getPosts();
+                    ArrayList<Post> mPosts = new ArrayList<>();
+                    for (Post post : posts) {
+                        mPosts.add(new Post(post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
+                    }
+                    Collections.sort(mPosts, Post.COMPARE_BY_TIME);
+                    lentaAdapter = new LentaAdapter(mPosts);
+                    lentaRecycler.setAdapter(lentaAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
+
+            }
+        });
+
         lentaAdapter = new LentaAdapter(new ArrayList<>());
         lentaRecycler.setAdapter(lentaAdapter);
 //        String nicknameSP = sp.getString("nickname", "");
