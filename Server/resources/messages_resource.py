@@ -116,7 +116,3 @@ class MessageCreateResource(Resource):
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{message.id} created'})
-
-
-class MessagesSearchResource(Resource):
-    pass

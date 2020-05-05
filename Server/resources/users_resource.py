@@ -6,7 +6,9 @@ from flask import jsonify
 from flask_restful import reqparse, abort, Resource
 
 from data import db_session
+from data.chats import Chat
 from data.photos import Photo
+from data.posts import Post
 from data.users import User
 
 
@@ -157,6 +159,7 @@ class UserResource(Resource):
             user.last_seen = args['last_seen']
         if args.get('photo', None):
             if user.photo_id != 2:
+                # Изменяем фото
                 photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
                 photo.data = decodebytes(args['photo'].encode())
             else:
@@ -164,8 +167,17 @@ class UserResource(Resource):
                 photo = Photo(
                     data=decodebytes(args['photo'].encode())
                 )
+                cur_photo_id = user.photo_id
                 session.add(photo)
                 session.commit()
+                posts = session.query(Post).filter(Post.photo_id == cur_photo_id).all()
+                if posts:
+                    for post in posts:
+                        post.photo_id = photo.id
+                chats = session.query(Chat).filter(Chat.photo_id == cur_photo_id).all()
+                if chats:
+                    for chat in chats:
+                        chat.photo_id = photo.id
                 user.photo_id = photo.id
         if args.get('photo_id', None):
             user.photo_id = args['photo_id']
@@ -173,7 +185,8 @@ class UserResource(Resource):
         user.modified_date = datetime.datetime.now()
         session.commit()
         return jsonify({'status': 200,
-                        'text': 'edited'})
+                        'text': 'edited',
+                        'message': str(user.photo_id)})
 
     # Удаляем пользователя по егу id
     def delete(self, user_id):

@@ -76,6 +76,12 @@
     <string name="Su">Сб</string>
     <string name="St">Вс</string>
     <string name="error_in_date">Что-то не так!</string>
+    <string name="photo">Фотография</string>
+    <string name="load_device">Загрузить с устройства</string>
+    <string name="do_photo">Сделать снимок</string>
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
+    <string name="write_message">Написать сообщение</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
 </resources>

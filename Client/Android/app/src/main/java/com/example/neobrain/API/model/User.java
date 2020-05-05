@@ -1,7 +1,14 @@
 package com.example.neobrain.API.model;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
 
 public class User {
 
@@ -358,4 +365,16 @@ public class User {
     public void setGender(Integer gender) {
         this.gender = gender;
     }
+
+    public static final Comparator<User> COMPARE_BY_SURNAME = new Comparator<User>() {
+        @Override
+        public int compare(User o1, User o2) {
+            return (o1.getSurname().compareTo(o2.getSurname()));
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
+    };
 }

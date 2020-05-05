@@ -92,9 +92,6 @@ public class ChatController extends Controller {
                 .pushChangeHandler(new HorizontalChangeHandler())));
 
         getChats();
-
-//        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-//        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
         return view;
     }
 
@@ -183,7 +180,7 @@ public class ChatController extends Controller {
         });
     }
 
-    public void allChatsSearched() {
+    private void allChatsSearched() {
         if (mChats.size() >= 2) {
             Collections.sort(mChats, Chat.COMPARE_BY_TIME);
         }
@@ -192,11 +189,4 @@ public class ChatController extends Controller {
         shimmerViewContainer.stopShimmer();
         shimmerViewContainer.setVisibility(View.GONE);
     }
-
-//    //TODO Исправить
-//    @Override
-//    public void run() {
-//        assert getView() != null;
-//        Snackbar.make(getView(), "run", Snackbar.LENGTH_LONG).show();
-//    }
 }

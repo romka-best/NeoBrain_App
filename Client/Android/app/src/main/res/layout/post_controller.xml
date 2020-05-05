@@ -9,7 +9,8 @@
         android:id="@+id/cancelButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@null"
+        android:radius="20dp"
+        android:background="?selectableItemBackgroundBorderless"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_close" />
@@ -18,7 +19,7 @@
         android:id="@+id/acceptButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@null"
+        android:background="?selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_check" />

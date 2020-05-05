@@ -39,22 +39,22 @@ public class SearchController extends Controller {
                 if (!router.hasRootController()) {
                     switch (position) {
                         case 0:
-//                            router.setRoot(RouterTransaction.with(new SearchAllController()));
+                            router.setRoot(RouterTransaction.with(new SearchAllController()));
                             break;
                         case 1:
-//                            router.setRoot(RouterTransaction.with(new SearchPeopleController()));
+                            router.setRoot(RouterTransaction.with(new SearchPeopleController()));
                             break;
                         case 2:
-//                            router.setRoot(RouterTransaction.with(new SearchGroupsController()));
+                            router.setRoot(RouterTransaction.with(new SearchGroupsController()));
                             break;
                         case 3:
-//                            router.setRoot(RouterTransaction.with(new SearchChatsController()));
+                            router.setRoot(RouterTransaction.with(new SearchChatsController()));
                             break;
                         case 4:
-//                            router.setRoot(RouterTransaction.with(new SearchMusicController()));
+                            router.setRoot(RouterTransaction.with(new SearchMusicController()));
                             break;
                         case 5:
-//                            router.setRoot(RouterTransaction.with(new SearchAppsController()));
+                            router.setRoot(RouterTransaction.with(new SearchAppsController()));
                             break;
                     }
                 }

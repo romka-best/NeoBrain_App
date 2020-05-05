@@ -2,13 +2,18 @@ package com.example.neobrain;
 
 // Импортируем нужные библиотеки
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
@@ -17,6 +22,7 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.Controllers.AuthController;
 import com.example.neobrain.Controllers.HomeController;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp;
 
+    public static final int PERMISSION_REQUEST_CODE = 1001;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+
+        requestMultiplePermissions();
 
         // Инициализируем роутер
         router = Conductor.attachRouter(this, container, savedInstanceState);
@@ -70,6 +80,32 @@ public class MainActivity extends AppCompatActivity {
         if (!router.handleBack()) {
             super.onBackPressed();
         }
+    }
+
+    public void requestMultiplePermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        Manifest.permission.INTERNET,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.VIBRATE
+                },
+                PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 5) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//            }
+//            if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//
+//            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void setOnline() {

@@ -5,6 +5,7 @@ from flask import jsonify
 from flask_restful import reqparse, Resource, abort
 
 from data import db_session
+from data.apps import App
 from data.chats import Chat
 from data.music import Music
 from data.photos import Photo
@@ -48,7 +49,7 @@ class PhotoResource(Resource):
         posts = session.query(Post).filter(Post.photo_id == photo_id).all()
         if posts:
             for post in posts:
-                post.photo_id = photo_id
+                post.photo_id = 2
         chats = session.query(Chat).filter(Chat.photo_id == photo_id).all()
         if chats:
             for chat in chats:
@@ -57,6 +58,11 @@ class PhotoResource(Resource):
         if music:
             for sound in music:
                 sound.photo_id = 10
+        apps = session.query(App).filter(App.photo_id == photo_id).all()
+        if apps:
+            for app in apps:
+                app.photo_id = 12
+        session.commit()
         session.delete(photo)
         session.commit()
         return jsonify({'status': 200,

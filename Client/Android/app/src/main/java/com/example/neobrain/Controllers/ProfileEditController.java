@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Objects;
 
 import butterknife.ButterKnife;
 
@@ -18,5 +21,12 @@ public class ProfileEditController extends Controller {
         View view = inflater.inflate(R.layout.profile_edit_controller, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public boolean handleBack() {
+        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+        return super.handleBack();
     }
 }

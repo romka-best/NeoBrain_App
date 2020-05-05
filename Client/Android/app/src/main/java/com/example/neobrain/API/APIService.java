@@ -108,6 +108,11 @@ public interface APIService {
             @Path("user_id") Integer user_id
     );
 
+    @GET("lenta/{user_id}")
+    Call<PostModel> getLenta(
+            @Path("user_id") Integer user_id
+    );
+
     @GET("messages/{message_id}")
     Call<Message> getMessage(
             @Path("message_id") Integer message_id

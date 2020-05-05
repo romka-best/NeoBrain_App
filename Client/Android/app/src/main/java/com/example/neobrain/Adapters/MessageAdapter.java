@@ -4,6 +4,8 @@ package com.example.neobrain.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.Message;
+import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -41,6 +45,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_MESSAGE_INCOMING = 1;
     private static final int VIEW_TYPE_MESSAGE_OUTGOING = 2;
     private static final int VIEW_TYPE_HELPER_MESSAGE = 3;
+    private User user;
     private Integer userId;
     private List<Message> mMessageList;
     private Callback mCallback;
@@ -59,6 +64,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             @Override
             public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                 assert response.body() != null;
+                user = response.body().getUser();
             }
 
             @Override
@@ -202,6 +208,16 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             itemView.setOnClickListener(v -> {
                 // Сделать что-нибудь
+            });
+            itemView.setOnLongClickListener(v -> {
+                long mills = 100L;
+                Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+                assert vibrator != null;
+                if (vibrator.hasVibrator()) {
+                    vibrator.vibrate(mills);
+                }
+                return false;
             });
         }
     }
