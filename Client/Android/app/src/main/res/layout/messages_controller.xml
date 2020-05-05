@@ -1,106 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:layout_editor_absoluteX="1dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/header_chat_online">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/MessagesRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:padding="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/footer_chat_edit_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:itemCount="9"
-            tools:listitem="@layout/recycler_view_item_outgoing_message">
+        <ImageButton
 
-        </androidx.recyclerview.widget.RecyclerView>
+            android:id="@+id/backButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_marginStart="20dp"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_arrow_back" />
 
-        <View
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/header_chat_online"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
+
             android:id="@+id/avatar_card"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="40dp"
             android:focusable="true"
-            app:cardCornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/header"
-            app:layout_constraintStart_toStartOf="@+id/header"
-            app:layout_constraintTop_toTopOf="@+id/header">
-
+            app:cardCornerRadius="10dp">
             <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
+
         </androidx.cardview.widget.CardView>
-        <EditText
-            android:id="@+id/footer_chat_edit_text"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/footer_chat"
-            android:gravity="bottom|left"
-            android:inputType="textMultiLine"
-            android:lines="3"
-            android:minLines="1"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageButton
-            android:id="@+id/attach"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:background="@null"
-            android:src="@drawable/ic_add"
-            app:layout_constraintEnd_toStartOf="@+id/footer_chat_edit_text"
-            app:layout_constraintTop_toTopOf="@+id/footer_chat_edit_text" />
-
-        <ImageButton
-            android:id="@+id/send"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:background="@null"
-            android:src="@drawable/ic_send"
-            app:layout_constraintStart_toEndOf="@+id/footer_chat_edit_text"
-            app:layout_constraintTop_toTopOf="@+id/footer_chat_edit_text" />
-
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:layout_marginStart="20dp"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/header"
-            app:layout_constraintStart_toStartOf="@+id/header"
-            app:layout_constraintTop_toTopOf="@+id/header"
-            app:srcCompat="@drawable/ic_arrow_back" />
 
         <TextView
             android:id="@+id/nameAndSurname"
@@ -114,17 +54,6 @@
             app:layout_constraintStart_toEndOf="@+id/avatar_card"
             app:layout_constraintTop_toTopOf="@+id/avatar_card" />
 
-        <ImageButton
-            android:id="@+id/callButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="20dp"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/header"
-            app:layout_constraintEnd_toEndOf="@+id/header"
-            app:layout_constraintTop_toTopOf="@+id/header"
-            app:srcCompat="@drawable/ic_phone" />
-
         <TextView
             android:id="@+id/textStatus"
             android:layout_width="wrap_content"
@@ -136,6 +65,70 @@
             app:layout_constraintStart_toStartOf="@+id/nameAndSurname"
             app:layout_constraintTop_toBottomOf="@+id/nameAndSurname" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <ImageButton
+            android:id="@+id/callButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="end"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_phone" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/MessagesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:stackFromBottom="true"
+        android:layout_weight="10"
+        tools:itemCount="3"
+        tools:listitem="@layout/recycler_view_item_outgoing_message"></androidx.recyclerview.widget.RecyclerView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/attach"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:src="@drawable/ic_add" />
+
+        <EditText
+            android:id="@+id/footer_chat_edit_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/footer_chat"
+            android:gravity="bottom|start"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:minLines="1"
+            android:padding="10dp"
+            android:scrollbars="vertical" />
+
+
+        <ImageButton
+            android:id="@+id/send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@null"
+            android:src="@drawable/ic_send" />
+    </LinearLayout>
+
+</LinearLayout>

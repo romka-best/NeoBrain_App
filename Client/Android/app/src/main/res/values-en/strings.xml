@@ -77,4 +77,6 @@
     <string name="Su">Su</string>
     <string name="St">St</string>
     <string name="error_in_date">Something is wrong!</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

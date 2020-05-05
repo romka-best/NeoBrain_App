@@ -33,7 +33,24 @@ public class Message {
     @Expose
     private Integer chatId;
 
+    private Boolean showDate = true;
+
     public Message(String text, String createdDate, Integer authorId) {
+        this.text = text;
+        this.createdDate = createdDate;
+        this.authorId = authorId;
+    }
+
+    public Boolean getShowDate() {
+        return showDate;
+    }
+
+    public void setShowDate(Boolean showDate) {
+        this.showDate = showDate;
+    }
+
+    public Message(String text, String createdDate, Integer authorId, Boolean show) {
+        this.showDate = show;
         this.text = text;
         this.createdDate = createdDate;
         this.authorId = authorId;
@@ -121,7 +138,7 @@ public class Message {
             assert date2 != null;
             Long timestamp1 = date1.getTime();
             Long timestamp2 = date2.getTime();
-            return (int) (timestamp2 - timestamp1);
+            return (int) (timestamp1 - timestamp2);
         }
     };
 

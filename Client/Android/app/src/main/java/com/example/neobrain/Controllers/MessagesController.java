@@ -2,19 +2,16 @@ package com.example.neobrain.Controllers;
 
 // Импортируем нужные библиотеки
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,7 +26,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Chat;
-import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
@@ -39,12 +35,13 @@ import com.example.neobrain.Adapters.MessageAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.SpacesItemDecoration;
+import com.example.neobrain.util.TimeFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -82,6 +79,8 @@ public class MessagesController extends Controller {
     ImageButton sendButton;
 
     private SharedPreferences sp;
+
+    private Boolean space = false;
 
     public MessagesController() {
     }
@@ -174,13 +173,36 @@ public class MessagesController extends Controller {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     List<Message> messages = response.body().getMessages();
+                    Collections.sort(messages, Message.COMPARE_BY_TIME);
                     ArrayList<Message> mMessages = new ArrayList<>();
-                    for (Message message : messages) {
+                    for (int i = 0; i < messages.size(); i++) {
+                        Message message = messages.get(i);
+                        TimeFormatter timeFormater = new TimeFormatter(message.getCreatedDate());
+                        if (message.getAuthorId().equals(-1)) {
+                            continue;
+                        }
+                        if (i == 0) {
+                            String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
+                            mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
+                        } else {
+                            if (!timeFormater.compareDatesDays(messages.get(i - 1).getCreatedDate())) {
+                                String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
+                                mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
+                            }
+                            if (timeFormater.compareDates(messages.get(i - 1).getCreatedDate()) && !message.getAuthorId().equals(-1)) {
+                                mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId(), false));
+                                continue;
+                            }
+                        }
                         mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId()));
                     }
+                    Collections.sort(mMessages, Message.COMPARE_BY_TIME);
                     messageAdapter = new MessageAdapter(mMessages, getApplicationContext());
                     messagesRecycler.setAdapter(messageAdapter);
-                    messagesRecycler.addItemDecoration(new SpacesItemDecoration(20));
+                    if (!space) {
+                        messagesRecycler.addItemDecoration(new SpacesItemDecoration(20));
+                        space = true;
+                    }
                     if (mMessages.size() > 0) {
                         messagesRecycler.smoothScrollToPosition(mMessages.size() - 1);
                     }
@@ -195,10 +217,13 @@ public class MessagesController extends Controller {
 
     @OnClick(R.id.send)
     void sendMessage() {
-        // TODO: реализовать отправку сообщения
         if (!footerChatEditText.getText().toString().equals("")) {
             Integer userIdSP = sp.getInt("userId", -1);
-            Message message = new Message(footerChatEditText.getText().toString(), userIdSP, chat.getId());
+            String txt = footerChatEditText.getText().toString().trim();
+            if (txt.equals("")) {
+                return;
+            }
+            Message message = new Message(txt, userIdSP, chat.getId());
             Call<Status> call = DataManager.getInstance().createMessage(message);
             call.enqueue(new Callback<Status>() {
                 @Override
@@ -221,17 +246,15 @@ public class MessagesController extends Controller {
                             }
                         });
                         Chat chat1 = new Chat();
-                        chat1.setLastMessage(footerChatEditText.getText().toString());
+                        chat1.setLastMessage(txt);
                         Call<Status> updateChatCall = DataManager.getInstance().editChat(chat.getId(), chat1);
                         updateChatCall.enqueue(new Callback<Status>() {
                             @Override
                             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-
                             }
 
                             @Override
                             public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
                             }
                         });
                         getMessages();
@@ -243,14 +266,13 @@ public class MessagesController extends Controller {
 
                 }
             });
+            footerChatEditText.setText("");
         }
-        footerChatEditText.setText("");
     }
 
     // TODO: проматывать сообщения вниз при нажатии на edit text
     @OnClick(R.id.footer_chat_edit_text)
     void typeText() {
-        messagesRecycler.smoothScrollToPosition(Objects.requireNonNull(messagesRecycler.getAdapter()).getItemCount() - 1);
     }
 
     @Override

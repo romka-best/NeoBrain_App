@@ -3,7 +3,6 @@ package com.example.neobrain.Adapters;
 // Импортируем нужные библиотеки
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -21,15 +20,12 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Chat;
-import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Photo;
-import com.example.neobrain.Controllers.ChatController;
-import com.example.neobrain.Controllers.HomeController;
 import com.example.neobrain.Controllers.MessagesController;
-import com.example.neobrain.Controllers.RegController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.util.BaseViewHolder;
+import com.example.neobrain.util.TimeFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,10 +37,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Адаптер чатов
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -153,7 +146,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 lastMessTextView.setText(mChat.getLastMessage());
             }
             if (mChat.getLastTimeMessage() != null) {
-                timeTextView.setText(mChat.getLastTimeMessage());
+                timeTextView.setText(new TimeFormatter(mChat.getLastTimeMessage()).timeForChat(itemView.getContext()));
             }
             if (mChat.getName() != null) {
                 titleTextView.setText(mChat.getName());

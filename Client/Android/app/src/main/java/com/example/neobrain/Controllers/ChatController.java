@@ -18,7 +18,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -29,7 +28,6 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,9 +35,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +46,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер чатов
 @SuppressLint("ValidController")
-public class ChatController extends Controller implements Runnable {
+public class ChatController extends Controller {
     @BindView(R.id.ChatsRecycler)
     public RecyclerView messagesRecycler;
     private ChatAdapter chatAdapter;
@@ -98,8 +93,8 @@ public class ChatController extends Controller implements Runnable {
 
         getChats();
 
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
+//        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+//        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
         return view;
     }
 
@@ -198,10 +193,10 @@ public class ChatController extends Controller implements Runnable {
         shimmerViewContainer.setVisibility(View.GONE);
     }
 
-    //TODO Исправить
-    @Override
-    public void run() {
-        assert getView() != null;
-        Snackbar.make(getView(), "run", Snackbar.LENGTH_LONG).show();
-    }
+//    //TODO Исправить
+//    @Override
+//    public void run() {
+//        assert getView() != null;
+//        Snackbar.make(getView(), "run", Snackbar.LENGTH_LONG).show();
+//    }
 }
