@@ -152,6 +152,7 @@ public class MessagesController extends Controller implements Runnable {
 
     private void getMessages() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
         Call<Messages> call = DataManager.getInstance().getMessages(chat.getId());

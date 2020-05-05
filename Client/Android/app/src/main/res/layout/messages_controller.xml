@@ -9,6 +9,7 @@
     tools:layout_editor_absoluteX="1dp">
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -87,7 +88,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
-        android:stackFromBottom="true"
         android:layout_weight="10"
         tools:itemCount="3"
         tools:listitem="@layout/recycler_view_item_outgoing_message"></androidx.recyclerview.widget.RecyclerView>
