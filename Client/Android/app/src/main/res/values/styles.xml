@@ -12,7 +12,7 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="android:windowBackground">@drawable/ic_neo_splash</item>
     </style>
 
     <style name="AlertDialogCustom" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">

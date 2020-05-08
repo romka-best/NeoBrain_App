@@ -20,16 +20,29 @@ class PeopleResource(Resource):
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
-        # Создаём сессию в БД и получаем чаты
+        # Создаём сессию в БД и получаем людей(друзей)
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         people = user.people
         return jsonify({'people': [profile.to_dict(
             only=('id', 'user_id')) for profile in people]})
 
-    # Отписываемся. user_id - кто отписывается
-    def delete(self, user_id):
-        pass
+
+class PeopleDeleteResource(Resource):
+    # Отписываемся. user_id1 - кто отписывается, user_id2 - от кого отписывается
+    def delete(self, user_id1, user_id2):
+        # Проверяем, есть ли пользователи
+        abort_if_user_not_found(user_id1)
+        abort_if_user_not_found(user_id2)
+        # Создаём сессию в БД и получаем людей(друзей)
+        session = db_session.create_session()
+        user = session.query(User).get(user_id1)
+        people = session.query(People).filter(People.user_id == user_id2).first()
+        print(f"people: {people}")
+        user.people.remove(people)
+        session.commit()
+        return jsonify({'status': 200,
+                        'text': 'deleted'})
 
 
 # Ресурс для добавления в Люди(Подписчики)
@@ -48,7 +61,7 @@ class PeopleCreateResource(Resource):
         # Получаем аргументы
         args = self.parser.parse_args()
         # Защита от дурака
-        if args['user_author_id'] == args['user_subscribe']:
+        if args['user_author_id'] == args['user_subscribe_id']:
             return jsonify({'status': 400,
                             'text': "Bad request"})
         abort_if_user_not_found(args['user_author_id'])

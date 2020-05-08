@@ -1,4 +1,4 @@
-package com.example.neobrain.util;
+package com.example.neobrain.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;

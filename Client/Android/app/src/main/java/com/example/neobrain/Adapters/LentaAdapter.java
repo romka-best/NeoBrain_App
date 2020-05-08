@@ -18,7 +18,7 @@ import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
+import com.example.neobrain.utils.BaseViewHolder;
 
 import org.jetbrains.annotations.NotNull;
 

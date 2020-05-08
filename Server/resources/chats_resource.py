@@ -136,6 +136,57 @@ class ChatsListResource(Resource):
                   'created_date', 'photo_id')) for chat in chats]})
 
 
+class ChatUsersResource(Resource):
+    # Получаем пользователей с которым переписывался user_id
+    def get(self, user_id):
+        # Проверяем, есть ли пользователь
+        abort_if_user_not_found(user_id)
+        # Создаём сессию в БД и получаем пользователей
+        session = db_session.create_session()
+        user = session.query(User).get(user_id)
+        chats = user.chats
+        users = []
+        for chat in chats:
+            # получаем чат
+            chat = session.query(Chat).get(chat.id)
+            cur_users = chat.users
+            for cur_user in cur_users:
+                if cur_user.id != user.id:
+                    users.append(cur_user)
+        return jsonify({'users': [user.to_dict(
+            only=('id', 'name', 'surname', 'nickname', 'number',
+                  'created_date', 'modified_date', 'is_closed', 'email', 'about',
+                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups',
+                  'can_see_videos', 'can_write_message', 'city', 'republic',
+                  'country', 'education', 'status', 'last_seen',
+                  'followers_count', 'subscriptions_count', 'photo_id'))
+            for user in users]})
+
+
+class ChatTwoUsersResource(Resource):
+    # Возвращаем chat_id двух пользователей
+    def get(self, user_id1, user_id2):
+        # Проверяем, есть ли пользователм
+        abort_if_user_not_found(user_id1)
+        abort_if_user_not_found(user_id2)
+        # Создаём сессию в БД и получаем пользователей
+        session = db_session.create_session()
+        user1 = session.query(User).get(user_id1)
+        chats = user1.chats
+        for chat in chats:
+            cur_chat = session.query(Chat).get(chat.id)
+            cur_users = cur_chat.users
+            for cur_user in cur_users:
+                if cur_user.id == user_id2:
+                    return jsonify({'chat': cur_chat.to_dict(
+                        only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
+                              'last_message', 'count_new_messages', 'count_messages',
+                              'created_date', 'photo_id'))})
+        else:
+            return jsonify({'status': 404,
+                            'text': 'Not found'})
+
+
 class ChatFindUsersResource(Resource):
     # Получаем юзеров по id чата
     def get(self, chat_id):
@@ -154,15 +205,17 @@ class ChatCreateResource(Resource):
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
         self.parser = reqparse.RequestParser()
         # Id user-а
-        self.parser.add_argument('user_id', required=True, type=str)
+        self.parser.add_argument('user_author_id', required=True, type=int)
+        # Id 2-ого user-a
+        self.parser.add_argument('user_other_id', required=True, type=int)
         # Имя чата
-        self.parser.add_argument('name', required=True, type=str)
+        self.parser.add_argument('name', required=False, type=str)
         # Тип чата: 0 - UserWithUser, 1 - UserWithUsers, 2 - Chanel, 3 - Бот
         self.parser.add_argument('type_of_chat', required=True, type=int)
         # 0 - Offline, >=1 Количество user-ов онлайн в чате
-        self.parser.add_argument('status', required=True, type=int)
+        self.parser.add_argument('status', required=False, type=int)
         # Время последнего отправленного сообщения в формате YYYY-MM-DD HH:MM:SS
-        self.parser.add_argument('last_time_message', required=True)
+        self.parser.add_argument('last_time_message', required=False)
         # Последнее сообщение в чате
         self.parser.add_argument('last_message', required=True, type=str)
         # Количество новых сообщений
@@ -180,25 +233,26 @@ class ChatCreateResource(Resource):
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()
-        # Если нет аргументов, отправляем ошибку 400 с текстом 'Empty request'
-        if not args:
-            return jsonify({'status': 400,
-                            'text': "Empty request"})
         # Создаём сессию в БД
         session = db_session.create_session()
-        abort_if_user_not_found(args['user_id'])
-        user = session.query(User).get(args['user_id'])
+        abort_if_user_not_found(args['user_author_id'])
+        abort_if_user_not_found(args['user_other_id'])
+        user = session.query(User).get(args['user_author_id'])
+        user2 = session.query(User).get(args['user_other_id'])
         # Создаём чат
         chat = Chat(
-            name=args['name'],
             type_of_chat=args['type_of_chat'],
-            status=args['status'],
-            last_time_message=args['last_time_message'],
             last_message=args['last_message']
         )
         # В зависимости от аргументов добавляем в чат новые
+        if args.get('name', None):
+            chat.name = args['name']
         if args.get('photo_id', None):
             chat.photo_id = args['photo_id']
+        if args.get('last_time_message', None):
+            chat.last_time_message = args['last_time_message']
+        if args.get('status', None) is not None:
+            chat.status = args['status']
         if args.get('count_new_messages', None) is not None:
             chat.count_new_messages = args['count_new_messages']
         if args.get('count_messages', None) is not None:
@@ -206,6 +260,7 @@ class ChatCreateResource(Resource):
         # Добавляем в БД чат
         session.add(chat)
         user.chats.append(chat)
+        user2.chats.append(chat)
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{chat.id} created'})

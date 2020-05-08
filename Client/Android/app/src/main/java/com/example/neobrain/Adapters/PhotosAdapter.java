@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
+import com.example.neobrain.utils.BaseViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

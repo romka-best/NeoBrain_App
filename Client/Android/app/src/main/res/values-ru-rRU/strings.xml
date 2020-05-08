@@ -83,7 +83,13 @@
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
     <string name="write_message">Написать сообщение</string>
+    <string name="in_development">Данный раздел в разработке</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
+    <string name="online">Онлайн</string>
+    <string name="offline">Оффлайн</string>
+    <string name="error">Ошибка</string>
+    <string name="delete_post">Удалить пост?</string>
+    <string name="empty">Пусто</string>
 
 </resources>

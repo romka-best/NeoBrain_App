@@ -2,11 +2,13 @@ package com.example.neobrain.Controllers;
 
 // Импортируем нужные библиотеки
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,31 +39,36 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.MessageAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.SpacesItemDecoration;
-import com.example.neobrain.util.TimeFormatter;
+import com.example.neobrain.utils.SpacesItemDecoration;
+import com.example.neobrain.utils.TimeFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер с сообщениями(Именно сам чат)
-public class MessagesController extends Controller implements Runnable {
+public class MessagesController extends Controller {
 
     private MessageAdapter messageAdapter;
     private Chat chat;
@@ -84,11 +92,14 @@ public class MessagesController extends Controller implements Runnable {
     ImageButton sendButton;
     @BindView(R.id.header)
     View header;
+    @BindView(R.id.progress_circular)
+    public ProgressBar progressBar;
 
     private int userId = 0;
     private SharedPreferences sp;
 
     private Boolean space = false;
+    private Disposable disposable;
 
     public MessagesController() {
     }
@@ -97,17 +108,35 @@ public class MessagesController extends Controller implements Runnable {
         this.chat = chat;
     }
 
+    public MessagesController(Chat chat, int userId) {
+        this.chat = chat;
+        this.userId = userId;
+    }
+
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.messages_controller, container, false);
         ButterKnife.bind(this, view);
+
+        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
+
         backButton.setColorFilter(Color.argb(255, 255, 255, 255));
         backButton.setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
             assert imm != null;
             imm.hideSoftInputFromWindow(backButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+                try {
+                    if (routerTransaction.controller() == getRouter().getBackstack().get(2).controller()) {
+                        bottomNavigationView.setVisibility(View.GONE);
+                        getRouter().popCurrentController();
+                        return;
+                    }
+                } catch (IndexOutOfBoundsException ignored) {
+                }
+            }
                     bottomNavigationView.setVisibility(View.VISIBLE);
                     getRouter().popCurrentController();
                 }
@@ -141,71 +170,22 @@ public class MessagesController extends Controller implements Runnable {
                 .popChangeHandler(new FadeChangeHandler())
                 .pushChangeHandler(new FadeChangeHandler())));
 
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this, 0, 3, TimeUnit.SECONDS);
-
         getUserId();
-        getProfile();
-        getMessages();
+        disposable = Observable.interval(1, 5,
+                TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::callMessagesEndpoint, this::onError);
+
+        progressBar.setVisibility(View.VISIBLE);
         return view;
-    }
-
-    private void getMessages() {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
-        messagesRecycler.setLayoutManager(mLayoutManager);
-        messagesRecycler.setItemAnimator(new DefaultItemAnimator());
-        Call<Messages> call = DataManager.getInstance().getMessages(chat.getId());
-        call.enqueue(new Callback<Messages>() {
-            @Override
-            public void onResponse(@NotNull Call<Messages> call, @NotNull Response<Messages> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    List<Message> messages = response.body().getMessages();
-                    Collections.sort(messages, Message.COMPARE_BY_TIME);
-                    ArrayList<Message> mMessages = new ArrayList<>();
-                    for (int i = 0; i < messages.size(); i++) {
-                        Message message = messages.get(i);
-                        TimeFormatter timeFormater = new TimeFormatter(message.getCreatedDate());
-                        if (message.getAuthorId().equals(-1)) {
-                            continue;
-                        }
-                        if (i == 0) {
-                            String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
-                            mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
-                        } else {
-                            if (!timeFormater.compareDatesDays(messages.get(i - 1).getCreatedDate())) {
-                                String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
-                                mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
-                            }
-                            if (timeFormater.compareDates(messages.get(i - 1).getCreatedDate()) && !message.getAuthorId().equals(-1)) {
-                                mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId(), false));
-                                continue;
-                            }
-                        }
-                        mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId()));
-                    }
-                    Collections.sort(mMessages, Message.COMPARE_BY_TIME);
-                    messageAdapter = new MessageAdapter(mMessages, getApplicationContext());
-                    messagesRecycler.setAdapter(messageAdapter);
-                    if (!space) {
-                        messagesRecycler.addItemDecoration(new SpacesItemDecoration(20));
-                        space = true;
-                    }
-                    if (mMessages.size() > 0) {
-                        messagesRecycler.smoothScrollToPosition(mMessages.size() - 1);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<Messages> call, @NotNull Throwable t) {
-            }
-        });
     }
 
     private void getUserId() {
         Integer userIdSP = sp.getInt("userId", -1);
+        if (userId != 0) {
+            getProfile();
+            return;
+        }
         Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
         chatUsersCall.enqueue(new Callback<ChatUsers>() {
             @Override
@@ -218,13 +198,13 @@ public class MessagesController extends Controller implements Runnable {
                             continue;
                         }
                         userId = curUserId;
+                        getProfile();
                     }
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
-
             }
         });
     }
@@ -232,17 +212,20 @@ public class MessagesController extends Controller implements Runnable {
     private void getProfile() {
         Call<UserModel> call = DataManager.getInstance().getUser(userId);
         call.enqueue(new Callback<UserModel>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     User user = response.body().getUser();
                     assert user != null;
-                    // TODO
+                    nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     if (user.getStatus() == 0) {
-                        header.setBackground(Objects.requireNonNull(getResources()).getDrawable(R.drawable.header_chat_offline, Objects.requireNonNull(getActivity()).getTheme()));
+                        textStatus.setText(Objects.requireNonNull(getResources()).getString(R.string.offline));
+                        textStatus.setTextColor(getResources().getColor(R.color.colorError, Objects.requireNonNull(getActivity()).getTheme()));
                     } else {
-                        header.setBackground(Objects.requireNonNull(getResources()).getDrawable(R.drawable.header_chat_online, Objects.requireNonNull(getActivity()).getTheme()));
+                        textStatus.setText(Objects.requireNonNull(getResources()).getString(R.string.online));
+                        textStatus.setTextColor(getResources().getColor(R.color.colorText, Objects.requireNonNull(getActivity()).getTheme()));
                     }
                 }
             }
@@ -260,6 +243,31 @@ public class MessagesController extends Controller implements Runnable {
             Integer userIdSP = sp.getInt("userId", -1);
             String txt = footerChatEditText.getText().toString().trim();
             if (txt.equals("")) {
+                return;
+            }
+            if (chat.getId() == -1) {
+                Chat newChat = new Chat();
+                newChat.setLastMessage(txt);
+                newChat.setTypeOfChat(0);
+                newChat.setUserAuthorId(userIdSP);
+                newChat.setUserOtherId(userId);
+                Call<Status> chatCall = DataManager.getInstance().createChat(newChat);
+                chatCall.enqueue(new Callback<Status>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                        if (response.isSuccessful()) {
+                            Status post = response.body();
+                            assert post != null;
+                            chat.setId(Integer.parseInt(post.getText().substring(0, post.getText().length() - 8)));
+                            sendMessage();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                    }
+                });
                 return;
             }
             Message message = new Message(txt, userIdSP, chat.getId());
@@ -296,7 +304,6 @@ public class MessagesController extends Controller implements Runnable {
                             public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                             }
                         });
-                        getMessages();
                     }
                 }
 
@@ -309,20 +316,121 @@ public class MessagesController extends Controller implements Runnable {
         }
     }
 
-    // TODO: проматывать сообщения вниз при нажатии на edit text
     @OnClick(R.id.footer_chat_edit_text)
     void typeText() {
+        messagesRecycler.smoothScrollToPosition(Objects.requireNonNull(messagesRecycler.getAdapter()).getItemCount() - 1);
+    }
+
+    @SuppressLint("CheckResult")
+    private void callMessagesEndpoint(Long aLong) {
+        Observable<Messages> observable = DataManager.getInstance().getMessages(chat.getId());
+        observable.subscribeOn(Schedulers.newThread()).
+                observeOn(AndroidSchedulers.mainThread())
+                .map(Messages::getMessages)
+                .subscribe(this::handleResults, this::handleError);
+    }
+
+    private void handleResults(List<Message> messages) {
+        progressBar.setVisibility(View.GONE);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager.setStackFromEnd(true);
+        messagesRecycler.setLayoutManager(mLayoutManager);
+        messagesRecycler.setItemAnimator(new DefaultItemAnimator());
+        ArrayList<Message> mMessages = new ArrayList<>();
+        for (int i = 0; i < messages.size(); i++) {
+            Message message = messages.get(i);
+            TimeFormatter timeFormater = new TimeFormatter(message.getCreatedDate());
+            if (message.getAuthorId().equals(-1)) {
+                continue;
+            }
+            if (i == 0) {
+                String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
+                mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
+            } else {
+                if (!timeFormater.compareDatesDays(messages.get(i - 1).getCreatedDate())) {
+                    String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
+                    mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
+                }
+                if (timeFormater.compareDates(messages.get(i - 1).getCreatedDate()) && !message.getAuthorId().equals(-1)) {
+                    mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId(), false));
+                    continue;
+                }
+            }
+            mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId()));
+        }
+        Collections.sort(mMessages, Message.COMPARE_BY_TIME);
+        messageAdapter = new MessageAdapter(mMessages, getApplicationContext());
+        messagesRecycler.setAdapter(messageAdapter);
+        if (!space) {
+            messagesRecycler.addItemDecoration(new SpacesItemDecoration(20));
+            space = true;
+        }
+        if (mMessages.size() > 0) {
+            messagesRecycler.scrollToPosition(mMessages.size() - 1);
+        }
+    }
+
+
+    private void onError(Throwable throwable) {
+        assert getView() != null;
+        Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.error), Snackbar.LENGTH_LONG).show();
+    }
+
+    private void handleError(Throwable t) {
+        assert getView() != null;
+        if (t instanceof SocketTimeoutException) {
+            Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.errors_with_connection), Snackbar.LENGTH_LONG).show();
+        } else if (t instanceof HttpException) {
+            progressBar.setVisibility(View.GONE);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            messagesRecycler.setLayoutManager(mLayoutManager);
+            messagesRecycler.setItemAnimator(new DefaultItemAnimator());
+            ArrayList<Message> mMessages = new ArrayList<>();
+            messageAdapter = new MessageAdapter(mMessages, getApplicationContext());
+            messagesRecycler.setAdapter(messageAdapter);
+        }
+    }
+
+    @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        super.onRestoreViewState(view, savedViewState);
+        space = false;
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        if (disposable.isDisposed()) {
+            disposable = Observable.interval(1, 5,
+                    TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::callMessagesEndpoint, this::onError);
+        }
+        try {
+            messagesRecycler.scrollToPosition(messageAdapter.getItemCount() - 1);
+        } catch (NullPointerException ignored) {
+        }
+    }
+
+    @Override
+    protected void onDetach(@NonNull View view) {
+        super.onDetach(view);
+        disposable.dispose();
     }
 
     @Override
     public boolean handleBack() {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+        for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+            try {
+                if (routerTransaction.controller() == getRouter().getBackstack().get(2).controller()) {
+                    bottomNavigationView.setVisibility(View.GONE);
+                    return super.handleBack();
+                }
+            } catch (IndexOutOfBoundsException ignored) {
+            }
+        }
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
-    }
-
-    @Override
-    public void run() {
-
     }
 }

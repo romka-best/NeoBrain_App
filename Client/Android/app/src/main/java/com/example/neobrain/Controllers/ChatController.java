@@ -19,8 +19,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.example.neobrain.API.model.Chat;
-import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
+import com.example.neobrain.API.model.Chats;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.ChatAdapter;
@@ -87,7 +87,7 @@ public class ChatController extends Controller {
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
-        searchChatsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController())
+        searchChatsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController((short) 3))
                 .popChangeHandler(new HorizontalChangeHandler())
                 .pushChangeHandler(new HorizontalChangeHandler())));
 
@@ -100,10 +100,10 @@ public class ChatController extends Controller {
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
         Integer userIdSP = sp.getInt("userId", -1);
-        Call<ChatModel> call = DataManager.getInstance().getChats(userIdSP);
-        call.enqueue(new Callback<ChatModel>() {
+        Call<Chats> call = DataManager.getInstance().getChats(userIdSP);
+        call.enqueue(new Callback<Chats>() {
             @Override
-            public void onResponse(@NotNull Call<ChatModel> call, @NotNull Response<ChatModel> response) {
+            public void onResponse(@NotNull Call<Chats> call, @NotNull Response<Chats> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     final List<Chat> chats = response.body().getChats();
@@ -175,7 +175,7 @@ public class ChatController extends Controller {
             }
 
             @Override
-            public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<Chats> call, @NotNull Throwable t) {
             }
         });
     }

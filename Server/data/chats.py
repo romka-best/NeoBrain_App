@@ -29,9 +29,9 @@ class Chat(SqlAlchemyBase, SerializerMixin):
     # Тип чата: 0 - UserWithUser, 1 - UserWithUsers, 2 - Chanel, 3 - Бот
     type_of_chat = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     # 0 - Offline, >=1 Количество user-ов онлайн в чате
-    status = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
+    status = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     # Время последнего отправленного сообщения в формате YYYY-MM-DD HH:MM:SS
-    last_time_message = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    last_time_message = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False, default=datetime.datetime.now)
     # Последнее сообщение в чате
     last_message = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # Количество новых сообщений

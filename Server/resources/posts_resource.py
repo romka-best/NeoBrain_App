@@ -45,6 +45,19 @@ class PostResource(Resource):
         return jsonify({'post': post.to_dict(
             only=('id', 'title', 'text', 'created_date', 'user_id', 'photo_id'))})
 
+    def delete(self, post_id):
+        if str(post_id).find("?") != -1:
+            post_id = int(post_id[:post_id.find("?")].strip())
+        abort_if_post_not_found(post_id)
+        # Создаём сессию и получаем пост
+        session = db_session.create_session()
+        post = session.query(Post).get(post_id)
+        # Удаляем пост
+        session.delete(post)
+        session.commit()
+        return jsonify({'status': 200,
+                        'text': 'deleted'})
+
 
 # Ресурс для получения постов
 class PostsListResource(Resource):

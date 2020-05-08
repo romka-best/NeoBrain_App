@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.neobrain.util.BaseViewHolder;
+import com.example.neobrain.utils.BaseViewHolder;
 
 public class ProfileEditAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @NonNull

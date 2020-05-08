@@ -45,6 +45,12 @@ public class Chat {
     @SerializedName("user_id")
     @Expose
     private Integer userId;
+    @SerializedName("user_author_id")
+    @Expose
+    private Integer userAuthorId;
+    @SerializedName("user_other_id")
+    @Expose
+    private Integer userOtherId;
 
     public Chat(Integer id, String lastMessage, String lastTimeMessage, String name, Integer photoId) {
         this.id = id;
@@ -143,6 +149,22 @@ public class Chat {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getUserAuthorId() {
+        return userAuthorId;
+    }
+
+    public void setUserAuthorId(Integer userAuthorId) {
+        this.userAuthorId = userAuthorId;
+    }
+
+    public Integer getUserOtherId() {
+        return userOtherId;
+    }
+
+    public void setUserOtherId(Integer userOtherId) {
+        this.userOtherId = userOtherId;
     }
 
     public static final Comparator<Chat> COMPARE_BY_TIME = new Comparator<Chat>() {

@@ -83,6 +83,12 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="write_message">Write a message</string>
+    <string name="in_development">This section is under development</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="error">Error</string>
+    <string name="delete_post">Delete the post?</string>
+    <string name="empty">Empty</string>
 </resources>

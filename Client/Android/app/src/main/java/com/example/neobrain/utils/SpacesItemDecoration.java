@@ -1,4 +1,4 @@
-package com.example.neobrain.util;
+package com.example.neobrain.utils;
 
 import android.graphics.Rect;
 import android.view.View;

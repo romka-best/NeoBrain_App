@@ -7,9 +7,11 @@ import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
+import com.example.neobrain.API.model.Chats;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
+import com.example.neobrain.API.model.PeopleModel;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
@@ -18,6 +20,7 @@ import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.API.model.Users;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 
 // Класс для работы с API NeoBrain сервера
@@ -47,7 +50,7 @@ public class DataManager {
         );
     }
 
-    public Call<Chat> getChat(Integer chat_id) {
+    public Call<ChatModel> getChat(Integer chat_id) {
         return mAPIService.getChat(
                 chat_id
         );
@@ -66,7 +69,7 @@ public class DataManager {
     }
 
 
-    public Call<ChatModel> getChats(Integer user_id) {
+    public Call<Chats> getChats(Integer user_id) {
         return mAPIService.getChats(
                 user_id
         );
@@ -109,6 +112,30 @@ public class DataManager {
         );
     }
 
+    public Call<Users> getUsersChats(Integer user_id) {
+        return mAPIService.getUsersChats(
+                user_id
+        );
+    }
+
+    public Call<ChatModel> getUsersChat(Integer user_id1, Integer user_id2) {
+        return mAPIService.getUsersChat(
+                user_id1,
+                user_id2
+        );
+    }
+
+    public Call<Status> deletePeople(Integer user_id1, Integer user_id2) {
+        return mAPIService.deletePeople(
+                user_id1,
+                user_id2
+        );
+    }
+
+    public Call<Status> createPeople(PeopleModel people) {
+        return mAPIService.createPeople(people);
+    }
+
     public Call<Status> createChat(Chat chat) {
         return mAPIService.createChat(
                 chat
@@ -134,6 +161,10 @@ public class DataManager {
         );
     }
 
+    public Call<Status> deletePost(Integer post_id) {
+        return mAPIService.deletePost(post_id);
+    }
+
     public Call<Status> createMessage(Message message) {
         return mAPIService.createMessage(
                 message
@@ -151,7 +182,7 @@ public class DataManager {
         );
     }
 
-    public Call<Messages> getMessages(Integer chat_id) {
+    public Observable<Messages> getMessages(Integer chat_id) {
         return mAPIService.getMessages(chat_id);
     }
 }

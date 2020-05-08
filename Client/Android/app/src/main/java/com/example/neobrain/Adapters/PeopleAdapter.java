@@ -23,13 +23,12 @@ import com.example.neobrain.API.model.User;
 import com.example.neobrain.Controllers.ProfileController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
+import com.example.neobrain.utils.BaseViewHolder;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

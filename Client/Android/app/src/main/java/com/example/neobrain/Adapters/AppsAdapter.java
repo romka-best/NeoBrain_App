@@ -14,11 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.App;
-import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
+import com.example.neobrain.utils.BaseViewHolder;
 import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;

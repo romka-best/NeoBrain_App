@@ -20,7 +20,7 @@ import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.ScaleFadeChangeHandler;
-import com.example.neobrain.util.BundleBuilder;
+import com.example.neobrain.utils.BundleBuilder;
 import com.example.neobrain.widget.ElasticDragDismissFrameLayout;
 
 import org.jetbrains.annotations.NotNull;

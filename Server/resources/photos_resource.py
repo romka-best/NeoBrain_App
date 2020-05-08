@@ -92,4 +92,4 @@ class PhotoCreateResource(Resource):
         session.add(photo)
         session.commit()
         return jsonify({'status': 201,
-                        'text': f'Photo {photo.id} created'})
+                        'text': f'{photo.id} created'})

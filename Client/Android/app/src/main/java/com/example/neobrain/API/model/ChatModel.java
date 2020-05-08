@@ -1,22 +1,18 @@
 package com.example.neobrain.API.model;
 
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ChatModel {
-
-    @SerializedName("chats")
+    @SerializedName("chat")
     @Expose
-    private List<Chat> chats = null;
+    private Chat chat;
 
-    public List<Chat> getChats() {
-        return chats;
+    public Chat getChat() {
+        return chat;
     }
 
-    public void setChats(List<Chat> chats) {
-        this.chats = chats;
+    public void setChat(Chat chat) {
+        this.chat = chat;
     }
-
 }

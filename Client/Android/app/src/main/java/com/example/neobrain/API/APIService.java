@@ -5,9 +5,11 @@ package com.example.neobrain.API;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
+import com.example.neobrain.API.model.Chats;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
+import com.example.neobrain.API.model.PeopleModel;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
@@ -16,6 +18,7 @@ import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.API.model.Users;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -57,18 +60,40 @@ public interface APIService {
             @Path("user_name_surname") String user_name_surname
     );
 
+    @GET("chats/users_id/{user_id}")
+    Call<Users> getUsersChats(
+            @Path("user_id") Integer user_id
+    );
+
+    @GET("chats/two_users/{user_id1}/{user_id2}")
+    Call<ChatModel> getUsersChat(
+            @Path("user_id1") Integer user_id1,
+            @Path("user_id2") Integer user_id2
+    );
+
     @GET("people/{user_id}")
     Call<People> getPeople(
             @Path("user_id") Integer user_id
     );
 
+    @POST("people")
+    Call<Status> createPeople(
+            @Body PeopleModel people
+    );
+
+    @DELETE("people/{user_id1}/{user_id2}")
+    Call<Status> deletePeople(
+            @Path("user_id1") Integer user_id1,
+            @Path("user_id2") Integer user_id2
+    );
+
     @GET("chats/{chat_id}")
-    Call<Chat> getChat(
+    Call<ChatModel> getChat(
             @Path("chat_id") Integer chat_id
     );
 
     @GET("chats/users/{user_id}")
-    Call<ChatModel> getChats(
+    Call<Chats> getChats(
             @Path("user_id") Integer user_id
     );
 
@@ -119,7 +144,7 @@ public interface APIService {
     );
 
     @GET("chats/{chat_id}/messages")
-    Call<Messages> getMessages(
+    Observable<Messages> getMessages(
             @Path("chat_id") Integer chat_id
     );
 
@@ -131,6 +156,11 @@ public interface APIService {
     @POST("posts")
     Call<Status> createPost(
             @Body Post post
+    );
+
+    @DELETE("posts/{post_id}")
+    Call<Status> deletePost(
+            @Path("post_id") Integer post_id
     );
 
     @POST("messages")

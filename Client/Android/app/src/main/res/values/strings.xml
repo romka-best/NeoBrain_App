@@ -16,6 +16,7 @@
     <string name="delete">Удалить</string>
     <string name="edit">Редактировать</string>
     <string name="delete_question">Удалить фотографию?</string>
+    <string name="delete_post">Удалить пост?</string>
     <string name="messages">Сообщения</string>
     <string name="achievements">Достижения</string>
     <string name="apps">Приложения</string>
@@ -58,6 +59,7 @@
     <string name="empty_achievements">Раздел достижений в разработке</string>
     <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
     <string name="empty_messages">Начните чат первым</string>
+    <string name="empty">Пусто</string>
     <string name="all">Все</string>
     <string name="groups">Группы</string>
     <string name="chats">Чаты</string>
@@ -82,6 +84,10 @@
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
     <string name="write_message">Написать сообщение</string>
+    <string name="in_development">Данный раздел в разработке</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
+    <string name="online">Онлайн</string>
+    <string name="offline">Оффлайн</string>
+    <string name="error">Ошибка</string>
 </resources>

@@ -4,9 +4,10 @@ import logging
 from resources.lenta_resource import LentaResource
 from resources.messages_resource import MessageListResource, MessageCreateResource, MessageResource
 from resources.music_resource import MusicResource, MusicListResource, MusicSearchResource
-from resources.people_resource import PeopleResource, PeopleCreateResource
+from resources.people_resource import PeopleResource, PeopleCreateResource, PeopleDeleteResource
 from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UsersSearchResource
-from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource, ChatFindUsersResource
+from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource, ChatFindUsersResource, \
+    ChatUsersResource, ChatTwoUsersResource
 from resources.photos_resource import PhotoResource, PhotoCreateResource
 from resources.posts_resource import PostResource, PostCreateResource, PostsListResource, PostsSearchResource
 from flask_restful import Api
@@ -32,6 +33,8 @@ def generate_routes(app):
     # Ресурсы с Chat
     api.add_resource(ChatResource, '/api/chats/<int:chat_id>')
     api.add_resource(ChatCreateResource, '/api/chats')
+    api.add_resource(ChatUsersResource, '/api/chats/users_id/<int:user_id>')
+    api.add_resource(ChatTwoUsersResource, '/api/chats/two_users/<int:user_id1>/<int:user_id2>')
     api.add_resource(ChatsListResource, '/api/chats/users/<int:user_id>')
     api.add_resource(ChatFindUsersResource, '/api/chats/search/<int:chat_id>')
 
@@ -55,6 +58,7 @@ def generate_routes(app):
 
     # Ресурсы с People
     api.add_resource(PeopleResource, '/api/people/<int:user_id>')
+    api.add_resource(PeopleDeleteResource, '/api/people/<int:user_id1>/<int:user_id2>')
     api.add_resource(PeopleCreateResource, '/api/people')
 
     # Ресурсы с Music

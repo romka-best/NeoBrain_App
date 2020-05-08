@@ -28,7 +28,8 @@ public class Post {
     @Expose
     private String createdDate;
 
-    public Post(String title, String text, Integer photoId, String createdDate) {
+    public Post(Integer id, String title, String text, Integer photoId, String createdDate) {
+        this.id = id;
         this.title = title;
         this.text = text;
         this.photoId = photoId;

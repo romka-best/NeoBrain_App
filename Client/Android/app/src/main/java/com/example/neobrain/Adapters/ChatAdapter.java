@@ -24,8 +24,8 @@ import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.Controllers.MessagesController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
-import com.example.neobrain.util.TimeFormatter;
+import com.example.neobrain.utils.BaseViewHolder;
+import com.example.neobrain.utils.TimeFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;

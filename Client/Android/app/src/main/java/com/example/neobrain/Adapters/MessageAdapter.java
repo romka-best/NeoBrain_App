@@ -5,7 +5,6 @@ package com.example.neobrain.Adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.Message;
-import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
-import com.example.neobrain.util.TimeFormatter;
+import com.example.neobrain.utils.BaseViewHolder;
+import com.example.neobrain.utils.TimeFormatter;
 
 import org.jetbrains.annotations.NotNull;
 

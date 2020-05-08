@@ -4,12 +4,10 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -23,18 +21,17 @@ import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Person;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
-import com.example.neobrain.API.model.Users;
 import com.example.neobrain.Adapters.PeopleAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -66,48 +63,10 @@ public class PeopleController extends Controller {
         peopleRecycler.setItemAnimator(new DefaultItemAnimator());
 
         ImageButton searchButton = view.findViewById(R.id.search_people_button);
-        searchButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController())
+        searchButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController((short) 1))
                 .popChangeHandler(new HorizontalChangeHandler())
                 .pushChangeHandler(new HorizontalChangeHandler())));
 
-//        SearchView searchView = view.findViewById(R.id.);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                List<String> strings = Arrays.asList(query.toLowerCase().trim().split(" "));
-//                StringJoiner joiner = new StringJoiner("&");
-//                for (int i = 0; i < strings.size(); i++) {
-//                    joiner.add(strings.get(i));
-//                }
-//                ArrayList<User> mUsers = new ArrayList<>();
-//                Call<Users> call = DataManager.getInstance().searchUser(String.valueOf(joiner));
-//                call.enqueue(new Callback<Users>() {
-//                    @Override
-//                    public void onResponse(@NotNull Call<Users> call, @NotNull Response<Users> response) {
-//                        assert response.body() != null;
-//                        List<User> users = response.body().getUsers();
-//                        for (User user : users) {
-//                            mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
-//                        }
-//                        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
-//                        peopleRecycler.setAdapter(peopleAdapter);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NotNull Call<Users> call, @NotNull Throwable t) {
-//
-//                    }
-//                });
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String searchQuery) {
-//                Log.e("onQueryTextChange", searchQuery.toLowerCase().trim());
-//                return true;
-//            }
-//        });
         getPeople();
         return view;
     }
@@ -127,30 +86,28 @@ public class PeopleController extends Controller {
                         return;
                     }
                     mUsers = new ArrayList<>();
-                    if (personList != null) {
-                        for (int i = 0; i < personList.size(); i++) {
-                            Call<UserModel> userCall = DataManager.getInstance().getUser(personList.get(i).getUserId());
-                            userCall.enqueue(new Callback<UserModel>() {
-                                @Override
-                                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-                                    assert response.body() != null;
-                                    User user = response.body().getUser();
-                                    for (User queueUser: mUsers) {
-                                        if (queueUser.getId().equals(user.getId())) {
-                                            return;
-                                        }
-                                    }
-                                    mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
-                                    if (mUsers.size() == personList.size()) {
-                                        allPeopleSearched();
+                    for (int i = 0; i < personList.size(); i++) {
+                        Call<UserModel> userCall = DataManager.getInstance().getUser(personList.get(i).getUserId());
+                        userCall.enqueue(new Callback<UserModel>() {
+                            @Override
+                            public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                                assert response.body() != null;
+                                User user = response.body().getUser();
+                                for (User queueUser : mUsers) {
+                                    if (queueUser.getId().equals(user.getId())) {
+                                        return;
                                     }
                                 }
+                                mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                                if (mUsers.size() == personList.size()) {
+                                    allPeopleSearched();
+                                }
+                            }
 
-                                @Override
-                                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                                }
-                            });
-                        }
+                            @Override
+                            public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                            }
+                        });
                     }
                 }
             }
@@ -162,8 +119,18 @@ public class PeopleController extends Controller {
         });
     }
 
-    public void allPeopleSearched(){
+    private void allPeopleSearched() {
+        if (mUsers.size() >= 2) {
+            Collections.sort(mUsers, User.COMPARE_BY_SURNAME);
+        }
         peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
         peopleRecycler.setAdapter(peopleAdapter);
+    }
+
+    @Override
+    public boolean handleBack() {
+        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+        return super.handleBack();
     }
 }

@@ -39,6 +39,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.ChatModel;
+import com.example.neobrain.API.model.People;
+import com.example.neobrain.API.model.PeopleModel;
+import com.example.neobrain.API.model.Person;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
@@ -48,7 +53,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BundleBuilder;
+import com.example.neobrain.utils.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -123,8 +128,8 @@ public class ProfileController extends Controller {
 
     private int photoId;
     private int userId = 0;
+    private boolean inSubscribe = false;
     private Integer userIdSP;
-    private int count = 0;
 
     public int getPhotoId() {
         return photoId;
@@ -150,12 +155,14 @@ public class ProfileController extends Controller {
         this.userId = args.getInt("userId");
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ResourceType"})
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.profile_controller, container, false);
         ButterKnife.bind(this, view);
+
+        setHasOptionsMenu(true);
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
@@ -198,18 +205,69 @@ public class ProfileController extends Controller {
                 bottomNavigationView.setVisibility(View.GONE);
                 getRouter().pushController(RouterTransaction.with(new PostController()));
             } else {
-                //TODO
+                if (inSubscribe) {
+                    Call<Status> deleteCall = DataManager.getInstance().deletePeople(userIdSP, userId);
+                    deleteCall.enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            if (response.isSuccessful()) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                        }
+                    });
+                } else {
+                    PeopleModel people = new PeopleModel(userIdSP, userId);
+                    Call<Status> addCall = DataManager.getInstance().createPeople(people);
+                    addCall.enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            if (response.isSuccessful()) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                        }
+                    });
+                }
             }
                 }
         );
 
         buttonEdit.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
             if (userId == 0) {
-                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-                bottomNavigationView.setVisibility(View.GONE);
                 getRouter().pushController(RouterTransaction.with(new ProfileEditController()));
             } else {
-                //TODO
+                Call<ChatModel> chatModelCall = DataManager.getInstance().getUsersChat(userIdSP, userId);
+                chatModelCall.enqueue(new Callback<ChatModel>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ChatModel> call, @NotNull Response<ChatModel> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            Chat chat = response.body().getChat();
+                            if (chat == null) {
+                                chat = new Chat();
+                                chat.setId(-1);
+                            }
+                            chat.setPhotoId(getPhotoId());
+                            getRouter().pushController(RouterTransaction.with(new MessagesController(chat, userId)));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
+
+                    }
+                });
             }
         });
 
@@ -320,10 +378,34 @@ public class ProfileController extends Controller {
                             swipeContainer.setVisibility(View.VISIBLE);
                             fabAdd.setVisibility(View.VISIBLE);
                             buttonEdit.setVisibility(View.VISIBLE);
-                            // TODO
                             if (userId != 0) {
-                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
-                                buttonEdit.setText(getResources().getString(R.string.write_message));
+                                buttonEdit.setText(Objects.requireNonNull(getResources()).getString(R.string.write_message));
+                                moreButton.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_more_vert, Objects.requireNonNull(getActivity()).getTheme()));
+                                Call<People> peopleCall = DataManager.getInstance().getPeople(userIdSP);
+                                peopleCall.enqueue(new Callback<People>() {
+                                    @Override
+                                    public void onResponse(@NotNull Call<People> call, @NotNull Response<People> response) {
+                                        if (response.isSuccessful()) {
+                                            assert response.body() != null;
+                                            People people = response.body();
+                                            List<Person> personList = people.getPeople();
+                                            for (int i = 0; i < personList.size(); i++) {
+                                                if (personList.get(i).getUserId() == userId) {
+                                                    fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));
+                                                    inSubscribe = true;
+                                                    break;
+                                                } else {
+                                                    fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NotNull Call<People> call, @NotNull Throwable t) {
+
+                                    }
+                                });
                             }
                         }
 
@@ -370,11 +452,11 @@ public class ProfileController extends Controller {
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
-                        mPosts.add(new Post(post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
+                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
                     }
-
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
-                    postAdapter = new PostAdapter(mPosts);
+                    postAdapter = new PostAdapter(mPosts, getRouter());
+                    postRecycler.setNestedScrollingEnabled(false);
                     postRecycler.setAdapter(postAdapter);
                 }
             }
@@ -528,7 +610,7 @@ public class ProfileController extends Controller {
     }
 
     private static int getBitmapOrientation(String path) {
-        ExifInterface exif = null;
+        ExifInterface exif;
         int orientation = 0;
         try {
             exif = new ExifInterface(path);

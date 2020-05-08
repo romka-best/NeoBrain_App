@@ -1,9 +1,5 @@
 package com.example.neobrain.Adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.Achievement;
-import com.example.neobrain.API.model.Photo;
-import com.example.neobrain.API.model.Post;
-import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
-import com.example.neobrain.util.BaseViewHolder;
-
-import org.jetbrains.annotations.NotNull;
+import com.example.neobrain.utils.BaseViewHolder;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "AchievementAdapter";

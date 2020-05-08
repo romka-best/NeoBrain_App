@@ -9,10 +9,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -26,6 +26,7 @@ import com.example.neobrain.API.model.User;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
@@ -70,6 +72,9 @@ public class RegController extends Controller {
     private TextInputLayout surnameEdit;
     private TextInputLayout nicknameEdit;
 
+    @BindView(R.id.regButton)
+    MaterialButton regButton;
+
 
     private SharedPreferences sp;
 
@@ -86,6 +91,8 @@ public class RegController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.reg_controller, container, false);
         ButterKnife.bind(this, view);
+
+
         textName = view.findViewById(R.id.name_text);
         textSurname = view.findViewById(R.id.surname_text);
         textNickname = view.findViewById(R.id.nickname_text);
@@ -110,6 +117,9 @@ public class RegController extends Controller {
     @SuppressLint("ResourceAsColor")
     @OnClick({R.id.regButton})
     void launchReg() {
+        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
+        imm.hideSoftInputFromWindow(regButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         name = textName.getText().toString();
         surname = textSurname.getText().toString();
         nickname = textNickname.getText().toString();
