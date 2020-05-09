@@ -3,6 +3,7 @@ sqlalchemy
 werkzeug
 flask
 flask-login
+flask-mail
 flask-restful
 sqlalchemy_serializer
 alembic

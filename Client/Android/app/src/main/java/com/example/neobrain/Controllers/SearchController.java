@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -183,24 +182,19 @@ public class SearchController extends Controller {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.GONE);
 
-        Observable.create(new ObservableOnSubscribe<String>() {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void subscribe(ObservableEmitter<String> emitter) {
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        emitter.onNext(query);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        emitter.onNext(newText);
-                        return false;
-                    }
-                });
+            public boolean onQueryTextSubmit(String query) {
+                emitter.onNext(query);
+                return false;
             }
-        }).map(String::trim)
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                emitter.onNext(newText);
+                return false;
+            }
+        })).map(String::trim)
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .filter(new Predicate<String>() {
                     @Override

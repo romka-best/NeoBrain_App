@@ -276,7 +276,7 @@ class UserLoginResource(Resource):
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})
         return jsonify({'status': 404,
-                        'text': 'User is not defined'})
+                        'text': 'Password or login is not correct'})
 
 
 # Ресурс для создания пользователя, а также для получения всех пользователей

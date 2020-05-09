@@ -5,11 +5,8 @@ package com.example.neobrain;
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +19,6 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.Controllers.AuthController;
 import com.example.neobrain.Controllers.HomeController;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp;
+    Integer userIdSP;
 
     public static final int PERMISSION_REQUEST_CODE = 1001;
 
@@ -109,37 +106,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setOnline() {
-        Integer userIdSP = sp.getInt("userId", -1);
+        userIdSP = sp.getInt("userId", -1);
         User user = new User();
         user.setStatus(1);
         Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
         call.enqueue(new Callback<Status>() {
             @Override
             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-
             }
 
             @Override
             public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
             }
         });
     }
 
     private void setOffline() {
-        Integer userIdSP = sp.getInt("userId", -1);
+        userIdSP = sp.getInt("userId", -1);
         User user = new User();
         user.setStatus(0);
         Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
         call.enqueue(new Callback<Status>() {
             @Override
             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-
             }
 
             @Override
             public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
             }
         });
     }

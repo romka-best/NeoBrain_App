@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -22,7 +22,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +33,12 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер для выкладывания/редактирования поста
 public class PostController extends Controller {
-    private MultiAutoCompleteTextView postText;
+    @BindView(R.id.acceptButton)
+    public ImageButton acceptButton;
+    @BindView(R.id.cancelButton)
+    public ImageButton cancelButton;
+    @BindView(R.id.postText)
+    public MultiAutoCompleteTextView postText;
 
     private SharedPreferences sp;
 
@@ -42,11 +49,6 @@ public class PostController extends Controller {
         View view = inflater.inflate(R.layout.post_controller, container, false);
         ButterKnife.bind(this, view);
 
-        ImageButton cancelButton = view.findViewById(R.id.cancelButton);
-        ImageButton acceptButton = view.findViewById(R.id.acceptButton);
-        TextView title = view.findViewById(R.id.title);
-        postText = view.findViewById(R.id.postText);
-
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
@@ -55,13 +57,15 @@ public class PostController extends Controller {
             bottomNavigationView.setVisibility(View.VISIBLE);
             getRouter().popCurrentController();
         });
-        acceptButton.setOnClickListener(v -> setPost());
-
 
         return view;
     }
 
-    private void setPost() {
+    @OnClick({R.id.acceptButton})
+    void setPost() {
+        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
+        imm.hideSoftInputFromWindow(acceptButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         Integer userIdSP = sp.getInt("userId", -1);
         Post post = new Post();
         post.setText(postText.getText().toString());

@@ -512,10 +512,10 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_margin="10dp"
-                    android:background="@null"
+                    android:background="?selectableItemBackgroundBorderless"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_menu" />
+                    app:srcCompat="@drawable/ic_settings" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/postRecycler"

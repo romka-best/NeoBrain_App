@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -67,6 +66,8 @@
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="15"
         app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.97"
@@ -80,8 +81,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:textCursorDrawable="@drawable/color_cursor"
-            android:textColor="@color/colorText"
-            android:maxLength="15"/>
+            android:textColor="@color/colorText" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -182,6 +182,8 @@
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/surname"
@@ -194,8 +196,7 @@
             android:layout_height="wrap_content"
             android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textPersonName"
-            android:textColor="@color/colorText"
-            android:maxLength="20"/>
+            android:textColor="@color/colorText" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -210,6 +211,8 @@
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/name"
@@ -222,8 +225,7 @@
             android:layout_height="wrap_content"
             android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textPersonName"
-            android:textColor="@color/colorText"
-            android:maxLength="15"/>
+            android:textColor="@color/colorText" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -54,8 +53,9 @@
             android:id="@+id/login_text"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:textColor="@color/colorText" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorText"
+            app:errorEnabled="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,7 +82,8 @@
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:textColor="@color/colorText" />
+            android:textColor="@color/colorText"
+            app:errorEnabled="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,10 +98,10 @@
         android:textColor="@color/colorPrimary"
         android:tint="@color/colorAccent"
         app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/square"
         app:layout_constraintEnd_toEndOf="@+id/square_s"
         app:layout_constraintStart_toStartOf="@+id/square_s"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/square" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/forgot_button"

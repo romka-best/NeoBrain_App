@@ -44,46 +44,9 @@ public class DataManager {
         );
     }
 
-    public Call<Photo> getPhoto(Integer photo_id) {
-        return mAPIService.getPhoto(
-                photo_id
-        );
-    }
-
-    public Call<ChatModel> getChat(Integer chat_id) {
-        return mAPIService.getChat(
-                chat_id
-        );
-    }
-
-    public Call<ChatUsers> searchUsersInChat(Integer chat_id) {
-        return mAPIService.searchUsersInChat(
-                chat_id
-        );
-    }
-
-    public Call<People> getPeople(Integer user_id) {
-        return mAPIService.getPeople(
-                user_id
-        );
-    }
-
-
-    public Call<Chats> getChats(Integer user_id) {
-        return mAPIService.getChats(
-                user_id
-        );
-    }
-
-    public Call<PostModel> getPosts(Integer user_id) {
-        return mAPIService.getPosts(
-                user_id
-        );
-    }
-
-    public Call<PostModel> getLenta(Integer user_id) {
-        return mAPIService.getLenta(
-                user_id
+    public Call<Status> createUser(User user) {
+        return mAPIService.createUser(
+                user
         );
     }
 
@@ -100,10 +63,8 @@ public class DataManager {
         );
     }
 
-    public Call<Status> createUser(User user) {
-        return mAPIService.createUser(
-                user
-        );
+    public Call<Status> sendEmail(User user) {
+        return mAPIService.sendEmail(user);
     }
 
     public Call<Users> searchUser(String user_name_surname) {
@@ -112,28 +73,28 @@ public class DataManager {
         );
     }
 
-    public Call<Users> getUsersChats(Integer user_id) {
-        return mAPIService.getUsersChats(
+    public Call<Photo> getPhoto(Integer photo_id) {
+        return mAPIService.getPhoto(
+                photo_id
+        );
+    }
+
+    public Call<Status> deletePhoto(Integer photo_id) {
+        return mAPIService.deletePhoto(
+                photo_id
+        );
+    }
+
+    public Call<ChatModel> getChat(Integer chat_id) {
+        return mAPIService.getChat(
+                chat_id
+        );
+    }
+
+    public Call<Chats> getChats(Integer user_id) {
+        return mAPIService.getChats(
                 user_id
         );
-    }
-
-    public Call<ChatModel> getUsersChat(Integer user_id1, Integer user_id2) {
-        return mAPIService.getUsersChat(
-                user_id1,
-                user_id2
-        );
-    }
-
-    public Call<Status> deletePeople(Integer user_id1, Integer user_id2) {
-        return mAPIService.deletePeople(
-                user_id1,
-                user_id2
-        );
-    }
-
-    public Call<Status> createPeople(PeopleModel people) {
-        return mAPIService.createPeople(people);
     }
 
     public Call<Status> createChat(Chat chat) {
@@ -149,9 +110,32 @@ public class DataManager {
         );
     }
 
-    public Call<Status> deletePhoto(Integer photo_id) {
-        return mAPIService.deletePhoto(
-                photo_id
+    public Call<ChatUsers> searchUsersInChat(Integer chat_id) {
+        return mAPIService.searchUsersInChat(
+                chat_id
+        );
+    }
+
+    public Call<People> getPeople(Integer user_id) {
+        return mAPIService.getPeople(
+                user_id
+        );
+    }
+
+    public Call<Status> deletePeople(Integer user_id1, Integer user_id2) {
+        return mAPIService.deletePeople(
+                user_id1,
+                user_id2
+        );
+    }
+
+    public Call<Status> createPeople(PeopleModel people) {
+        return mAPIService.createPeople(people);
+    }
+
+    public Call<PostModel> getPosts(Integer user_id) {
+        return mAPIService.getPosts(
+                user_id
         );
     }
 
@@ -163,6 +147,25 @@ public class DataManager {
 
     public Call<Status> deletePost(Integer post_id) {
         return mAPIService.deletePost(post_id);
+    }
+
+    public Call<PostModel> getLenta(Integer user_id) {
+        return mAPIService.getLenta(
+                user_id
+        );
+    }
+
+    public Call<Users> getUsersChats(Integer user_id) {
+        return mAPIService.getUsersChats(
+                user_id
+        );
+    }
+
+    public Call<ChatModel> getUsersChat(Integer user_id1, Integer user_id2) {
+        return mAPIService.getUsersChat(
+                user_id1,
+                user_id2
+        );
     }
 
     public Call<Status> createMessage(Message message) {

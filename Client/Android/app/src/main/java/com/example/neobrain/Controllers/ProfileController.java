@@ -38,6 +38,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
@@ -211,7 +212,8 @@ public class ProfileController extends Controller {
                         @Override
                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                             if (response.isSuccessful()) {
-
+                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
+                                inSubscribe = false;
                             }
                         }
 
@@ -227,7 +229,8 @@ public class ProfileController extends Controller {
                         @Override
                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                             if (response.isSuccessful()) {
-
+                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));
+                                inSubscribe = true;
                             }
                         }
 
@@ -274,21 +277,23 @@ public class ProfileController extends Controller {
         buttonInfo.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
-            getRouter().pushController(RouterTransaction.with(new ProfileInfoController()));
+            getRouter().pushController(RouterTransaction.with(new ProfileInfoController())
+                    .popChangeHandler(new VerticalChangeHandler())
+                    .pushChangeHandler(new VerticalChangeHandler()));
         });
 
-//        moreButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) coordinatorLayout.getLayoutParams();
-//                // узнаем размеры экрана из класса Display
-//                Display display = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay();
-//                DisplayMetrics metricsB = new DisplayMetrics();
-//                display.getMetrics(metricsB);
-//                params.setMarginEnd(metricsB.widthPixels / 100 * 75);
-//                coordinatorLayout.setLayoutParams(params);
-//            }
-//        });
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userId == 0) {
+                    getRouter().pushController(RouterTransaction.with(new SettingsController())
+                            .popChangeHandler(new HorizontalChangeHandler())
+                            .pushChangeHandler(new HorizontalChangeHandler()));
+                } else {
+                    // TODO
+                }
+            }
+        });
 
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
@@ -389,6 +394,10 @@ public class ProfileController extends Controller {
                                             assert response.body() != null;
                                             People people = response.body();
                                             List<Person> personList = people.getPeople();
+                                            if (personList.size() == 0) {
+                                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
+                                                return;
+                                            }
                                             for (int i = 0; i < personList.size(); i++) {
                                                 if (personList.get(i).getUserId() == userId) {
                                                     fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));

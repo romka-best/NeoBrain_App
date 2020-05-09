@@ -37,9 +37,20 @@ class PeopleDeleteResource(Resource):
         # Создаём сессию в БД и получаем людей(друзей)
         session = db_session.create_session()
         user = session.query(User).get(user_id1)
-        people = session.query(People).filter(People.user_id == user_id2).first()
-        print(f"people: {people}")
-        user.people.remove(people)
+        user2 = session.query(User).get(user_id2)
+        list_people_id = []
+        while True:
+            try:
+                people = session.query(People).filter(People.user_id == user_id2,
+                                                      People.id.notin_(list_people_id)).first()
+                list_people_id.append(people.id)
+                # Удаляем (Отписываемся)
+                user.people.remove(people)
+                break
+            except ValueError:
+                continue
+        user.subscriptions_count -= 1
+        user2.followers_count -= 1
         session.commit()
         return jsonify({'status': 200,
                         'text': 'deleted'})
@@ -69,6 +80,7 @@ class PeopleCreateResource(Resource):
         # Создаём сессию в БД
         session = db_session.create_session()
         user = session.query(User).get(args['user_author_id'])
+        user2 = session.query(User).get(args['user_subscribe_id'])
         # Подписываемся
         people = People(
             user_id=args['user_subscribe_id']
@@ -76,6 +88,8 @@ class PeopleCreateResource(Resource):
         # Добавляем в БД подписку
         session.add(people)
         user.people.append(people)
+        user.subscriptions_count += 1
+        user2.followers_count += 1
         session.commit()
         return jsonify({'status': 201,
                         'text': f'{people.id} created'})

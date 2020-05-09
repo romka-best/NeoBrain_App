@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -68,6 +67,8 @@
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="15"
         app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@+id/square"
         app:layout_constraintStart_toStartOf="@+id/square"
@@ -87,7 +88,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_number"
+        android:hint="@string/email"
         android:textColor="@color/colorText"
         android:textColorHint="#80F6F6F6"
         app:boxStrokeColor="@color/colorText"
@@ -97,14 +98,14 @@
         app:layout_constraintEnd_toEndOf="@+id/passwordRepeat"
         app:layout_constraintStart_toStartOf="@+id/passwordRepeat"
         app:layout_constraintTop_toBottomOf="@+id/passwordRepeat"
-        app:startIconDrawable="@drawable/ic_phone"
+        app:startIconDrawable="@drawable/ic_email"
         app:startIconTint="@color/colorText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_text"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:inputType="phone"
+            android:inputType="textEmailAddress"
             android:textColor="@color/colorText" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -172,6 +173,8 @@
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
         app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@+id/surname"
         app:layout_constraintStart_toStartOf="@+id/surname"
@@ -197,6 +200,8 @@
         app:boxStrokeColor="@color/colorText"
         app:boxStrokeErrorColor="@color/colorError"
         app:errorEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="15"
         app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@+id/name"
         app:layout_constraintStart_toStartOf="@+id/name"

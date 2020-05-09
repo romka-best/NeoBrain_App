@@ -6,7 +6,7 @@
     <string name="reg">Registration</string>
     <string name="reg2">Register</string>
     <string name="hint_password">Password</string>
-    <string name="hint_username">Nickname/Number phone/Email</string>
+    <string name="hint_username">Nickname/Email</string>
     <string name="hint_name">Name</string>
     <string name="hint_nickname">Nickname</string>
     <string name="hint_number">Number phone</string>
@@ -91,4 +91,17 @@
     <string name="error">Error</string>
     <string name="delete_post">Delete the post?</string>
     <string name="empty">Empty</string>
+    <string name="error_with_password">The password is incorrect</string>
+    <string name="empty_field">This field cannot be empty</string>
+    <string name="invalid_password_or_username">Invalid password or username</string>
+    <string name="invalid_password">Invalid password</string>
+    <string name="nickname_already_exists">Nickname already exists</string>
+    <string name="email_already_exists">Email already exists</string>
+    <string name="phone_already_exists">Phone number already exists</string>
+    <string name="check_code">Enter the code that came to your email</string>
+    <string name="code">Six-digit code</string>
+    <string name="accept">Accept</string>
+    <string name="invalid_code">Invalid code</string>
+    <string name="exit">Exit</string>
+    <string name="settings">Settings</string>
 </resources>

@@ -44,6 +44,11 @@ public interface APIService {
             @Body User user
     );
 
+    @POST("send_email")
+    Call<Status> sendEmail(
+            @Body User user
+    );
+
     @PUT("users/{user_id}")
     Call<Status> editUser(
             @Path("user_id") Integer user_id,

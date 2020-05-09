@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NeoBrain</string>
     <string name="auth">Авторизация</string>
-    <string name="hint_username">Никнейм/Номер телефона/Эл. почта</string>
+    <string name="hint_username">Никнейм/Эл. почта</string>
     <string name="hint_password">Пароль</string>
     <string name="entry">Войти</string>
     <string name="reg">Регистрация</string>
@@ -90,4 +90,17 @@
     <string name="online">Онлайн</string>
     <string name="offline">Оффлайн</string>
     <string name="error">Ошибка</string>
+    <string name="error_with_password">Пароль некорректен</string>
+    <string name="empty_field">Поле не может быть пустым</string>
+    <string name="invalid_password_or_username">Неверный логин или пароль</string>
+    <string name="invalid_password">Неверный пароль</string>
+    <string name="invalid_code">Код неверный</string>
+    <string name="nickname_already_exists">Никнейм уже существует</string>
+    <string name="email_already_exists">Емайл уже занят</string>
+    <string name="phone_already_exists">Телефон уже занят</string>
+    <string name="check_code">Введите код, который пришёл вам на почту</string>
+    <string name="code">Шестизначный код</string>
+    <string name="accept">Подтвердить</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
 </resources>
