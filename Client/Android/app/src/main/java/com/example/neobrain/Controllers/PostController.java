@@ -17,6 +17,7 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,12 +64,17 @@ public class PostController extends Controller {
 
     @OnClick({R.id.acceptButton})
     void setPost() {
+        assert getView() != null;
+        if (postText.getText().toString().equals("")) {
+            Snackbar.make(getView(), R.string.empty_field, Snackbar.LENGTH_LONG).show();
+            return;
+        }
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
         assert imm != null;
         imm.hideSoftInputFromWindow(acceptButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         Integer userIdSP = sp.getInt("userId", -1);
         Post post = new Post();
-        post.setText(postText.getText().toString());
+        post.setText(postText.getText().toString().trim());
         post.setUserId(userIdSP);
         Call<Status> call = DataManager.getInstance().createPost(post);
         call.enqueue(new Callback<Status>() {

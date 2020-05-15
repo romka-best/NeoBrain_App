@@ -1,6 +1,6 @@
 # Импортируем нужные библиотеки
 from base64 import decodebytes
-from datetime import datetime
+import datetime
 
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
@@ -18,6 +18,11 @@ def abort_if_chat_not_found(chat_id):
     chat = session.query(Chat).get(chat_id)
     if not chat:
         abort(404, message=f"Chat {chat_id} not found")
+
+
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
 
 
 #  Основной ресурс чата
@@ -83,7 +88,7 @@ class ChatResource(Resource):
             chat.last_time_message = args['last_time_message']
         if args.get('last_message'):
             chat.last_message = args['last_message']
-            chat.last_time_message = datetime.now()
+            chat.last_time_message = get_current_time()
         if args.get('count_new_messages', None) is not None:
             chat.count_new_messages = args['count_new_messages']
         if args.get('count_messages', None) is not None:
@@ -102,7 +107,7 @@ class ChatResource(Resource):
                 chat.photo_id = photo.id
         if args.get('photo_id', None):
             chat.photo_id = args['photo_id']
-        chat.modified_date = datetime.now()
+        chat.modified_date = get_current_time()
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited'})

@@ -330,7 +330,12 @@ public class ProfileController extends Controller {
                     assert user != null;
                     nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     nickname.setText(user.getNickname());
-                    followersCount.setText(user.getFollowersCount().toString());
+                    if (user.getFollowersCount() >= 1000 && user.getFollowersCount() < 1000000) {
+                        followersCount.setText(user.getFollowersCount().toString().charAt(0) + "K");
+                    } else {
+                        followersCount.setText(user.getFollowersCount().toString());
+                    }
+
                     subscribersCount.setText(user.getSubscriptionsCount().toString());
                     if (user.getStatus() == 0) {
                         statusCircle.setBackgroundResource(R.drawable.circle_offline);

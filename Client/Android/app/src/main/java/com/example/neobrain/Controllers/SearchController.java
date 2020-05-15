@@ -56,6 +56,7 @@ public class SearchController extends Controller {
     private final RouterPagerAdapter pagerAdapter;
 
     public SearchController() {
+        // TODO Автоматичесское открывание SearchView
         currentItem = 0;
         pagerAdapter = new RouterPagerAdapter(this) {
             @Override
@@ -177,10 +178,6 @@ public class SearchController extends Controller {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(currentItem);
         tabLayout.setupWithViewPager(viewPager);
-
-
-        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setVisibility(View.GONE);
 
         Observable.create((ObservableOnSubscribe<String>) emitter -> searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

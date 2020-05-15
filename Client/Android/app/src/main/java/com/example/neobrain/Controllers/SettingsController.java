@@ -35,9 +35,6 @@ public class SettingsController extends Controller {
         View view = inflater.inflate(R.layout.settings_controller, container, false);
         ButterKnife.bind(this, view);
 
-        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setVisibility(View.GONE);
-
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
@@ -46,6 +43,7 @@ public class SettingsController extends Controller {
 
     @OnClick({R.id.exitButton})
     void exit() {
+        // TODO Пользователь Offline
         SharedPreferences.Editor e = sp.edit();
         e.putBoolean("hasAuthed", false);
         e.apply();

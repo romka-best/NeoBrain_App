@@ -91,7 +91,7 @@
         android:id="@+id/regButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="false"
         android:layout_margin="8dp"
         android:backgroundTint="@color/colorText"
         android:text="@string/reg2"

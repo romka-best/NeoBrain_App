@@ -95,6 +95,8 @@ public class MessagesController extends Controller {
     @BindView(R.id.progress_circular)
     public ProgressBar progressBar;
 
+    private BottomNavigationView bottomNavigationView;
+
     private int userId = 0;
     private SharedPreferences sp;
 
@@ -119,25 +121,25 @@ public class MessagesController extends Controller {
         View view = inflater.inflate(R.layout.messages_controller, container, false);
         ButterKnife.bind(this, view);
 
-        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+        bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.GONE);
 
         backButton.setColorFilter(Color.argb(255, 255, 255, 255));
         backButton.setOnClickListener(v -> {
-            InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(backButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
-                try {
-                    if (routerTransaction.controller() == getRouter().getBackstack().get(2).controller()) {
-                        bottomNavigationView.setVisibility(View.GONE);
-                        getRouter().popCurrentController();
-                        return;
+                    InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
+                    imm.hideSoftInputFromWindow(backButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+                        try {
+                            if (routerTransaction.controller() == getRouter().getBackstack().get(2).controller()) {
+//                        bottomNavigationView.setVisibility(View.GONE);
+                                getRouter().popCurrentController();
+                                return;
+                            }
+                        } catch (IndexOutOfBoundsException ignored) {
+                        }
                     }
-                } catch (IndexOutOfBoundsException ignored) {
-                }
-            }
-                    bottomNavigationView.setVisibility(View.VISIBLE);
+//                    bottomNavigationView.setVisibility(View.VISIBLE);
                     getRouter().popCurrentController();
                 }
         );

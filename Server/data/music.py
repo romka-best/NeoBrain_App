@@ -14,6 +14,11 @@ association_table = sqlalchemy.Table('music_association', SqlAlchemyBase.metadat
                                      )
 
 
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
+
+
 class Music(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'music'
 
@@ -33,7 +38,7 @@ class Music(SqlAlchemyBase, SerializerMixin):
 
     # Дата создания музыки в формате YYYY-MM-DD HH:MM
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
+                                     default=get_current_time)
 
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")

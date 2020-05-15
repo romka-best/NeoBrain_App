@@ -9,7 +9,7 @@ from data import db_session
 from data.chats import Chat
 from data.photos import Photo
 from data.posts import Post
-from data.users import User
+from data.users import User, correct_password
 
 
 # Если user не найден, то приходит ответа сервера
@@ -18,6 +18,11 @@ def abort_if_user_not_found(user_id):
     user = session.query(User).get(user_id)
     if not user:
         abort(404, message=f"User {user_id} not found")
+
+
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
 
 
 # Основной ресурс для работы с User
@@ -154,7 +159,7 @@ class UserResource(Resource):
             user.subscriptions_count = args['subscriptions_count']
         if args.get('status', None) is not None:
             user.status = args['status']
-            user.last_seen = datetime.datetime.now()
+            user.last_seen = get_current_time()
         if args.get('last_seen', None):
             user.last_seen = args['last_seen']
         if args.get('photo', None):
@@ -182,7 +187,7 @@ class UserResource(Resource):
         if args.get('photo_id', None):
             user.photo_id = args['photo_id']
         # Обновляем дату модификации пользователя
-        user.modified_date = datetime.datetime.now()
+        user.modified_date = get_current_time()
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited',
@@ -364,7 +369,12 @@ class UsersListResource(Resource):
                 User.nickname == args['nickname']).first():
             return jsonify({'status': 449,
                             'text': 'Nickname already exists'})
+        # Проверяем корректность пароля
+        if correct_password(args['hashed_password'])[0] == "WRONG":
+            return jsonify({'status': 449,
+                            'text': 'Password is not correct'})
         # Создаём пользователя
+        # TODO Проверка email
         user = User(
             name=args['name'].title(),
             surname=args['surname'].title(),

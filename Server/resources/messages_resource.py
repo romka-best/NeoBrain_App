@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from flask import jsonify
 from flask_restful import abort, Resource, reqparse
@@ -16,6 +16,11 @@ def abort_if_message_not_found(message_id):
     message = session.query(Message).get(message_id)
     if not message:
         abort(404, message=f"Message {message_id} not found")
+
+
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
 
 
 class MessageResource(Resource):
@@ -61,7 +66,7 @@ class MessageResource(Resource):
             message.text = args['text']
         if args.get('status', None) is not None:
             message.status = args['status']
-        message.modified_date = datetime.now()
+        message.modified_date = get_current_time()
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited'})
