@@ -1,16 +1,18 @@
 # Импортируем нужные библиотеки
-import logging
 
+from flask_restful import Api
+
+from resources.achievements_resource import AchievementResource, AchievementUserResource, AchievementCreateResource
+from resources.apps_resource import AppCreateResource, AppDeleteResource, AppResource
+from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource, ChatFindUsersResource, \
+    ChatUsersResource, ChatTwoUsersResource
 from resources.lenta_resource import LentaResource
 from resources.messages_resource import MessageListResource, MessageCreateResource, MessageResource
 from resources.music_resource import MusicResource, MusicListResource, MusicSearchResource
 from resources.people_resource import PeopleResource, PeopleCreateResource, PeopleDeleteResource
-from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UsersSearchResource
-from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource, ChatFindUsersResource, \
-    ChatUsersResource, ChatTwoUsersResource
 from resources.photos_resource import PhotoResource, PhotoCreateResource
 from resources.posts_resource import PostResource, PostCreateResource, PostsListResource, PostsSearchResource
-from flask_restful import Api
+from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UsersSearchResource
 
 
 # logger = logging.getLogger("routes")
@@ -67,9 +69,15 @@ def generate_routes(app):
     api.add_resource(MusicListResource, '/api/music/users/<int:user_id>')
 
     # Ресурсы с App
+    api.add_resource(AppResource, '/api/apps/<int:user_id>')
+    api.add_resource(AppDeleteResource, '/api/apps/<int:user_id>/<int:app_id>')
+    api.add_resource(AppCreateResource, '/api/apps')
 
     # Ресурсы с Group
 
     # Ресурсы с Achievements
+    api.add_resource(AchievementResource, '/api/achievements/<int:achievement_id>')
+    api.add_resource(AchievementUserResource, '/api/achievements/user/<int:user_id>')
+    api.add_resource(AchievementCreateResource, '/api/achievements')
 
     # logger.debug("Added API resources")

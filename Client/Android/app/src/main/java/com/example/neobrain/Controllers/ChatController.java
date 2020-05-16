@@ -27,6 +27,7 @@ import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -87,9 +88,13 @@ public class ChatController extends Controller {
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
-        searchChatsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController((short) 3))
-                .popChangeHandler(new HorizontalChangeHandler())
-                .pushChangeHandler(new HorizontalChangeHandler())));
+        searchChatsButton.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
+            getRouter().pushController(RouterTransaction.with(new SearchController((short) 3))
+                    .popChangeHandler(new HorizontalChangeHandler())
+                    .pushChangeHandler(new HorizontalChangeHandler()));
+        });
 
         getChats();
         return view;

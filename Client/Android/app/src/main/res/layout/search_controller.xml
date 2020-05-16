@@ -22,11 +22,11 @@
                 android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:closeIcon="@drawable/ic_close"
-                android:searchHintIcon="@drawable/ic_search"
-                android:searchIcon="@drawable/ic_search"
+                android:closeIcon="@drawable/ic_close_white"
+                android:searchHintIcon="@drawable/ic_search_white"
+                android:searchIcon="@drawable/ic_search_white"
                 android:showAsAction="always"
-                android:voiceIcon="@drawable/ic_mic" />
+                android:voiceIcon="@drawable/ic_mic_white" />
         </Toolbar>
 
 

@@ -4,12 +4,14 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +26,7 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PeopleAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.utils.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,10 +46,31 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер с людьми (Друзьями, подписчиками)
 public class PeopleController extends Controller {
-    private RecyclerView peopleRecycler;
+    @BindView(R.id.peopleRecycler)
+    public RecyclerView peopleRecycler;
     private PeopleAdapter peopleAdapter;
     private ArrayList<User> mUsers = new ArrayList<>();
     private SharedPreferences sp;
+    private boolean bottomIsGone = false;
+    private int userId;
+
+    public PeopleController() {
+
+    }
+
+    public PeopleController(int userId, boolean bottomIsGone) {
+        this(new BundleBuilder(new Bundle())
+                .putInt("userId", userId)
+                .putBoolean("bottomIsGone", bottomIsGone)
+                .build());
+    }
+
+    public PeopleController(@Nullable Bundle args) {
+        super(args);
+        assert args != null;
+        this.bottomIsGone = args.getBoolean("bottomIsGone");
+        this.userId = args.getInt("userId");
+    }
 
     @NonNull
     @Override
@@ -56,24 +81,26 @@ public class PeopleController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
-        peopleRecycler = view.findViewById(R.id.peopleRecycler);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         peopleRecycler.setLayoutManager(mLayoutManager);
         peopleRecycler.setItemAnimator(new DefaultItemAnimator());
 
         ImageButton searchButton = view.findViewById(R.id.search_people_button);
-        searchButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new SearchController((short) 1))
-                .popChangeHandler(new HorizontalChangeHandler())
-                .pushChangeHandler(new HorizontalChangeHandler())));
+        searchButton.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
+            getRouter().pushController(RouterTransaction.with(new SearchController((short) 1))
+                    .popChangeHandler(new HorizontalChangeHandler())
+                    .pushChangeHandler(new HorizontalChangeHandler()));
+        });
 
         getPeople();
         return view;
     }
 
     private void getPeople() {
-        Integer userIdSP = sp.getInt("userId", -1);
-        Call<People> call = DataManager.getInstance().getPeople(userIdSP);
+        Call<People> call = DataManager.getInstance().getPeople(userId);
         call.enqueue(new Callback<People>() {
             @Override
             public void onResponse(@NotNull Call<People> call, @NotNull Response<People> response) {
@@ -132,5 +159,17 @@ public class PeopleController extends Controller {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        try {
+            if (bottomIsGone) {
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+            }
+        } catch (NullPointerException ignored) {
+        }
     }
 }

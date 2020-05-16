@@ -56,7 +56,6 @@ public class SearchController extends Controller {
     private final RouterPagerAdapter pagerAdapter;
 
     public SearchController() {
-        // TODO Автоматичесское открывание SearchView
         currentItem = 0;
         pagerAdapter = new RouterPagerAdapter(this) {
             @Override
@@ -178,6 +177,7 @@ public class SearchController extends Controller {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(currentItem);
         tabLayout.setupWithViewPager(viewPager);
+        searchView.setIconified(false);
 
         Observable.create((ObservableOnSubscribe<String>) emitter -> searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -214,14 +214,18 @@ public class SearchController extends Controller {
         return new Observable<String>() {
             @Override
             protected void subscribeActual(Observer<? super String> observer) {
+                String[] s = query.toLowerCase().trim().split(" ");
                 switch (viewPager.getCurrentItem()) {
                     case 0:
                         break;
                     case 1:
-                        List<String> strings = Arrays.asList(query.toLowerCase().trim().split(" "));
+                        List<String> strings = Arrays.asList(s);
                         StringJoiner joiner = new StringJoiner("&");
-                        for (int i = 0; i < strings.size(); i++) {
-                            joiner.add(strings.get(i));
+                        if (strings.size() >= 2) {
+                            joiner.add(strings.get(0));
+                            joiner.add(strings.get(1));
+                        } else if (strings.size() == 1) {
+                            joiner.add(strings.get(0));
                         }
                         ArrayList<User> mUsers = new ArrayList<>();
                         Call<Users> call = DataManager.getInstance().searchUser(String.valueOf(joiner));
@@ -245,6 +249,7 @@ public class SearchController extends Controller {
                     case 2:
                         break;
                     case 3:
+                        List<String> chatStrings = Arrays.asList(s);
                         break;
                     case 4:
                         break;
@@ -265,11 +270,12 @@ public class SearchController extends Controller {
     }
 
     @Override
-    protected void onDestroyView(@NonNull View view) {
-        if (!Objects.requireNonNull(getActivity()).isChangingConfigurations()) {
-            viewPager.setAdapter(null);
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        try {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
+        } catch (NullPointerException ignored) {
         }
-        tabLayout.setupWithViewPager(null);
-        super.onDestroyView(view);
     }
 }

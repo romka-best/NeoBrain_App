@@ -10,13 +10,6 @@ from .users_resource import abort_if_user_not_found
 
 # Основной ресурс для работы с People
 class PeopleResource(Resource):
-    def __init__(self):
-        # Инициализируем parser, так как доступ к данным,
-        # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
-        self.parser = reqparse.RequestParser()
-        # Id пользователя, на которого подписывается человек
-        self.parser.add_argument('user_subscribe_id', required=True, type=int)
-
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)

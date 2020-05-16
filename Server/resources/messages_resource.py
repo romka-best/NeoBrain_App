@@ -5,7 +5,6 @@ from flask_restful import abort, Resource, reqparse
 
 from data import db_session
 from data.messages import Message
-
 from resources.chats_resource import abort_if_chat_not_found
 from resources.users_resource import abort_if_user_not_found
 
@@ -39,8 +38,6 @@ class MessageResource(Resource):
 
     # Получаем сообщение по его id
     def get(self, message_id):
-        if str(message_id).find("?") != -1:
-            message_id = int(message_id[:message_id.find("?")].strip())
         # Создаём сессию и получаем сообщение
         session = db_session.create_session()
         message = session.query(Message).get(message_id)
@@ -50,8 +47,6 @@ class MessageResource(Resource):
 
     # Изменяем сообщение по его id
     def put(self, message_id):
-        if str(message_id).find("?") != -1:
-            message_id = int(message_id[:message_id.find("?")].strip())
         # Получаем аргументы
         args = self.parser.parse_args()
         # Если нет аргументов, отправляем ошибку 400 с текстом 'Empty request'

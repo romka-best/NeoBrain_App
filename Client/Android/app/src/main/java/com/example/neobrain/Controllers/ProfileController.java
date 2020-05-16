@@ -120,6 +120,7 @@ public class ProfileController extends Controller {
     public TextView textError;
     @BindView(R.id.city_age_gender)
     public TextView cityAgeGenderText;
+    private BottomNavigationView bottomNavigationView;
 
     private SharedPreferences sp;
 
@@ -130,6 +131,7 @@ public class ProfileController extends Controller {
     private int photoId;
     private int userId = 0;
     private boolean inSubscribe = false;
+    private boolean bottomIsGone = false;
     private Integer userIdSP;
 
     public int getPhotoId() {
@@ -150,10 +152,18 @@ public class ProfileController extends Controller {
                 .build());
     }
 
+    public ProfileController(int userId, boolean bottomIsGone) {
+        this(new BundleBuilder(new Bundle())
+                .putInt("userId", userId)
+                .putBoolean("bottomIsGone", bottomIsGone)
+                .build());
+    }
+
     public ProfileController(@Nullable Bundle args) {
         super(args);
         assert args != null;
         this.userId = args.getInt("userId");
+        this.bottomIsGone = args.getBoolean("bottomIsGone");
     }
 
     @SuppressLint({"SetTextI18n", "ResourceType"})
@@ -169,27 +179,27 @@ public class ProfileController extends Controller {
                 Context.MODE_PRIVATE);
 
         View imagesButton = view.findViewById(R.id.button_first);
-        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PhotosController())
+        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PhotosController(bottomIsGone))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
         View peopleButton = view.findViewById(R.id.button_second);
-        peopleButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PeopleController())
+        peopleButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PeopleController((userId == 0) ? userIdSP : userId, bottomIsGone))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
         View musicButton = view.findViewById(R.id.button_third);
-        musicButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new MusicController())
+        musicButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new MusicController(bottomIsGone))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
         View achievementsButton = view.findViewById(R.id.button_fourth);
-        achievementsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new AchievementsController())
+        achievementsButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new AchievementsController((userId == 0) ? userIdSP : userId, bottomIsGone))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
         View videosButton = view.findViewById(R.id.button_fifth);
-        videosButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new VideosController())
+        videosButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new VideosController(bottomIsGone))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
@@ -201,46 +211,46 @@ public class ProfileController extends Controller {
 
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
-            if (userId == 0) {
-                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-                bottomNavigationView.setVisibility(View.GONE);
-                getRouter().pushController(RouterTransaction.with(new PostController()));
-            } else {
-                if (inSubscribe) {
-                    Call<Status> deleteCall = DataManager.getInstance().deletePeople(userIdSP, userId);
-                    deleteCall.enqueue(new Callback<Status>() {
-                        @Override
-                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                            if (response.isSuccessful()) {
-                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
-                                inSubscribe = false;
-                            }
-                        }
+                    if (userId == 0) {
+                        BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                        bottomNavigationView.setVisibility(View.GONE);
+                        getRouter().pushController(RouterTransaction.with(new PostController()));
+                    } else {
+                        if (inSubscribe) {
+                            Call<Status> deleteCall = DataManager.getInstance().deletePeople(userIdSP, userId);
+                            deleteCall.enqueue(new Callback<Status>() {
+                                @Override
+                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                    if (response.isSuccessful()) {
+                                        fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
+                                        inSubscribe = false;
+                                    }
+                                }
 
-                        @Override
-                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                @Override
+                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
 
-                        }
-                    });
-                } else {
-                    PeopleModel people = new PeopleModel(userIdSP, userId);
-                    Call<Status> addCall = DataManager.getInstance().createPeople(people);
-                    addCall.enqueue(new Callback<Status>() {
-                        @Override
-                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                            if (response.isSuccessful()) {
-                                fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));
-                                inSubscribe = true;
-                            }
-                        }
+                                }
+                            });
+                        } else {
+                            PeopleModel people = new PeopleModel(userIdSP, userId);
+                            Call<Status> addCall = DataManager.getInstance().createPeople(people);
+                            addCall.enqueue(new Callback<Status>() {
+                                @Override
+                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                    if (response.isSuccessful()) {
+                                        fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));
+                                        inSubscribe = true;
+                                    }
+                                }
 
-                        @Override
-                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                @Override
+                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
 
+                                }
+                            });
                         }
-                    });
-                }
-            }
+                    }
                 }
         );
 
@@ -248,7 +258,7 @@ public class ProfileController extends Controller {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
             if (userId == 0) {
-                getRouter().pushController(RouterTransaction.with(new ProfileEditController()));
+                getRouter().pushController(RouterTransaction.with(new ProfileEditController(bottomIsGone)));
             } else {
                 Call<ChatModel> chatModelCall = DataManager.getInstance().getUsersChat(userIdSP, userId);
                 chatModelCall.enqueue(new Callback<ChatModel>() {
@@ -275,9 +285,7 @@ public class ProfileController extends Controller {
         });
 
         buttonInfo.setOnClickListener(v -> {
-            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setVisibility(View.GONE);
-            getRouter().pushController(RouterTransaction.with(new ProfileInfoController())
+            getRouter().pushController(RouterTransaction.with(new ProfileInfoController((userId == 0) ? userIdSP : userId, true))
                     .popChangeHandler(new VerticalChangeHandler())
                     .pushChangeHandler(new VerticalChangeHandler()));
         });
@@ -337,7 +345,7 @@ public class ProfileController extends Controller {
                     }
 
                     subscribersCount.setText(user.getSubscriptionsCount().toString());
-                    if (user.getStatus() == 0) {
+                    if (user.getStatus() == 0 && userId != 0) {
                         statusCircle.setBackgroundResource(R.drawable.circle_offline);
                     } else {
                         statusCircle.setBackgroundResource(R.drawable.circle_online);
@@ -685,5 +693,17 @@ public class ProfileController extends Controller {
                 .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        try {
+            if (bottomIsGone) {
+                bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+            }
+        } catch (NullPointerException ignored) {
+        }
     }
 }

@@ -10,22 +10,31 @@ import androidx.annotation.NonNull;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.User;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.changehandler.FlipChangeHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 public class SettingsController extends Controller {
     @BindView(R.id.exitButton)
     public MaterialButton exitButton;
+    private BottomNavigationView bottomNavigationView;
 
     private SharedPreferences sp;
 
@@ -43,16 +52,30 @@ public class SettingsController extends Controller {
 
     @OnClick({R.id.exitButton})
     void exit() {
-        // TODO Пользователь Offline
-        SharedPreferences.Editor e = sp.edit();
-        e.putBoolean("hasAuthed", false);
-        e.apply();
-        for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
-            routerTransaction.controller().getRouter().popCurrentController();
-        }
-        getRouter().setRoot(RouterTransaction.with(new AuthController())
-                .popChangeHandler(new FlipChangeHandler())
-                .pushChangeHandler(new FlipChangeHandler()));
+        Integer userIdSP = sp.getInt("userId", -1);
+        User user = new User();
+        user.setStatus(0);
+        Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
+        call.enqueue(new Callback<Status>() {
+            @Override
+            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                if (response.isSuccessful()) {
+                    SharedPreferences.Editor e = sp.edit();
+                    e.putBoolean("hasAuthed", false);
+                    e.apply();
+                    for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+                        routerTransaction.controller().getRouter().popCurrentController();
+                    }
+                    getRouter().setRoot(RouterTransaction.with(new AuthController())
+                            .popChangeHandler(new FlipChangeHandler())
+                            .pushChangeHandler(new FlipChangeHandler()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+            }
+        });
     }
 
     @Override
@@ -60,5 +83,15 @@ public class SettingsController extends Controller {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        try {
+            bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
+        } catch (NullPointerException ignored) {
+        }
     }
 }

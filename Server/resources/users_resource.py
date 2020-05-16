@@ -373,8 +373,17 @@ class UsersListResource(Resource):
         if correct_password(args['hashed_password'])[0] == "WRONG":
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})
+        if args.get('number', None):
+            # Проверяем занят ли номер телефона
+            if session.query(User).filter(User.number == args['number'].lower()).first():
+                return jsonify({'status': 449,
+                                'text': 'Phone number already exists'})
+        if args.get('email', None):
+            # Проверяем занята ли почта
+            if session.query(User).filter(User.email == args['email'].lower()).first():
+                return jsonify({'status': 449,
+                                'text': 'Email already exists'})
         # Создаём пользователя
-        # TODO Проверка email
         user = User(
             name=args['name'].title(),
             surname=args['surname'].title(),
@@ -383,16 +392,8 @@ class UsersListResource(Resource):
         )
         user.set_password(args['hashed_password'])
         if args.get('number', None):
-            # Проверяем занят ли номер телефона
-            if session.query(User).filter(User.number == args['number'].lower()).first():
-                return jsonify({'status': 449,
-                                'text': 'Phone number already exists'})
             user.number = args['number'].lower()
         if args.get('email', None):
-            # Проверяем занята ли почта
-            if session.query(User).filter(User.email == args['email'].lower()).first():
-                return jsonify({'status': 449,
-                                'text': 'Email already exists'})
             user.email = args['email'].lower()
         # Добавляем пользователя
         session.add(user)

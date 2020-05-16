@@ -1,13 +1,14 @@
 # Импортируем нужные библиотеки
 import datetime
+import re
 
 import sqlalchemy
-from sqlalchemy import orm
-from .db_session import SqlAlchemyBase
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
-import re
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from .db_session import SqlAlchemyBase
 
 
 # Для проверки пароля
@@ -102,9 +103,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
                                       default=get_current_time)
 
     # связь с Achievement
-    achievements = orm.relation("Achievement",
-                                secondary="achievement_association",
-                                backref="users")
+    association = orm.relation("AchievementAssociation")
 
     # Связь с App
     apps = orm.relation("App",
