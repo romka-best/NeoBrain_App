@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA,
-                        Manifest.permission.VIBRATE
+                        Manifest.permission.VIBRATE,
+                        Manifest.permission.ACCESS_NETWORK_STATE
                 },
                 PERMISSION_REQUEST_CODE);
     }
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 5) {
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 6) {
 //            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //
 //            }

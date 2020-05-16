@@ -72,11 +72,11 @@ public class TimeFormatter {
             if (days < 365) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date(parsedDate.getTime()));
-                return cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ENGLISH);
+                return cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
             } else {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date(parsedDate.getTime()));
-                return cal.get(Calendar.DAY_OF_MONTH) + "-" + cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ENGLISH)
+                return cal.get(Calendar.DAY_OF_MONTH) + "-" + cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
                         + "-" + cal.get(Calendar.YEAR);
             }
         } catch (ParseException e) {
@@ -102,7 +102,7 @@ public class TimeFormatter {
                     calendarNow.get(Calendar.YEAR) == calendarThen.get(Calendar.YEAR)) {
                 return context.getResources().getString(R.string.yesterday);
             } else {
-                return calendarThen.get(Calendar.DAY_OF_MONTH) + " " + calendarThen.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
+                return calendarThen.get(Calendar.DAY_OF_MONTH) + " " + calendarThen.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -219,5 +219,18 @@ public class TimeFormatter {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public String getCurrentDate() {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(new Date(FormatHours.parse(date).getTime()));
+            calendar.add(Calendar.HOUR, 3);
+            return FormatHours.format(FormatHours.format(calendar.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return FormatHours.format(new Date());
     }
 }

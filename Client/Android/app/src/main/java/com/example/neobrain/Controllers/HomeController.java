@@ -1,8 +1,8 @@
 package com.example.neobrain.Controllers;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,12 +19,10 @@ import com.example.neobrain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 // Стартовый класс с BottomNavigation и ControllersContainer
 @SuppressLint("ValidController")
 public class HomeController extends Controller {
-
     private SparseArray<Bundle> routerStates;
     private Router childRouter;
 

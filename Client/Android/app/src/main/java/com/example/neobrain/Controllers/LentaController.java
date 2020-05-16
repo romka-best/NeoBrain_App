@@ -2,6 +2,7 @@ package com.example.neobrain.Controllers;
 
 // Импортируем нужные библиотеки
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -20,11 +21,16 @@ import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.Adapters.LentaAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,7 +60,6 @@ public class LentaController extends Controller {
         ButterKnife.bind(this, view);
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
@@ -99,9 +104,41 @@ public class LentaController extends Controller {
 
             }
         });
-
         lentaAdapter = new LentaAdapter(new ArrayList<>());
         lentaRecycler.setAdapter(lentaAdapter);
+
+        Date nowDate = new Date();
+        Calendar calendar_now = Calendar.getInstance();
+        calendar_now.setTime(nowDate);
+        calendar_now.add(Calendar.HOUR_OF_DAY, 3);
+        nowDate = calendar_now.getTime();
+
+        if (sp.getString("lastEntrance", "").equals("")) {
+            new MaterialAlertDialogBuilder(lentaRecycler.getContext())
+                    .setTitle(R.string.advice)
+                    .setMessage("Sovet, а че?!")
+                    .show();
+            sp.edit().putString("lastEntrance", nowDate.toString()).apply();
+        } else {
+            Calendar calendar_then = Calendar.getInstance();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                calendar_then.setTime(Objects.requireNonNull(FormatHours.parse(sp.getString("lastEntrance", ""))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            ;
+            calendar_then.add(Calendar.HOUR_OF_DAY, 3);
+            if (calendar_now.get(Calendar.DATE) != calendar_then.get(Calendar.DATE)) {
+                sp.edit().putString("lastEntrance", nowDate.toString()).apply();
+                String[] myResArray = Objects.requireNonNull(getResources()).getStringArray(R.array.advices_list);
+                String advice = myResArray[rnd(myResArray.length - 1)];
+                new MaterialAlertDialogBuilder(lentaRecycler.getContext())
+                        .setTitle(R.string.advice)
+                        .setMessage(advice)
+                        .show();
+            }
+        }
 //        String nicknameSP = sp.getString("nickname", "");
 //        Call<PostModel> call = DataManager.getInstance().getPosts(nicknameSP);
 //        call.enqueue(new Callback<PostModel>() {
@@ -124,5 +161,9 @@ public class LentaController extends Controller {
 //
 //            }
 //        });
+    }
+
+    public static int rnd(int max) {
+        return (int) (Math.random() * ++max);
     }
 }

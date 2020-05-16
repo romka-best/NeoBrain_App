@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
+import com.example.neobrain.API.model.Achievement;
 import com.example.neobrain.Adapters.AchievementAdapter;
 import com.example.neobrain.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +47,15 @@ public class AchievementsController extends Controller {
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         achievementRecycler.setLayoutManager(mLayoutManager);
         achievementRecycler.setItemAnimator(new DefaultItemAnimator());
-        achievementAdapter = new AchievementAdapter(new ArrayList<>());
+        List<Achievement> achievementList = new ArrayList<>();
+        for (int i = 0; i <= 5; i++) {
+            if (i % 2 == 0) {
+                achievementList.add(new Achievement(i, "desc", true, 0, "Название"));
+            } else {
+                achievementList.add(new Achievement(i, "desc", false, 0, "Название"));
+            }
+        }
+        achievementAdapter = new AchievementAdapter(achievementList);
         achievementRecycler.setAdapter(achievementAdapter);
     }
 }

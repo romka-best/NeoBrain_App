@@ -104,4 +104,18 @@
     <string name="invalid_code">Invalid code</string>
     <string name="exit">Exit</string>
     <string name="settings">Settings</string>
+    <string name="statement">Statement</string>
+    <string name="advice">Advice</string>
+    <string-array name="advices_list">
+        <item>Take the time to listen to your inner voice</item>
+        <item>Be aware of your personal experience in a global perspective</item>
+        <item>Remember: mind control is your main strength</item>
+        <item>Keep your mind clear through meditative practices</item>
+        <item>Do nоt look for shortcuts</item>
+        <item>Review your core values every week</item>
+        <item>Explore, think, experiment</item>
+        <item>Happiness is like a kiss: to enjoy it, you need to share it with someone.</item>
+        <item>Appreciate the people who come in when it is not them who are feeling bad, but you.</item>
+        <item>There is no point in trying to help people who do not help themselves. You can not force a person to go up the stairs if they do not want to go up themselves.</item>
+    </string-array>
 </resources>

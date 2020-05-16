@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.neobrain.API.model.Achievement;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -74,6 +75,12 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public class ViewHolder extends BaseViewHolder {
+        @BindView(R.id.avatar)
+        ImageView achiv_image;
+        @BindView(R.id.title)
+        TextView achiv_title;
+        @BindView(R.id.is_got)
+        ImageView is_got_view;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,10 +89,31 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         protected void clear() {
+            is_got_view.setImageDrawable(null);
+            achiv_image.setImageDrawable(null);
+            achiv_title.setText("");
         }
 
         public void onBind(int position) {
             super.onBind(position);
+            final Achievement mAchievement = mAchievementList.get(position);
+            if (mAchievement.getTitle() != null) {
+                achiv_title.setText(mAchievement.getTitle());
+            }
+            if (mAchievement.getGot() != null) {
+                if (mAchievement.getGot()) {
+                    is_got_view.setImageResource(R.drawable.done);
+                } else {
+                    is_got_view.setImageResource(R.drawable.black_circle);
+                }
+            }
+            achiv_image.setImageResource(R.drawable.face_with_monocle);
+            itemView.setOnClickListener(v -> {
+                new MaterialAlertDialogBuilder(itemView.getContext())
+                        .setTitle(R.string.statement)
+                        .setMessage(mAchievement.getDescription())
+                        .show();
+            });
         }
     }
 
