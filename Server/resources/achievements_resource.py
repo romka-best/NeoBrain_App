@@ -17,7 +17,7 @@ class AchievementUserResource(Resource):
         self.parser = reqparse.RequestParser()
 
         self.parser.add_argument('achievement_id', required=True, type=int)
-        self.parser.add_argument('is_get', required=True, type=bool)
+        self.parser.add_argument('is_got', required=True, type=bool)
 
     def get(self, user_id):
         # Проверяем, есть ли пользователь
@@ -45,7 +45,7 @@ class AchievementUserResource(Resource):
             achievement = session.query(AchievementAssociation).filter(
                 AchievementAssociation.achievement_id == args['achievement_id'],
                 AchievementAssociation.user_id == user_id).first()
-            achievement.is_get = args['is_get']
+            achievement.is_get = args['is_got']
         session.commit()
         return jsonify({'status': 200,
                         'text': 'edited'})

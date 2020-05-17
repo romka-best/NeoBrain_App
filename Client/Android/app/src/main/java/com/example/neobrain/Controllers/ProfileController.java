@@ -40,8 +40,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-import com.example.neobrain.API.model.Achievement;
-import com.example.neobrain.API.model.Achievements;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.People;
@@ -210,6 +208,9 @@ public class ProfileController extends Controller {
         avatarCard.setOnClickListener(v -> launchPhoto());
 
         userIdSP = sp.getInt("userId", -1);
+        if (userId == userIdSP) {
+            userId = 0;
+        }
 
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
