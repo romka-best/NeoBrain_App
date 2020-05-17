@@ -1,20 +1,9 @@
 # Импортируем нужные библиотеки
 import sqlalchemy
 from sqlalchemy import orm
-from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
-# добавляем ассоциативную таблицу с user и achievement
-association_table = sqlalchemy.Table('achievement_association', SqlAlchemyBase.metadata,
-                                     # Внешний ключ юзера
-                                     sqlalchemy.Column('user', sqlalchemy.Integer,
-                                                       sqlalchemy.ForeignKey('users.id')),
-                                     # Внешний ключ достижения
-                                     sqlalchemy.Column('achievement', sqlalchemy.Integer,
-                                                       sqlalchemy.ForeignKey('achievements.id')),
-                                     # false - не получено, true - получено
-                                     sqlalchemy.Column('is_get', sqlalchemy.Boolean, default=False)
-                                     )
+from .db_session import SqlAlchemyBase
 
 
 class Achievement(SqlAlchemyBase, SerializerMixin):
@@ -26,6 +15,8 @@ class Achievement(SqlAlchemyBase, SerializerMixin):
     title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # Описание достижения
     description = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+
+    association = orm.relation("AchievementAssociation")
 
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")

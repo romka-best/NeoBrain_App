@@ -17,6 +17,11 @@ association_table = sqlalchemy.Table('chat_association', SqlAlchemyBase.metadata
                                      )
 
 
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
+
+
 class Chat(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'chats'
 
@@ -31,7 +36,7 @@ class Chat(SqlAlchemyBase, SerializerMixin):
     # 0 - Offline, >=1 Количество user-ов онлайн в чате
     status = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     # Время последнего отправленного сообщения в формате YYYY-MM-DD HH:MM:SS
-    last_time_message = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False, default=datetime.datetime.now)
+    last_time_message = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False, default=get_current_time)
     # Последнее сообщение в чате
     last_message = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # Количество новых сообщений
@@ -40,7 +45,7 @@ class Chat(SqlAlchemyBase, SerializerMixin):
     count_messages = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     # Дата создания чата в формате YYYY-MM-DD HH:MM:SS
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
+                                     default=get_current_time)
 
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")

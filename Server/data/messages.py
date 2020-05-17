@@ -7,6 +7,11 @@ from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
 
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
+
+
 class Message(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'messages'
 
@@ -21,10 +26,10 @@ class Message(SqlAlchemyBase, SerializerMixin):
 
     # Дата создания сообщения
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
+                                     default=get_current_time)
     # Дата изменения сообщения
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                      default=datetime.datetime.now)
+                                      default=get_current_time)
 
     # Автор сообщения
     author = orm.relation("User")

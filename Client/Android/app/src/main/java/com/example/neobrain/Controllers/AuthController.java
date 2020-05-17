@@ -107,8 +107,8 @@ public class AuthController extends Controller {
             findError = true;
         }
         if (findError) return;
-        String login = Objects.requireNonNull(textLogin.getText()).toString();
-        String password = Objects.requireNonNull(textPassword.getText()).toString();
+        String login = Objects.requireNonNull(textLogin.getText()).toString().trim();
+        String password = Objects.requireNonNull(textPassword.getText()).toString().trim();
         if (isPasswordValid(password)) {
             textLogin.setError(null);
             textPassword.setError(null);
@@ -133,9 +133,23 @@ public class AuthController extends Controller {
                         for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
                             routerTransaction.controller().getRouter().popCurrentController();
                         }
-                        getRouter().setRoot(RouterTransaction.with(new HomeController())
-                                .popChangeHandler(new FlipChangeHandler())
-                                .pushChangeHandler(new FlipChangeHandler()));
+                        User newUser = new User();
+                        newUser.setStatus(1);
+                        Call<Status> editCall = DataManager.getInstance().editUser(Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)), newUser);
+                        editCall.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    getRouter().setRoot(RouterTransaction.with(new HomeController())
+                                            .popChangeHandler(new FlipChangeHandler())
+                                            .pushChangeHandler(new FlipChangeHandler()));
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                            }
+                        });
                     } else {
                         assert getView() != null;
                         switch (post.getStatus()) {

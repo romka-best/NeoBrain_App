@@ -1,13 +1,14 @@
 # Импортируем нужные библиотеки
 import datetime
+import re
 
 import sqlalchemy
-from sqlalchemy import orm
-from .db_session import SqlAlchemyBase
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
-import re
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from .db_session import SqlAlchemyBase
 
 
 # Для проверки пароля
@@ -21,7 +22,7 @@ def correct_password(password):
         errors.append("Missing digits")
     # Если массив не пустой, значит отправляем ошибки
     if errors:
-        return errors
+        return "WRONG", errors
     # В ином случае проверяем насколько хороший пароль:
     # 8 - Нормальный, 10 - Хороший, 12 - отличный
     balls = 8
@@ -30,6 +31,11 @@ def correct_password(password):
     if len(password) >= 12:
         balls += 2
     return "OK", balls
+
+
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
 
 
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
@@ -87,19 +93,17 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     status = sqlalchemy.Column(sqlalchemy.Integer, default=1)
 
     # Последний вход пользователя в формате YYYY-MM-DD HH:MM:SS
-    last_seen = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    last_seen = sqlalchemy.Column(sqlalchemy.DateTime, default=get_current_time)
 
     # Дата создания пользователя
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
+                                     default=get_current_time)
     # Дата изменения пользователя
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                      default=datetime.datetime.now)
+                                      default=get_current_time)
 
     # связь с Achievement
-    achievements = orm.relation("Achievement",
-                                secondary="achievement_association",
-                                backref="users")
+    association = orm.relation("AchievementAssociation")
 
     # Связь с App
     apps = orm.relation("App",

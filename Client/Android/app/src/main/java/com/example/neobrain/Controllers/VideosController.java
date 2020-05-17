@@ -3,6 +3,7 @@ package com.example.neobrain.Controllers;
 // Импортируем нужные библиотеки
 
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.Adapters.VideosAdapter;
 import com.example.neobrain.R;
+import com.example.neobrain.utils.BundleBuilder;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.annotations.Nullable;
 
 // Контроллер видео
 public class VideosController extends Controller {
@@ -28,6 +33,23 @@ public class VideosController extends Controller {
     private VideosAdapter videosAdapter;
 
     private SharedPreferences sp;
+    private boolean bottomIsGone = false;
+
+    public VideosController() {
+
+    }
+
+    public VideosController(boolean bottomIsGone) {
+        this(new BundleBuilder(new Bundle())
+                .putBoolean("bottomIsGone", bottomIsGone)
+                .build());
+    }
+
+    public VideosController(@Nullable Bundle args) {
+        super(args);
+        assert args != null;
+        this.bottomIsGone = args.getBoolean("bottomIsGone");
+    }
 
     @NonNull
     @Override
@@ -46,5 +68,17 @@ public class VideosController extends Controller {
         videosRecycler.setItemAnimator(new DefaultItemAnimator());
         videosAdapter = new VideosAdapter(new ArrayList<>());
         videosRecycler.setAdapter(videosAdapter);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        try {
+            if (bottomIsGone) {
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+            }
+        } catch (NullPointerException ignored) {
+        }
     }
 }

@@ -7,6 +7,11 @@ from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
 
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
+
+
 class Post(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'posts'
 
@@ -20,7 +25,7 @@ class Post(SqlAlchemyBase, SerializerMixin):
     text = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # Дата создания поста в формате YYYY-MM-DD HH:MM:SS
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
+                                     default=get_current_time)
 
     # Связь с пользователем и его foreign key
     user = orm.relation("User")

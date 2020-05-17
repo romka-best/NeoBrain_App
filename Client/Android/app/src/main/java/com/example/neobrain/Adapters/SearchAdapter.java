@@ -1,6 +1,7 @@
 package com.example.neobrain.Adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -287,6 +289,9 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             textTextView.setText(sb);
 
             itemView.setOnClickListener(v -> {
+                InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(mRouter.getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(itemView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 mRouter.pushController(RouterTransaction.with(new ProfileController(mPerson.getId()))
                         .popChangeHandler(new FadeChangeHandler())
                         .pushChangeHandler(new FadeChangeHandler()));

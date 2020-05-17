@@ -2,6 +2,8 @@ package com.example.neobrain.Adapters;
 
 // Импортируем нужные библиотеки
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -37,6 +39,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
+
 // Адаптер постов
 public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PostAdapter";
@@ -45,10 +49,14 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<Post> mPostList;
     private Router mRouter;
+    private SharedPreferences sp;
+    private Integer authorId;
 
     public PostAdapter(List<Post> postList, Router router) {
         mPostList = postList;
         mRouter = router;
+        sp = Objects.requireNonNull(router.getActivity()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -161,6 +169,10 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
 
             moreButton.setOnClickListener(v -> {
+                authorId = sp.getInt("userId", -1);
+                if (!mPost.getUserId().equals(authorId)) {
+                    return;
+                }
                 PopupMenu popupMenu = new PopupMenu(mRouter.getActivity(), moreButton);
                 popupMenu.inflate(R.menu.post_menu);
                 popupMenu.setOnMenuItemClickListener(item -> {

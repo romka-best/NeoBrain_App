@@ -115,14 +115,15 @@ public class RegController extends Controller {
     @SuppressLint("ResourceAsColor")
     @OnClick({R.id.regButton})
     void launchReg() {
+        // TODO Обработать корректно поля
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
         assert imm != null;
         imm.hideSoftInputFromWindow(regButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        name = textName.getText().toString();
-        surname = textSurname.getText().toString();
-        nickname = textNickname.getText().toString();
-        password = textPassword.getText().toString();
-        passwordRepeat = textPasswordRepeat.getText().toString();
+        name = textName.getText().toString().trim();
+        surname = textSurname.getText().toString().trim();
+        nickname = textNickname.getText().toString().trim();
+        password = textPassword.getText().toString().trim();
+        passwordRepeat = textPasswordRepeat.getText().toString().trim();
         email = textEmail.getText().toString();
         if (!(!isPasswordSame(password, passwordRepeat) | !passwordValidate(password)
                 | !isEmailValid(email) | name.equals("") | surname.equals("") | nickname.equals("")
