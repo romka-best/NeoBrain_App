@@ -91,7 +91,7 @@ public class LentaController extends Controller {
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
-                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
+                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
                     }
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
                     lentaAdapter = new LentaAdapter(mPosts);

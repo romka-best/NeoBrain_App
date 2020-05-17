@@ -19,6 +19,10 @@
         <item name="colorPrimary">@color/colorError</item>
     </style>
 
+    <style name="AlertDialogCustomDarkBlue" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+    </style>
+
     <style name="ToolBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorText</item>
     </style>

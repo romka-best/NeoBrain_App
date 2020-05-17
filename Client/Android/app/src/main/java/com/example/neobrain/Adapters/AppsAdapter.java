@@ -1,9 +1,11 @@
 package com.example.neobrain.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.UserApp;
+import com.example.neobrain.Controllers.AppsController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
@@ -165,7 +169,8 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO перейти в гугл плэй
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mApp.getLinkAndroid()));
+                    Objects.requireNonNull(mRouter.getActivity()).startActivity(browserIntent);
                 }
             });
             button.setOnClickListener(new View.OnClickListener() {
@@ -195,8 +200,8 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                             @Override
                             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                 if (response.isSuccessful()) {
-                                    // TODO обновлять нормально recyclerView
-                                    notifyDataSetChanged();
+                                    // TODO корректно обновить recyclerview
+                                    mRouter.pushController(RouterTransaction.with(new AppsController()));
                                 }
                             }
 
