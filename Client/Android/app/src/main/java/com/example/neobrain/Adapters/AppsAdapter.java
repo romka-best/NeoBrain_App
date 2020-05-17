@@ -1,5 +1,7 @@
 package com.example.neobrain.Adapters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -13,8 +15,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bluelinelabs.conductor.Router;
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Status;
+import com.example.neobrain.API.model.UserApp;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
@@ -24,20 +29,30 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "AppsAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
-    private List<App> mAppsList;
 
-    public AppsAdapter(ArrayList<App> mAppsList) {
+    private List<App> mAppsList;
+    private Router mRouter;
+    private SharedPreferences sp;
+
+    public AppsAdapter(ArrayList<App> mAppsList, Router router) {
         this.mAppsList = mAppsList;
+        mRouter = router;
+        sp = Objects.requireNonNull(router.getActivity()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -92,10 +107,8 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         TextView secondaryTextView;
         @BindView(R.id.description)
         TextView descriptionTextView;
-        @BindView(R.id.button1)
-        MaterialButton button1;
-        @BindView(R.id.button2)
-        MaterialButton button2;
+        @BindView(R.id.button)
+        MaterialButton button;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -107,8 +120,7 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             titleTextView.setText("");
             secondaryTextView.setText("");
             descriptionTextView.setText("");
-            button1.setText("");
-            button2.setText("");
+            button.setText("");
         }
 
         public void onBind(int position) {
@@ -131,7 +143,7 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                     @Override
                     public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
-                        Log.e("E", "Чёрт...");
+                        Log.e(TAG, "Чёрт...");
                     }
                 });
             }
@@ -145,22 +157,55 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             if (mApp.getDescription() != null) {
                 descriptionTextView.setText(mApp.getDescription());
             }
-            if (mApp.getButtonText1() != null) {
-                button1.setText(mApp.getButtonText1());
+            if (mApp.getAdded()) {
+                button.setText(R.string.delete);
+            } else {
+                button.setText(R.string.add);
             }
-            if (mApp.getButtonText2() != null) {
-                button2.setText(mApp.getButtonText2());
-            }
-            button1.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // TODO перейти в гугл плэй
                 }
             });
-            button2.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Integer userIdSP = sp.getInt("userId", -1);
+                    if (mApp.getAdded()) {
+                        Call<Status> call = DataManager.getInstance().deleteApp(userIdSP, mApp.getId());
+                        call.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    mAppsList.remove(mApp);
+                                    notifyDataSetChanged();
+                                }
+                            }
 
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                            }
+                        });
+                    } else {
+                        UserApp userApp = new UserApp(userIdSP, mApp.getId());
+                        Call<Status> call = DataManager.getInstance().addApp(userApp);
+                        call.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    // TODO обновлять нормально recyclerView
+                                    notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                            }
+                        });
+                    }
                 }
             });
         }

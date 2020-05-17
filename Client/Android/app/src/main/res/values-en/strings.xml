@@ -118,4 +118,5 @@
         <item>Appreciate the people who come in when it is not them who are feeling bad, but you.</item>
         <item>There is no point in trying to help people who do not help themselves. You can not force a person to go up the stairs if they do not want to go up themselves.</item>
     </string-array>
+    <string name="add">Add</string>
 </resources>

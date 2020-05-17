@@ -2,6 +2,8 @@ package com.example.neobrain.API;
 
 // Импортируем нужные библиотеки
 
+import com.example.neobrain.API.model.App;
+import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -15,6 +17,7 @@ import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
+import com.example.neobrain.API.model.UserApp;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.API.model.Users;
 
@@ -178,4 +181,23 @@ public interface APIService {
             @Path("message_id") Integer message_id,
             @Body Message message
     );
+
+    @GET("apps/{user_id}")
+    Call<Apps> getMyApps(
+            @Path("user_id") Integer user_id
+    );
+
+    @DELETE("apps/{user_id}/{app_id}")
+    Call<Status> deleteApp(
+            @Path("user_id") Integer user_id,
+            @Path("app_id") Integer app_id
+    );
+
+    @POST("apps")
+    Call<Status> addApp(
+            @Body UserApp userApp
+    );
+
+    @GET("apps")
+    Call<Apps> getOtherApps();
 }

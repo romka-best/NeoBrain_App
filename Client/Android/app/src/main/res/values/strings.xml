@@ -105,6 +105,7 @@
     <string name="exit">Выход</string>
     <string name="statement">Требование</string>
     <string name="advice">Совет</string>
+    <string name="add">Добавить</string>
     <string-array name="advices_list">
         <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
         <item>Помните: контроль над мыслями — ваша главная сила</item>

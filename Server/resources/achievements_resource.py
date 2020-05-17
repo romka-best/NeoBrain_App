@@ -25,9 +25,12 @@ class AchievementUserResource(Resource):
         # Создаём сессию в БД и получаем людей(друзей)
         session = db_session.create_session()
         association = session.query(AchievementAssociation).filter(AchievementAssociation.user_id == user_id).all()
-        achievements = {'achievements': {}}
+        achievements = {'achievements': []}
         for achievement in association:
-            achievements['achievements'].update({"id": achievement.achievement_id})
+            achievements['achievements'].append({"id": achievement.id,
+                                                 "title": achievement.title,
+                                                 "description": achievement.description,
+                                                 "photo_id": achievement.photo_id})
         return jsonify(achievements)
 
     def put(self, user_id):

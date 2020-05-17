@@ -1,18 +1,9 @@
 # Импортируем нужные библиотеки
 import sqlalchemy
 from sqlalchemy import orm
-from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
-# Добавляем ассоциативную таблицу с user и app
-association_table = sqlalchemy.Table('app_association', SqlAlchemyBase.metadata,
-                                     # Внешний ключ пользователя
-                                     sqlalchemy.Column('user', sqlalchemy.Integer,
-                                                       sqlalchemy.ForeignKey('users.id')),
-                                     # Внешний ключ приложения
-                                     sqlalchemy.Column('app', sqlalchemy.Integer,
-                                                       sqlalchemy.ForeignKey('apps.id'))
-                                     )
+from .db_session import SqlAlchemyBase
 
 
 class App(SqlAlchemyBase, SerializerMixin):
@@ -29,6 +20,8 @@ class App(SqlAlchemyBase, SerializerMixin):
     # Ссылки на приложение
     link_android = sqlalchemy.Column(sqlalchemy.String)
     link_ios = sqlalchemy.Column(sqlalchemy.String)
+
+    association = orm.relation("AppAssociation")
 
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")

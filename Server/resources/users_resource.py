@@ -6,6 +6,8 @@ from flask import jsonify
 from flask_restful import reqparse, abort, Resource
 
 from data import db_session
+from data.achievement_association import AchievementAssociation
+from data.achievements import Achievement
 from data.chats import Chat
 from data.photos import Photo
 from data.posts import Post
@@ -398,5 +400,12 @@ class UsersListResource(Resource):
         # Добавляем пользователя
         session.add(user)
         session.commit()
+        for achievement in session.query(Achievement).all():
+            association = AchievementAssociation(
+                user_id=user.id,
+                achievement_id=achievement.id
+            )
+            session.add(association)
+            session.commit()
         return jsonify({'status': 201,
                         'text': f'User {user.id} created'})

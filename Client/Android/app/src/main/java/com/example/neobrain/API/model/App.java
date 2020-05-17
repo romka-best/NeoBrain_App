@@ -17,15 +17,25 @@ public class App {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("button_text1")
+    @SerializedName("link_android")
     @Expose
-    private String buttonText1;
-    @SerializedName("button_text2")
-    @Expose
-    private String buttonText2;
+    private String linkAndroid;
     @SerializedName("photo_id")
     @Expose
     private Integer photoId;
+    @SerializedName("is_added")
+    @Expose
+    private Boolean isAdded;
+
+    public App(Integer id, String title, String secondaryText, String description, String linkAndroid, Integer photoId, boolean isAdded) {
+        this.id = id;
+        this.title = title;
+        this.secondaryText = secondaryText;
+        this.description = description;
+        this.linkAndroid = linkAndroid;
+        this.photoId = photoId;
+        this.isAdded = isAdded;
+    }
 
     public Integer getId() {
         return id;
@@ -59,22 +69,6 @@ public class App {
         this.description = description;
     }
 
-    public String getButtonText1() {
-        return buttonText1;
-    }
-
-    public void setButtonText1(String buttonText1) {
-        this.buttonText1 = buttonText1;
-    }
-
-    public String getButtonText2() {
-        return buttonText2;
-    }
-
-    public void setButtonText2(String buttonText2) {
-        this.buttonText2 = buttonText2;
-    }
-
     public Integer getPhotoId() {
         return photoId;
     }
@@ -83,4 +77,19 @@ public class App {
         this.photoId = photoId;
     }
 
+    public Boolean getAdded() {
+        return isAdded;
+    }
+
+    public void setAdded(Boolean added) {
+        isAdded = added;
+    }
+
+    public String getLinkAndroid() {
+        return linkAndroid;
+    }
+
+    public void setLinkAndroid(String linkAndroid) {
+        this.linkAndroid = linkAndroid;
+    }
 }

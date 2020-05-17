@@ -3,22 +3,30 @@ from flask import jsonify
 from flask_restful import Resource, reqparse
 
 from data import db_session
+from data.app_association import AppAssociation
 from data.apps import App
-from data.users import User
 from .users_resource import abort_if_user_not_found
 
 
-# Основной ресурс для работы с Achievement
+# Основной ресурс для работы с App
 class AppResource(Resource):
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
-        # Создаём сессию в БД и получаем людей(друзей)
+        # Создаём сессию в БД и получаем приложения
         session = db_session.create_session()
-        user = session.query(User).get(user_id)
-        apps = user.apps
-        return jsonify({'apps': [app.to_dict(
-            only=('id', 'user_id')) for app in apps]})
+        app_association = session.query(AppAssociation).filter(AppAssociation.user_id == user_id).all()
+        apps = {'apps': []}
+        for app in app_association:
+            cur_app = session.query(App).get(app.app_id)
+            apps['apps'].append({"id": cur_app.id,
+                                 "title": cur_app.title,
+                                 "secondary_text": cur_app.secondary_text,
+                                 "description": cur_app.description,
+                                 "link_android": cur_app.link_android,
+                                 "link_ios": cur_app.link_ios,
+                                 "photo_id": cur_app.photo_id})
+        return jsonify(apps)
 
 
 class AppDeleteResource(Resource):
@@ -28,18 +36,9 @@ class AppDeleteResource(Resource):
         abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем людей(друзей)
         session = db_session.create_session()
-        user = session.query(User).get(user_id)
-        list_apps_id = []
-        while True:
-            try:
-                app = session.query(App).filter(App.user_id == user_id,
-                                                App.id.notin_(list_apps_id)).first()
-                list_apps_id.append(app.id)
-                # Удаляем (Отписываемся)
-                user.apps.remove(app)
-                break
-            except ValueError:
-                continue
+        app = session.query(AppAssociation).filter(AppAssociation.user_id == user_id,
+                                                   AppAssociation.app_id == app_id).first()
+        session.delete(app)
         session.commit()
         return jsonify({'status': 200,
                         'text': 'deleted'})
@@ -63,11 +62,11 @@ class AppCreateResource(Resource):
         abort_if_user_not_found(args['user_id'])
         # Создаём сессию в БД
         session = db_session.create_session()
-        user = session.query(User).get(args['user_id'])
         # Добавляем приложение
-        app = session.query(App).get(args['app_id'])
-        # Добавляем в БД подписку
-        user.apps.append(app)
+        app_association = AppAssociation()
+        app_association.user_id = args['user_id']
+        app_association.app_id = args['app_id']
+        session.add(app_association)
         session.commit()
         return jsonify({'status': 201,
                         'text': f'successful'})

@@ -103,12 +103,10 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
                                       default=get_current_time)
 
     # связь с Achievement
-    association = orm.relation("AchievementAssociation")
+    achievements = orm.relation("AchievementAssociation")
 
     # Связь с App
-    apps = orm.relation("App",
-                        secondary="app_association",
-                        backref="users")
+    apps = orm.relation("AppAssociation")
 
     # Связь с Group
     groups = orm.relation("Group",

@@ -4,6 +4,7 @@ package com.example.neobrain;
 
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
+import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -17,6 +18,7 @@ import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
+import com.example.neobrain.API.model.UserApp;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.API.model.Users;
 
@@ -187,5 +189,21 @@ public class DataManager {
 
     public Observable<Messages> getMessages(Integer chat_id) {
         return mAPIService.getMessages(chat_id);
+    }
+
+    public Call<Apps> getMyApps(Integer user_id) {
+        return mAPIService.getMyApps(user_id);
+    }
+
+    public Call<Status> deleteApp(Integer user_id, Integer app_id) {
+        return mAPIService.deleteApp(user_id, app_id);
+    }
+
+    public Call<Status> addApp(UserApp userApp) {
+        return mAPIService.addApp(userApp);
+    }
+
+    public Call<Apps> getOtherApps() {
+        return mAPIService.getOtherApps();
     }
 }
