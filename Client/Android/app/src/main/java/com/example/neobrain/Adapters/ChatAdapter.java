@@ -45,12 +45,12 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<Chat> mChatsList;
-    private Router ChildRouter;
+    private Router childRouter;
     private Chat chat;
 
-    public ChatAdapter(ArrayList<Chat> mChatsList, Router ChildRouter) {
+    public ChatAdapter(ArrayList<Chat> mChatsList, Router childRouter) {
         this.mChatsList = mChatsList;
-        this.ChildRouter = ChildRouter;
+        this.childRouter = childRouter;
     }
 
     @NonNull
@@ -153,9 +153,9 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             itemView.setOnClickListener(v -> {
                 chat = mChatsList.get(this.getCurrentPosition());
-                BottomNavigationView bottomNavigationView = Objects.requireNonNull(ChildRouter.getActivity()).findViewById(R.id.bottom_navigation);
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(childRouter.getActivity()).findViewById(R.id.bottom_navigation);
                 bottomNavigationView.setVisibility(View.GONE);
-                ChildRouter.pushController(RouterTransaction.with(new MessagesController(chat))
+                childRouter.pushController(RouterTransaction.with(new MessagesController(chat))
                         .popChangeHandler(new FadeChangeHandler())
                         .pushChangeHandler(new FadeChangeHandler()));
             });

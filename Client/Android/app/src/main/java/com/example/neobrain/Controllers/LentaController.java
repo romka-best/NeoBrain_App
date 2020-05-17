@@ -91,7 +91,7 @@ public class LentaController extends Controller {
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
-                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
+                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
                     }
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
                     lentaAdapter = new LentaAdapter(mPosts);
@@ -114,9 +114,11 @@ public class LentaController extends Controller {
         nowDate = calendar_now.getTime();
 
         if (sp.getString("lastEntrance", "").equals("")) {
+            String[] myResArray = Objects.requireNonNull(getResources()).getStringArray(R.array.advices_list);
+            String advice = myResArray[rnd(myResArray.length - 1)];
             new MaterialAlertDialogBuilder(lentaRecycler.getContext())
                     .setTitle(R.string.advice)
-                    .setMessage("Sovet, а че?!")
+                    .setMessage(advice)
                     .show();
             sp.edit().putString("lastEntrance", nowDate.toString()).apply();
         } else {

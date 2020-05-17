@@ -18,6 +18,7 @@
             android:id="@+id/code_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:counterMaxLength="6"
             android:inputType="phone" />
 
     </com.google.android.material.textfield.TextInputLayout>

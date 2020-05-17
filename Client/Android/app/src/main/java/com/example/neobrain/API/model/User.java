@@ -102,6 +102,12 @@ public class User {
     @SerializedName("gender")
     @Expose
     private Integer gender;
+    @SerializedName("count_incoming_messages")
+    @Expose
+    private Integer count_incoming_messages;
+    @SerializedName("count_outgoing_messages")
+    @Expose
+    private Integer count_outgoing_messages;
 
     public User() {
 
@@ -364,6 +370,22 @@ public class User {
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    public Integer getCount_incoming_messages() {
+        return count_incoming_messages;
+    }
+
+    public void setCount_incoming_messages(Integer count_incoming_messages) {
+        this.count_incoming_messages = count_incoming_messages;
+    }
+
+    public Integer getCount_outgoing_messages() {
+        return count_outgoing_messages;
+    }
+
+    public void setCount_outgoing_messages(Integer count_outgoing_messages) {
+        this.count_outgoing_messages = count_outgoing_messages;
     }
 
     public static final Comparator<User> COMPARE_BY_SURNAME = new Comparator<User>() {

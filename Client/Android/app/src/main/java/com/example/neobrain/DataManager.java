@@ -5,6 +5,8 @@ package com.example.neobrain;
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
 import com.example.neobrain.API.model.Apps;
+import com.example.neobrain.API.model.Achievement;
+import com.example.neobrain.API.model.Achievements;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -185,6 +187,14 @@ public class DataManager {
                 message_id,
                 message
         );
+    }
+
+    public Call<Achievements> getAchievements(Integer user_id) {
+        return mAPIService.getAchievements(user_id);
+    }
+
+    public Call<Status> editAchievements(Integer user_id, Achievement achievement) {
+        return mAPIService.editAchievements(user_id, achievement);
     }
 
     public Observable<Messages> getMessages(Integer chat_id) {

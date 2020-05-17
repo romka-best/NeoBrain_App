@@ -102,6 +102,24 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=get_current_time)
 
+    # Счётчики
+    count_incoming_messages = sqlalchemy.Column(sqlalchemy.Integer,
+                                                default=0)
+    count_outgoing_messages = sqlalchemy.Column(sqlalchemy.Integer,
+                                                default=0)
+    count_music = sqlalchemy.Column(sqlalchemy.Integer,
+                                    default=0)
+    count_apps = sqlalchemy.Column(sqlalchemy.Integer,
+                                   default=0)
+    count_chats = sqlalchemy.Column(sqlalchemy.Integer,
+                                    default=0)
+    count_groups = sqlalchemy.Column(sqlalchemy.Integer,
+                                     default=0)
+    count_posts = sqlalchemy.Column(sqlalchemy.Integer,
+                                    default=0)
+    count_upload_photos = sqlalchemy.Column(sqlalchemy.Integer,
+                                            default=0)
+
     # связь с Achievement
     achievements = orm.relation("AchievementAssociation")
 

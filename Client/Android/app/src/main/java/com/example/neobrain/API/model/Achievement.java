@@ -1,18 +1,37 @@
 package com.example.neobrain.API.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Comparator;
+
 public class Achievement {
-    private Boolean got;
+    @SerializedName("is_got")
+    @Expose
+    private Boolean isGot;
+
+    @SerializedName("title")
+    @Expose
     private String title;
+
+    @SerializedName("description")
+    @Expose
     private String description;
+
+    @SerializedName("id")
+    @Expose
     private Integer id;
+
+    @SerializedName("photo_id")
+    @Expose
     private Integer photo_id;
 
     public Boolean getGot() {
-        return got;
+        return isGot;
     }
 
-    public void setGot(Boolean got) {
-        this.got = got;
+    public void setGot(Boolean isGot) {
+        this.isGot = isGot;
     }
 
     public String getDescription() {
@@ -47,11 +66,18 @@ public class Achievement {
         this.title = title;
     }
 
-    public Achievement(Integer id, String description, Boolean got, Integer photo_id, String title) {
-        this.got = got;
+    public Achievement(Integer id, String description, Boolean isGot, Integer photo_id, String title) {
+        this.isGot = isGot;
         this.title = title;
         this.description = description;
         this.id = id;
         this.photo_id = photo_id;
     }
+
+    public static final Comparator<Achievement> COMPARE_BY_ID = new Comparator<Achievement>() {
+        @Override
+        public int compare(Achievement o1, Achievement o2) {
+            return o1.getId() - o2.getId();
+        }
+    };
 }

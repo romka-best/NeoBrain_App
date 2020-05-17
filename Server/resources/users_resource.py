@@ -77,6 +77,15 @@ class UserResource(Resource):
         self.parser.add_argument('followers_count', required=False, type=int)
         # Количество подписок на других пользователей
         self.parser.add_argument('subscriptions_count', required=False, type=int)
+        # Счётчики
+        self.parser.add_argument('count_incoming_messages', required=False, type=int)
+        self.parser.add_argument('count_outgoing_messages', required=False, type=int)
+        self.parser.add_argument('count_music', required=False, type=int)
+        self.parser.add_argument('count_apps', required=False, type=int)
+        self.parser.add_argument('count_chats', required=False, type=int)
+        self.parser.add_argument('count_groups', required=False, type=int)
+        self.parser.add_argument('count_posts', required=False, type=int)
+        self.parser.add_argument('count_upload_photos', required=False, type=int)
         # Статус пользователя 0 - Offline, 1 - Online
         self.parser.add_argument('status', required=False, type=int)
         # Последний вход пользователя в формате YYYY-MM-DD HH:MM:SS
@@ -99,9 +108,13 @@ class UserResource(Resource):
         return jsonify({'user': user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
-                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
-                  'can_write_message', 'city', 'republic', 'country', 'education', 'status',
-                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id'))})
+                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups',
+                  'can_see_videos', 'can_write_message', 'city', 'republic',
+                  'country', 'education', 'status', 'last_seen',
+                  'followers_count', 'subscriptions_count', 'count_incoming_messages',
+                  'count_outgoing_messages', 'count_music', 'count_apps',
+                  'count_chats', 'count_groups', 'count_posts', 'count_upload_photos',
+                  'photo_id'))})
 
     # Изменяем пользователя по его id
     def put(self, user_id):
@@ -159,6 +172,22 @@ class UserResource(Resource):
             user.followers_count = args['followers_count']
         if args.get('subscriptions_count', None) is not None:
             user.subscriptions_count = args['subscriptions_count']
+        if args.get('count_incoming_messages', None) is not None:
+            user.count_incoming_messages = args['count_incoming_messages']
+        if args.get('count_outgoing_messages', None) is not None:
+            user.count_outgoing_messages = args['count_outgoing_messages']
+        if args.get('count_music', None) is not None:
+            user.count_music = args['count_music']
+        if args.get('count_apps', None) is not None:
+            user.count_apps = args['count_apps']
+        if args.get('count_chats', None) is not None:
+            user.count_chats = args['count_chats']
+        if args.get('count_groups', None) is not None:
+            user.count_groups = args['count_groups']
+        if args.get('count_posts', None) is not None:
+            user.count_posts = args['count_posts']
+        if args.get('count_upload_photos', None) is not None:
+            user.count_upload_photos = args['count_upload_photos']
         if args.get('status', None) is not None:
             user.status = args['status']
             user.last_seen = get_current_time()
@@ -351,7 +380,10 @@ class UsersListResource(Resource):
                   'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups',
                   'can_see_videos', 'can_write_message', 'city', 'republic',
                   'country', 'education', 'status', 'last_seen',
-                  'followers_count', 'subscriptions_count', 'photo_id'))
+                  'followers_count', 'subscriptions_count', 'count_incoming_messages',
+                  'count_outgoing_messages', 'count_music', 'count_apps',
+                  'count_chats', 'count_groups', 'count_posts', 'count_upload_photos',
+                  'photo_id'))
             for user in users]})
 
     # Создаём пользователя

@@ -40,6 +40,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.example.neobrain.API.model.Achievement;
+import com.example.neobrain.API.model.Achievements;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.People;
@@ -474,7 +476,7 @@ public class ProfileController extends Controller {
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
-                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
+                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
                     }
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
                     postAdapter = new PostAdapter(mPosts, getRouter());

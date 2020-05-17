@@ -30,7 +30,7 @@
     <string name="btn_retry">Обновить</string>
     <string name="email">Почта</string>
     <string name="pass_not_same">Пароли отличаются!</string>
-    <string name="pass_not_corr">Пароль некорректен!</string>
+    <string name="pass_not_corr">Пароль некорректен! Пароль должен содержать в себе как минимум одну заглавную букву, одну нижнего регистра, одну цифру и состоять из минимум 8-ми символов</string>
     <string name="not_correct">Некорректно!</string>
     <string name="email_not_correct">Такой почты не существует!</string>
     <string name="empty_name">Имя не введено!</string>

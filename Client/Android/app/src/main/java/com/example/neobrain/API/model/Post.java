@@ -28,12 +28,13 @@ public class Post {
     @Expose
     private String createdDate;
 
-    public Post(Integer id, String title, String text, Integer photoId, String createdDate) {
+    public Post(Integer id, String title, String text, Integer photoId, String createdDate, Integer userId) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.photoId = photoId;
         this.createdDate = createdDate;
+        this.userId = userId;
     }
 
     @SerializedName("user_id")

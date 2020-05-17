@@ -99,4 +99,14 @@ public class PostController extends Controller {
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        try {
+            BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setVisibility(View.GONE);
+        } catch (NullPointerException ignored) {
+        }
+    }
 }

@@ -1,5 +1,9 @@
 package com.example.neobrain.Adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +14,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.Achievement;
+import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "AchievementAdapter";
@@ -107,7 +117,26 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     is_got_view.setImageResource(R.drawable.black_circle);
                 }
             }
-            achiv_image.setImageResource(R.drawable.face_with_monocle);
+            if (mAchievement.getPhoto_id() != null) {
+                Call<Photo> call = DataManager.getInstance().getPhoto(mAchievement.getPhoto_id());
+                call.enqueue(new retrofit2.Callback<Photo>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            String photo = response.body().getPhoto();
+                            byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            achiv_image.setImageBitmap(decodedByte);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
+                        Log.e("E", "Чёрт...");
+                    }
+                });
+            }
             itemView.setOnClickListener(v -> {
                 new MaterialAlertDialogBuilder(itemView.getContext())
                         .setTitle(R.string.statement)

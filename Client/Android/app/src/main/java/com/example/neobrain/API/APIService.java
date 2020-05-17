@@ -4,6 +4,8 @@ package com.example.neobrain.API;
 
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Apps;
+import com.example.neobrain.API.model.Achievement;
+import com.example.neobrain.API.model.Achievements;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -200,4 +202,16 @@ public interface APIService {
 
     @GET("apps")
     Call<Apps> getOtherApps();
+
+    @GET("achievements/user/{user_id}")
+    Call<Achievements> getAchievements(
+            @Path("user_id") Integer user_id
+    );
+
+    @PUT("achievements/user/{user_id}")
+    Call<Status> editAchievements(
+            @Path("user_id") Integer user_id,
+            @Body Achievement achievement
+    );
+
 }

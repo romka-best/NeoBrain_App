@@ -153,63 +153,60 @@ public class RegController extends Controller {
                     if (response.isSuccessful() && post.getStatus() == 200) {
                         @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.alert_layout, null);
                         final TextInputEditText valueKey = view.findViewById(R.id.code_text);
-                        new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustom)
+                        new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()), R.style.AlertDialogCustomDarkBlue)
                                 .setMessage(R.string.check_code)
                                 .setView(view)
-                                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (Objects.requireNonNull(valueKey.getText()).toString().equals(post.getText())) {
-                                            User user = new User();
-                                            user.setName(name);
-                                            user.setSurname(surname);
-                                            user.setNickname(nickname);
-                                            user.setEmail(email);
-                                            user.setHashedPassword(password);
-                                            Call<Status> call = DataManager.getInstance().createUser(user);
-                                            call.enqueue(new Callback<Status>() {
-                                                @Override
-                                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                                    Status post = response.body();
-                                                    assert post != null;
-                                                    if (response.isSuccessful() && post.getStatus() == 201) {
-                                                        SharedPreferences.Editor e = sp.edit();
-                                                        e.putBoolean("hasAuthed", true);
-                                                        e.putInt("userId", Integer.parseInt(post.getText().substring(5, post.getText().length() - 8)));
-                                                        e.apply();
-                                                        for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
-                                                            routerTransaction.controller().getRouter().popCurrentController();
-                                                        }
-                                                        getRouter().setRoot(RouterTransaction.with(new HomeController())
-                                                                .popChangeHandler(new FlipChangeHandler())
-                                                                .pushChangeHandler(new FlipChangeHandler()));
-                                                    } else {
-                                                        assert getView() != null;
-                                                        switch (post.getText()) {
-                                                            case "Nickname already exists":
-                                                                nicknameEdit.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.nickname_already_exists));
-                                                                break;
-                                                            case "Phone number already exists":
-                                                                break;
-                                                            case "Email already exists":
-                                                                emailEdit.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.email_already_exists));
-                                                                break;
-                                                            default:
-                                                                Snackbar.make(getView(), R.string.error, Snackbar.LENGTH_LONG).show();
-                                                        }
+                                .setPositiveButton(R.string.accept, (dialog, which) -> {
+                                    if (Objects.requireNonNull(valueKey.getText()).toString().equals(post.getText())) {
+                                        User user = new User();
+                                        user.setName(name);
+                                        user.setSurname(surname);
+                                        user.setNickname(nickname);
+                                        user.setEmail(email);
+                                        user.setHashedPassword(password);
+                                        Call<Status> call1 = DataManager.getInstance().createUser(user);
+                                        call1.enqueue(new Callback<Status>() {
+                                            @Override
+                                            public void onResponse(@NotNull Call<Status> call1, @NotNull Response<Status> response1) {
+                                                Status post1 = response1.body();
+                                                assert post1 != null;
+                                                if (response1.isSuccessful() && post1.getStatus() == 201) {
+                                                    SharedPreferences.Editor e = sp.edit();
+                                                    e.putBoolean("hasAuthed", true);
+                                                    e.putInt("userId", Integer.parseInt(post1.getText().substring(5, post1.getText().length() - 8)));
+                                                    e.apply();
+                                                    for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+                                                        routerTransaction.controller().getRouter().popCurrentController();
+                                                    }
+                                                    getRouter().setRoot(RouterTransaction.with(new HomeController())
+                                                            .popChangeHandler(new FlipChangeHandler())
+                                                            .pushChangeHandler(new FlipChangeHandler()));
+                                                } else {
+                                                    assert getView() != null;
+                                                    switch (post1.getText()) {
+                                                        case "Nickname already exists":
+                                                            nicknameEdit.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.nickname_already_exists));
+                                                            break;
+                                                        case "Phone number already exists":
+                                                            break;
+                                                        case "Email already exists":
+                                                            emailEdit.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.email_already_exists));
+                                                            break;
+                                                        default:
+                                                            Snackbar.make(getView(), R.string.error, Snackbar.LENGTH_LONG).show();
                                                     }
                                                 }
+                                            }
 
-                                                @Override
-                                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                                                    assert getView() != null;
-                                                    Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
-                                                }
-                                            });
-                                        } else {
-                                            assert getView() != null;
-                                            Snackbar.make(getView(), R.string.invalid_code, Snackbar.LENGTH_LONG).show();
-                                        }
+                                            @Override
+                                            public void onFailure(@NotNull Call<Status> call1, @NotNull Throwable t) {
+                                                assert getView() != null;
+                                                Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    } else {
+                                        assert getView() != null;
+                                        Snackbar.make(getView(), R.string.invalid_code, Snackbar.LENGTH_LONG).show();
                                     }
                                 })
                                 .setNegativeButton(R.string.cancel, null)
@@ -345,7 +342,7 @@ public class RegController extends Controller {
 
     private boolean passwordValidate(String password) {
         // Пароль должен содержать латинксие буквы (оба регистра),
-        // знаки {}@#$%^&+=*()!?,.~_, цифры, и быть от 8
+        // цифры, и содержать в себе как минимум 8 символов
         final String regex1 = "(.*)(\\d{1,})(.*)";
         final String regex2 = "(.*)([a-z]{1,})(.*)";
         final String regex3 = "(.*)([A-Z]{1,})(.*)";

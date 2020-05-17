@@ -27,10 +27,12 @@ class AchievementUserResource(Resource):
         association = session.query(AchievementAssociation).filter(AchievementAssociation.user_id == user_id).all()
         achievements = {'achievements': []}
         for achievement in association:
-            achievements['achievements'].append({"id": achievement.id,
-                                                 "title": achievement.title,
-                                                 "description": achievement.description,
-                                                 "photo_id": achievement.photo_id})
+            cur_achievement = session.query(Achievement).get(achievement.achievement_id)
+            achievements['achievements'].append({"id": cur_achievement.id,
+                                                 "title": cur_achievement.title,
+                                                 "description": cur_achievement.description,
+                                                 "is_got": achievement.is_get,
+                                                 "photo_id": cur_achievement.photo_id})
         return jsonify(achievements)
 
     def put(self, user_id):
