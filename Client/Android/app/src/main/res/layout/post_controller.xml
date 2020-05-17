@@ -45,41 +45,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <!--    <com.google.android.material.chip.ChipGroup-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/postText">-->
+<!--    <com.google.android.material.chip.ChipGroup-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/postText">-->
 
-    <!--        <com.google.android.material.chip.Chip-->
-    <!--            android:id="@+id/chip1"-->
-    <!--            style="@style/Widget.MaterialComponents.Chip.Entry"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:text=""-->
-    <!--            app:chipIcon="@drawable/thumbs_up_sign"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/postText" />-->
+<!--        <com.google.android.material.chip.Chip-->
+<!--            android:id="@+id/chip1"-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Entry"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text=""-->
+<!--            app:chipIcon="@drawable/thumbs_up_sign"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/postText" />-->
 
-    <!--        <com.google.android.material.chip.Chip-->
-    <!--            android:id="@+id/chip2"-->
-    <!--            style="@style/Widget.MaterialComponents.Chip.Entry"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:text=""-->
-    <!--            app:chipIcon="@drawable/face_with_tears_of_joy"-->
-    <!--            app:layout_constraintStart_toEndOf="@+id/chip1"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/postText" />-->
+<!--        <com.google.android.material.chip.Chip-->
+<!--            android:id="@+id/chip2"-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Entry"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text=""-->
+<!--            app:chipIcon="@drawable/face_with_tears_of_joy"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/chip1"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/postText" />-->
 
-    <!--        <com.google.android.material.chip.Chip-->
-    <!--            style="@style/Widget.MaterialComponents.Chip.Entry"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:text=""-->
-    <!--            app:chipIcon="@drawable/heavy_black_heart"-->
-    <!--            app:layout_constraintStart_toEndOf="@+id/chip2"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/postText" />-->
-    <!--    </com.google.android.material.chip.ChipGroup>-->
+<!--        <com.google.android.material.chip.Chip-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Entry"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text=""-->
+<!--            app:chipIcon="@drawable/heavy_black_heart"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/chip2"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/postText" />-->
+<!--    </com.google.android.material.chip.ChipGroup>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
