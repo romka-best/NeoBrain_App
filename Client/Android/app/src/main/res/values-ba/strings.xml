@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth">Танылған</string>
+    <string name="entry">Инә</string>
+    <string name="reg2">Өҫтәмә теркәлгән</string>
+    <string name="hint_name">Исеме</string>
+    <string name="hint_nickname">Никнейм</string>
+    <string name="hint_username">Никнейм/Эл. почта</string>
+    <string name="hint_number">Телефон номерҙары</string>
+    <string name="hint_password">Пароль</string>
+    <string name="hint_password_repeat">Пароль ҡабатлау</string>
+    <string name="reg">Теркәлгән</string>
+    <string name="hint_surname">Фамилия</string>
+    <string name="password_forget">Пароль онотмай?</string>
+    <string name="cancel">Бөтөрөү</string>
+    <string name="delete">Бөтөрөп</string>
+    <string name="delete_question">Фотография удалена?</string>
+    <string name="messages">Хәбәрҙәр</string>
+    <string name="apps">Ҡушымта</string>
+    <string name="images">Фотоһүрәттәр</string>
+    <string name="lenta">Таҫма</string>
+    <string name="music">Музыка</string>
+    <string name="navigation">Күҙәтеү</string>
+    <string name="people">Кеше</string>
+    <string name="videos">Видео</string>
+    <string name="achievements">Ҡаҙаныштар</string>
+    <string name="empty_posts">Вазифаға әлегә юҡ</string>
+    <string name="empty_screen">Бында әлегә бер нәмә юҡ!</string>
+    <string name="btn_retry">Яңыртыу</string>
+    <string name="email">Почта</string>
+    <string name="pass_not_same">Пароль айырыла!</string>
+    <string name="pass_not_corr">Пароль боҙоҡлоҡ! Пароль кәмендә бер хәрефтән торорға тейеш тип үҙ-үҙе баш, түбәнге регистрҙан береһе, кәм тигәндә 8 цифры тора һәм бер-ми символы</string>
+    <string name="not_correct">Боҙоҡлоҡ!</string>
+    <string name="email_not_correct">Бындай почта юҡ!</string>
+    <string name="empty_name">Исеме индерә алмайым!</string>
+    <string name="empty_surname">Фамилия индерә алмайым!</string>
+    <string name="empty_nickname">Никнейм индерә алмайым!</string>
+    <string name="undo">Йыйып алынған</string>
+    <string name="errors_with_connection">Интернет берләшмәләре менән проблемалар</string>
+    <string name="loading">Тоташ барҙы</string>
+    <string name="new_post">Яңы вазифала</string>
+    <string name="empty_chat">Әлеге ваҡытта ч сездә юҡ. Кем яҙыла-ҙә</string>
+    <string name="empty_lenta">Буш таҫмаһы. Кем яҙыла-шул йәки нәмә</string>
+    <string name="empty_apps">Ҡушымта әлегә юҡ</string>
+    <string name="your_apps">Һеҙ</string>
+    <string name="recommended_apps">Кәңәш</string>
+    <string name="edit">Шымартыу</string>
+    <string name="subscribers">Яҙылған</string>
+    <string name="followers">Подписчик</string>
+    <string name="detailed_information">Ентекле мәғлүмәт</string>
+    <string name="gender_w">Ҡ</string>
+    <string name="gender_m">И</string>
+    <string name="empty_people">Подписка юҡ</string>
+    <string name="empty_photos">Юҡ, бында әле фотоһүрәттәр</string>
+    <string name="empty_videos">Юҡ, бында әле видео</string>
+    <string name="empty_music">Бында тағы ниндәй музыка</string>
+    <string name="empty_achievements">Бүлек эшләй ҡаҙаныштары</string>
+    <string name="empty_navigation">\"Бүлеге Обзор\" эшләй</string>
+    <string name="empty_messages">Беренсе сатнай башланы</string>
+    <string name="all">Барыһы</string>
+    <string name="groups">Төркөм</string>
+    <string name="chats">Әңгәмә</string>
+    <string name="edit_information">Шаблон буйынса мәғлүмәт</string>
+    <string name="less_than_one_minute">Аҙ минут элек 1</string>
+    <string name="n_minutes_before">элек мин.</string>
+    <string name="n_hours_before">сәғәт. элек</string>
+    <string name="n_days_before">көн элек</string>
+    <string name="n_years_before">элек йыл</string>
+    <string name="m_years_before">элек йыл</string>
+    <string name="week_before">Аҙна элек</string>
+    <string name="Mn">Дш</string>
+    <string name="Tu">Шш</string>
+    <string name="Wd">Шр</string>
+    <string name="Th">Кс</string>
+    <string name="Fr">Йм</string>
+    <string name="Su">Шм</string>
+    <string name="St">Йш</string>
+    <string name="error_in_date">Бер нәмә лә түгел!</string>
+    <string name="photo">Фотоһүрәттәр</string>
+    <string name="load_device">Скачать төҙөлөшө менән</string>
+    <string name="do_photo">Һүрәт яһау</string>
+    <string name="open">Асыу</string>
+    <string name="close">Ябыу</string>
+    <string name="write_message">Хәбәр яҙырға</string>
+    <string name="in_development">Был бүлек эшләү</string>
+    <string name="today">Бөгөн</string>
+    <string name="yesterday">Кисә</string>
+    <string name="online">Онлайн</string>
+    <string name="offline">Оффлайн</string>
+    <string name="error">Ошибка</string>
+    <string name="delete_post">Вазифаһын бөтөрә?</string>
+    <string name="empty">Буш</string>
+    <string name="error_with_password">Боҙоҡлоҡ Пароль</string>
+    <string name="empty_field">Буш майҙан була алмай</string>
+    <string name="invalid_password_or_username">Пароль дөрөҫ йәки логинов</string>
+    <string name="invalid_password">Пароль дөрөҫ</string>
+    <string name="nickname_already_exists">Никнейм бар инде</string>
+    <string name="email_already_exists">Емайл биләй инде</string>
+    <string name="phone_already_exists">Телефон биләй инде</string>
+    <string name="check_code">Код индереп, улар почтаның килеүен һеҙ</string>
+    <string name="code">Код Шестизначный</string>
+    <string name="accept">Раҫланған</string>
+    <string name="invalid_code">Дөрөҫ чита</string>
+    <string name="exit">Сығыу</string>
+    <string name="settings">Көй</string>
+    <string name="statement">Талаптар</string>
+    <string name="advice">Советы</string>
+    <string-array name="advices_list">
+        <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
+        <item>Помните: контроль над мыслями — ваша главная сила</item>
+        <item>Осознавайте личный опыт в глобальной перспективе</item>
+        <item>Сохраняйте ясность разума с помощью медитативных практик</item>
+        <item>Пересматривайте свои основные ценности каждую неделю</item>
+        <item>Не ищите коротких путей</item>
+        <item>Исследуйте, размышляйте, экспериментируйте</item>
+        <item>Счастье - как поцелуй: чтобы насладиться им, его нужно с кем-то разделить.</item>
+        <item>Цените людей, которые приходят в те моменты, когда плохо не им, а вам.</item>
+        <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
+    </string-array>
+    <string name="add">Өҫтәп</string>
+</resources>

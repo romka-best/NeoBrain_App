@@ -2,6 +2,8 @@ package com.example.neobrain.Adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,11 +88,11 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public class ViewHolder extends BaseViewHolder {
         @BindView(R.id.avatar)
-        ImageView achiv_image;
+        ImageView achivImage;
         @BindView(R.id.title)
-        TextView achiv_title;
+        TextView achivTitle;
         @BindView(R.id.is_got)
-        ImageView is_got_view;
+        ImageView isGotView;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,25 +101,25 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         protected void clear() {
-            is_got_view.setImageDrawable(null);
-            achiv_image.setImageDrawable(null);
-            achiv_title.setText("");
+            isGotView.setImageDrawable(null);
+            achivImage.setImageDrawable(null);
+            achivTitle.setText("");
         }
 
         public void onBind(int position) {
             super.onBind(position);
             final Achievement mAchievement = mAchievementList.get(position);
             if (mAchievement.getTitle() != null) {
-                achiv_title.setText(mAchievement.getTitle());
+                achivTitle.setText(mAchievement.getTitle());
             }
             if (mAchievement.getGot() != null) {
                 if (mAchievement.getGot()) {
-                    is_got_view.setImageResource(R.drawable.done);
+                    isGotView.setImageResource(R.drawable.done);
                 } else {
-                    is_got_view.setImageResource(R.drawable.black_circle);
+                    isGotView.setImageResource(R.drawable.black_circle);
                 }
             }
-            if (mAchievement.getPhoto_id() != null) {
+            if (mAchievement.getPhoto_id() != null && !hasImage(achivImage)) {
                 Call<Photo> call = DataManager.getInstance().getPhoto(mAchievement.getPhoto_id());
                 call.enqueue(new retrofit2.Callback<Photo>() {
                     @Override
@@ -127,7 +129,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                             String photo = response.body().getPhoto();
                             byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
                             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            achiv_image.setImageBitmap(decodedByte);
+                            achivImage.setImageBitmap(decodedByte);
                         }
                     }
 
@@ -143,6 +145,15 @@ public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         .setMessage(mAchievement.getDescription())
                         .show();
             });
+        }
+
+        private boolean hasImage(@NonNull ImageView view) {
+            Drawable drawable = view.getDrawable();
+            boolean hasImage = (drawable != null);
+            if (hasImage && (drawable instanceof BitmapDrawable)) {
+                hasImage = ((BitmapDrawable) drawable).getBitmap() != null;
+            }
+            return hasImage;
         }
     }
 

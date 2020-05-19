@@ -16,7 +16,7 @@ class AchievementUserResource(Resource):
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
         self.parser = reqparse.RequestParser()
 
-        self.parser.add_argument('achievement_id', required=True, type=int)
+        self.parser.add_argument('id', required=True, type=int)
         self.parser.add_argument('is_got', required=True, type=bool)
 
     def get(self, user_id):
@@ -41,9 +41,9 @@ class AchievementUserResource(Resource):
         # Создаём сессию в БД и получаем достижение
         session = db_session.create_session()
         # В зависимости от аргументов, изменяем достижение
-        if args.get('achievement_id', None):
+        if args.get('id', None):
             achievement = session.query(AchievementAssociation).filter(
-                AchievementAssociation.achievement_id == args['achievement_id'],
+                AchievementAssociation.achievement_id == args['id'],
                 AchievementAssociation.user_id == user_id).first()
             achievement.is_get = args['is_got']
         session.commit()

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NeoBrain</string>
     <string name="auth">Authorization</string>
     <string name="entry">Enter</string>
     <string name="reg">Registration</string>
@@ -51,7 +50,7 @@
     <string name="detailed_information">Detailed information</string>
     <string name="gender_w">W</string>
     <string name="gender_m">M</string>
-    <string name="empty_people">You haven\'t subscribed to anyone yet</string>
+    <string name="empty_people">No subscriptions</string>
     <string name="empty_photos">There is no photos here yet</string>
     <string name="empty_videos">There is no videos here yet</string>
     <string name="empty_music">There is no music here yet</string>

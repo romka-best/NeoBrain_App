@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NeoBrain</string>
+    <string name="app_name" translatable="false">NeoBrain</string>
     <string name="auth">Авторизация</string>
     <string name="hint_username">Никнейм/Эл. почта</string>
     <string name="hint_password">Пароль</string>
@@ -36,7 +36,7 @@
     <string name="email_not_correct">Такой почты не существует!</string>
     <string name="empty_name">Имя не введено!</string>
     <string name="empty_surname">Фамилия не введена!</string>
-    <string name="empty_nickname">Ник не введен!</string>
+    <string name="empty_nickname">Никнейм не введен!</string>
     <string name="undo">Убрать</string>
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
     <string name="loading">Идёт загрузка</string>

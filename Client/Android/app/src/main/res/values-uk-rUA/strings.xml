@@ -1,0 +1,120 @@
+<resources>
+    <string name="auth">Авторизація</string>
+    <string name="hint_username">Нікнейм / Ел. пошта</string>
+    <string name="hint_password">Пароль</string>
+    <string name="entry">Увійти</string>
+    <string name="reg">Реєстрація</string>
+    <string name="reg2">Зареєструватися</string>
+    <string name="hint_name">Ім\'я</string>
+    <string name="hint_surname">Прізвище</string>
+    <string name="hint_nickname">Нікнейм</string>
+    <string name="hint_password_repeat">Повторення пароля</string>
+    <string name="hint_number">Номер телефону</string>
+    <string name="password_forget">Забули пароль?</string>
+    <string name="cancel">Скасування</string>
+    <string name="delete">Видалити</string>
+    <string name="edit">Редагувати</string>
+    <string name="delete_question">Видалити фотографію?</string>
+    <string name="delete_post">Видалити пост?</string>
+    <string name="messages">Повідомлення</string>
+    <string name="achievements">Досягнення</string>
+    <string name="apps">Докладання</string>
+    <string name="images">Фотографія</string>
+    <string name="lenta">Стрічка</string>
+    <string name="music">Музика</string>
+    <string name="navigation">Огляд</string>
+    <string name="people">Люди</string>
+    <string name="videos">Відео</string>
+    <string name="empty_posts">Постів поки немає</string>
+    <string name="empty_screen">Тут поки що нічого немає!</string>
+    <string name="btn_retry">Оновити</string>
+    <string name="email">Пошта</string>
+    <string name="pass_not_same">Паролі відрізняються!</string>
+    <string name="pass_not_corr">Пароль некоректний! Пароль повинен містити в собі як мінімум одну велику літеру, одну нижнього регістру, одну цифру і складатися з мінімум 8-ми символів</string>
+    <string name="not_correct">Некоректно!</string>
+    <string name="email_not_correct">Такої пошти не існує!</string>
+    <string name="empty_name">Ім\'я не введено!</string>
+    <string name="empty_surname">Прізвище не введено!</string>
+    <string name="empty_nickname">Нікнейм не введений!</string>
+    <string name="undo">Поприбирати</string>
+    <string name="errors_with_connection">Проблеми з інтернет з\'єднанням</string>
+    <string name="loading">Йде завантаження</string>
+    <string name="new_post">Новий пост</string>
+    <string name="empty_chat">На даний момент у вас немає чатів. Напишіть кому-небудь</string>
+    <string name="empty_lenta">Стрічка порожня. Підпишіться на когось або на щось</string>
+    <string name="empty_apps">Додатків поки немає</string>
+    <string name="your_apps">Ваш</string>
+    <string name="recommended_apps">Рекомендований</string>
+    <string name="followers">Підписників</string>
+    <string name="subscribers">Підписок</string>
+    <string name="detailed_information">Детальна інформація</string>
+    <string name="edit_information">Редагувати інвормацію</string>
+    <string name="gender_w">Ж</string>
+    <string name="gender_m">Ч</string>
+    <string name="empty_people">Підписок немає</string>
+    <string name="empty_photos">Тут ще немає фотографій</string>
+    <string name="empty_videos">Тут ще немає Відео</string>
+    <string name="empty_music">Здесь ещё нет музыки</string>
+    <string name="empty_achievements">Тут ще немає музики</string>
+    <string name="empty_navigation">Розділ \"огляд\" в розробці</string>
+    <string name="empty_messages">Почніть чат першим</string>
+    <string name="empty">Порожньо</string>
+    <string name="all">Весь</string>
+    <string name="groups">Група</string>
+    <string name="chats">Чати</string>
+    <string name="less_than_one_minute">Менше 1 хвилини тому</string>
+    <string name="n_minutes_before">хв. тому</string>
+    <string name="n_hours_before">година. назад</string>
+    <string name="n_days_before">дн. назад</string>
+    <string name="n_years_before">роки тому</string>
+    <string name="m_years_before">років тому</string>
+    <string name="week_before">Тиждень тому</string>
+    <string name="Mn">Пн</string>
+    <string name="Tu">Вт</string>
+    <string name="Wd">Ср</string>
+    <string name="Th">Чт</string>
+    <string name="Fr">Пт</string>
+    <string name="Su">Сб</string>
+    <string name="St">Нд</string>
+    <string name="error_in_date">Щось не так!</string>
+    <string name="photo">Фотографія</string>
+    <string name="load_device">Завантажити з пристрою</string>
+    <string name="do_photo">Зробити знімок</string>
+    <string name="open">Відкривши</string>
+    <string name="close">Заплющити</string>
+    <string name="write_message">Написати повідомлення</string>
+    <string name="in_development">Даний розділ в розробці</string>
+    <string name="today">Сьогодні</string>
+    <string name="yesterday">Вчора</string>
+    <string name="online">Онлайн</string>
+    <string name="offline">Оффлайн</string>
+    <string name="error">Помилка</string>
+    <string name="error_with_password">Пароль некоректний</string>
+    <string name="empty_field">Поле не може бути порожнім</string>
+    <string name="invalid_password_or_username">Невірний логін або пароль</string>
+    <string name="invalid_password">Невірний пароль</string>
+    <string name="invalid_code">Код невірний</string>
+    <string name="nickname_already_exists">Нікнейм вже існує</string>
+    <string name="email_already_exists">Емайл вже зайнятий</string>
+    <string name="phone_already_exists">Телефон вже зайнятий</string>
+    <string name="check_code">Введіть код, який прийшов вам на пошту</string>
+    <string name="code">Шестизначний код</string>
+    <string name="accept">Підтвердивши</string>
+    <string name="settings">Настройка</string>
+    <string name="exit">Вихід</string>
+    <string name="statement">Вимога</string>
+    <string name="advice">Рада</string>
+    <string name="add">Додавши</string>
+    <string-array name="advices_list">
+        <item>Знаходьте час, щоб прислухатися до внутрішнього голосу</item>
+        <item>Пам'ятайте: контроль над думками-ваша головна сила</item>
+        <item>Усвідомлюйте особистий досвід у глобальній перспективі</item>
+        <item>Зберігайте ясність розуму за допомогою медитативних практик</item>
+        <item>Переглядайте свої основні цінності щотижня</item>
+        <item>Не шукайте коротких шляхів</item>
+        <item>Дослідіть, роздумуйте, експериментуйте</item>
+        <item>Щастя - як поцілунок: щоб насолодитися ним, його потрібно з кимось розділити</item>
+        <item>Цінуйте людей, які приходять в ті моменти, коли погано не їм, а вам</item>
+        <item>Немає ніякого сенсу намагатися допомогти людям, які не допомагають собі самі. Людину неможливо змусити підніматися по сходах, якщо він сам не бажає підніматися</item>
+    </string-array>
+</resources>

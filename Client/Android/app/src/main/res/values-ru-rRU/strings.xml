@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NeoBrain</string>
     <string name="auth">Авторизация</string>
     <string name="entry">Войти</string>
     <string name="reg2">Зарегистрироваться</string>
@@ -35,7 +34,7 @@
     <string name="email_not_correct">Такой почты не существует!</string>
     <string name="empty_name">Имя не введено!</string>
     <string name="empty_surname">Фамилия не введена!</string>
-    <string name="empty_nickname">Ник не введен!</string>
+    <string name="empty_nickname">Никнейм не введен!</string>
     <string name="undo">Убрать</string>
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
     <string name="loading">Идёт загрузка</string>
@@ -51,7 +50,7 @@
     <string name="detailed_information">Подробная информация</string>
     <string name="gender_w">Ж</string>
     <string name="gender_m">М</string>
-    <string name="empty_people">Вы ещё ни на кого не подписаны</string>
+    <string name="empty_people">Подписок нет</string>
     <string name="empty_photos">Здесь ещё нет фотографий</string>
     <string name="empty_videos">Здесь ещё нет видео</string>
     <string name="empty_music">Здесь ещё нет музыки</string>

@@ -4,7 +4,6 @@ package com.example.neobrain.Controllers;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Achievement;
 import com.example.neobrain.API.model.Achievements;
 import com.example.neobrain.API.model.Status;
-import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
-import com.example.neobrain.API.model.Users;
 import com.example.neobrain.Adapters.AchievementAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -88,7 +85,7 @@ public class AchievementsController extends Controller {
         Call<Achievements> call = DataManager.getInstance().getAchievements(userId);
         call.enqueue(new Callback<Achievements>() {
             @Override
-            public void onResponse(Call<Achievements> call, Response<Achievements> response) {
+            public void onResponse(@NotNull Call<Achievements> call, @NotNull Response<Achievements> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     List<Achievement> achievements = response.body().getAchievements();
@@ -97,247 +94,247 @@ public class AchievementsController extends Controller {
                     Call<UserModel> call_user = DataManager.getInstance().getUser(userId);
                     call_user.enqueue(new Callback<UserModel>() {
                         @Override
-                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                        public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                             if (response.isSuccessful()) {
                                 assert response.body() != null;
                                 if (!achievementList.get(0).getGot() && response.body().getUser().getPhotoId() != 2) {
-                                    Achievement achiv_new = achievementList.get(0);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(0);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(1).getGot() && response.body().getUser().getCount_outgoing_messages() >= 50) {
-                                    Achievement achiv_new = achievementList.get(1);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(1);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(2).getGot() && response.body().getUser().getCount_outgoing_messages() >= 500) {
-                                    Achievement achiv_new = achievementList.get(2);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(2);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(3).getGot() && response.body().getUser().getCount_outgoing_messages() >= 2000) {
-                                    Achievement achiv_new = achievementList.get(3);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(3);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(4).getGot() && response.body().getUser().getCount_incoming_messages() >= 50) {
-                                    Achievement achiv_new = achievementList.get(4);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(4);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(5).getGot() && response.body().getUser().getCount_incoming_messages() >= 500) {
-                                    Achievement achiv_new = achievementList.get(5);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(5);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(6).getGot() && response.body().getUser().getCount_incoming_messages() >= 2000) {
-                                    Achievement achiv_new = achievementList.get(6);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(6);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(2).getGot() && response.body().getUser().getCount_incoming_messages() >= 50) {
-                                    Achievement achiv_new = achievementList.get(2);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(2);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(7).getGot() && response.body().getUser().getFollowersCount() >= 100) {
-                                    Achievement achiv_new = achievementList.get(7);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(7);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(8).getGot() && response.body().getUser().getFollowersCount() >= 1000) {
-                                    Achievement achiv_new = achievementList.get(8);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(8);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(9).getGot() && response.body().getUser().getFollowersCount() >= 100000) {
-                                    Achievement achiv_new = achievementList.get(9);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(9);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
 
                                 }
                                 if (!achievementList.get(10).getGot() && response.body().getUser().getSubscriptionsCount() >= 10) {
-                                    Achievement achiv_new = achievementList.get(10);
+                                    Achievement achivNew = achievementList.get(10);
                                     getAchievements();
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(11).getGot() && response.body().getUser().getFollowersCount() >= 100) {
-                                    Achievement achiv_new = achievementList.get(11);
+                                    Achievement achivNew = achievementList.get(11);
                                     getAchievements();
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
                                 if (!achievementList.get(12).getGot() && response.body().getUser().getFollowersCount() >= 1000) {
-                                    Achievement achiv_new = achievementList.get(12);
-                                    achiv_new.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achiv_new);
+                                    Achievement achivNew = achievementList.get(12);
+                                    achivNew.setGot(true);
+                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
                                     putAchivCall.enqueue(new Callback<Status>() {
                                         @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
+                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                getAchievements();
+                                                achievementAdapter.notifyDataSetChanged();
                                             }
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
+                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
                                         }
                                     });
                                 }
@@ -345,7 +342,7 @@ public class AchievementsController extends Controller {
                         }
 
                         @Override
-                        public void onFailure(Call<UserModel> call, Throwable t) {
+                        public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                         }
                     });
                     achievementAdapter = new AchievementAdapter(achievementList);
@@ -354,7 +351,7 @@ public class AchievementsController extends Controller {
             }
 
             @Override
-            public void onFailure(Call<Achievements> call, Throwable t) {
+            public void onFailure(@NotNull Call<Achievements> call, @NotNull Throwable t) {
             }
         });
     }
