@@ -2,10 +2,9 @@ package com.example.neobrain.API;
 
 // Импортируем нужные библиотеки
 
-import com.example.neobrain.API.model.App;
-import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.Achievement;
 import com.example.neobrain.API.model.Achievements;
+import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -16,6 +15,7 @@ import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.PeopleModel;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
+import com.example.neobrain.API.model.PostList;
 import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
@@ -138,13 +138,14 @@ public interface APIService {
             @Path("photo_id") Integer photo_id
     );
 
-    @GET("posts/users/{user_id}")
-    Call<PostModel> getPosts(
+    @GET("posts/users/{author_id}/{user_id}")
+    Call<PostList> getPosts(
+            @Path("author_id") Integer author_id,
             @Path("user_id") Integer user_id
     );
 
     @GET("lenta/{user_id}")
-    Call<PostModel> getLenta(
+    Call<PostList> getLenta(
             @Path("user_id") Integer user_id
     );
 
@@ -159,12 +160,18 @@ public interface APIService {
     );
 
     @GET("posts/{post_id}")
-    Call<Post> getPost(
+    Call<PostModel> getPost(
             @Path("post_id") Integer post_id
     );
 
     @POST("posts")
     Call<Status> createPost(
+            @Body Post post
+    );
+
+    @PUT("posts/{post_id}")
+    Call<Status> editPost(
+            @Path("post_id") Integer post_id,
             @Body Post post
     );
 

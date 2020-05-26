@@ -21,16 +21,25 @@ class Post(SqlAlchemyBase, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     # Имя(Заголовок) поста
     title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    # текст поста
+    # Текст поста
     text = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # Дата создания поста в формате YYYY-MM-DD HH:MM:SS
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=get_current_time)
+    # Дата изменения поста в формате YYYY-MM-DD HH:MM:SS
+    modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
+                                      default=get_current_time)
 
-    # Связь с пользователем и его foreign key
-    user = orm.relation("User")
-    user_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                sqlalchemy.ForeignKey("users.id"))
+    # Оценки поста
+    like_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    laughter_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    heart_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    disappointed_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    smile_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    angry_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    smile_with_heart_eyes_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+    screaming_emoji_count = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
+
     # Связь с фото и его foreign key
     photo = orm.relation("Photo")
     photo_id = sqlalchemy.Column(sqlalchemy.Integer,

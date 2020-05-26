@@ -1,20 +1,18 @@
 package com.example.neobrain.API.model;
 
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class PostModel {
-    @SerializedName("posts")
+    @SerializedName("post")
     @Expose
-    private List<Post> posts = null;
+    private Post post;
 
-    public List<Post> getPosts() {
-        return posts;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
+    public void setPost(Post post) {
+        this.post = post;
     }
 }

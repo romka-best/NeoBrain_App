@@ -53,7 +53,7 @@ def generate_routes(app):
     api.add_resource(PostResource, '/api/posts/<int:post_id>')
     api.add_resource(PostCreateResource, '/api/posts')
     api.add_resource(PostsSearchResource, '/api/posts/search/<string:post_text>')
-    api.add_resource(PostsListResource, '/api/posts/users/<int:user_id>')
+    api.add_resource(PostsListResource, '/api/posts/users/<int:author_id>/<int:user_id>')
 
     # Ресурсы с Lenta
     api.add_resource(LentaResource, '/api/lenta/<int:user_id>')

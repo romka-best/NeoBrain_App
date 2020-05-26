@@ -17,6 +17,8 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +40,26 @@ public class PostController extends Controller {
     public ImageButton acceptButton;
     @BindView(R.id.cancelButton)
     public ImageButton cancelButton;
+
+    @BindView(R.id.chip_group)
+    public ChipGroup chipGroup;
+    @BindView(R.id.chip1)
+    public Chip chip1;
+    @BindView(R.id.chip2)
+    public Chip chip2;
+    @BindView(R.id.chip3)
+    public Chip chip3;
+    @BindView(R.id.chip4)
+    public Chip chip4;
+    @BindView(R.id.chip5)
+    public Chip chip5;
+    @BindView(R.id.chip6)
+    public Chip chip6;
+    @BindView(R.id.chip7)
+    public Chip chip7;
+    @BindView(R.id.chip8)
+    public Chip chip8;
+
     @BindView(R.id.postText)
     public MultiAutoCompleteTextView postText;
 
@@ -62,6 +84,16 @@ public class PostController extends Controller {
         return view;
     }
 
+    @OnClick({R.id.chip1, R.id.chip2, R.id.chip3, R.id.chip4,
+            R.id.chip5, R.id.chip6, R.id.chip7, R.id.chip8})
+    void checkChip() {
+        assert getView() != null;
+        if (chipGroup.getCheckedChipIds().size() > 3) {
+            chipGroup.clearCheck();
+            Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.emoji_rule), Snackbar.LENGTH_LONG).show();
+        }
+    }
+
     @OnClick({R.id.acceptButton})
     void setPost() {
         assert getView() != null;
@@ -75,6 +107,30 @@ public class PostController extends Controller {
         Integer userIdSP = sp.getInt("userId", -1);
         Post post = new Post();
         post.setText(postText.getText().toString().trim());
+        if (chip1.isChecked()) {
+            post.setLikeEmojiCount(0);
+        }
+        if (chip2.isChecked()) {
+            post.setLaughterEmojiCount(0);
+        }
+        if (chip3.isChecked()) {
+            post.setHeartEmojiCount(0);
+        }
+        if (chip4.isChecked()) {
+            post.setDisappointedEmojiCount(0);
+        }
+        if (chip5.isChecked()) {
+            post.setSmileEmojiCount(0);
+        }
+        if (chip6.isChecked()) {
+            post.setAngryEmojiCount(0);
+        }
+        if (chip7.isChecked()) {
+            post.setSmileWithHeartEyesCount(0);
+        }
+        if (chip8.isChecked()) {
+            post.setScreamingEmojiCount(0);
+        }
         post.setUserId(userIdSP);
         Call<Status> call = DataManager.getInstance().createPost(post);
         call.enqueue(new Callback<Status>() {

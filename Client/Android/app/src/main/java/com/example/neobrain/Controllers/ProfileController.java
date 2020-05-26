@@ -47,7 +47,7 @@ import com.example.neobrain.API.model.PeopleModel;
 import com.example.neobrain.API.model.Person;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
-import com.example.neobrain.API.model.PostModel;
+import com.example.neobrain.API.model.PostList;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
@@ -463,21 +463,53 @@ public class ProfileController extends Controller {
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         postRecycler.setLayoutManager(mLayoutManager);
         postRecycler.setItemAnimator(new DefaultItemAnimator());
-        Call<PostModel> call;
+        Call<PostList> call;
         if (userId == 0) {
-            call = DataManager.getInstance().getPosts(userIdSP);
+            call = DataManager.getInstance().getPosts(userIdSP, userIdSP);
         } else {
-            call = DataManager.getInstance().getPosts(userId);
+            call = DataManager.getInstance().getPosts(userId, userIdSP);
         }
-        call.enqueue(new Callback<PostModel>() {
+        call.enqueue(new Callback<PostList>() {
             @Override
-            public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
+            public void onResponse(@NotNull Call<PostList> call, @NotNull Response<PostList> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
                         mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
+                        if (post.getLikeEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setLikeEmojiCount(post.getLikeEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setLikeEmoji(post.getLikeEmoji());
+                        }
+                        if (post.getLaughterEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setLaughterEmojiCount(post.getLaughterEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setLaughterEmoji(post.getLaughterEmoji());
+                        }
+                        if (post.getHeartEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setHeartEmojiCount(post.getHeartEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setHeartEmoji(post.getHeartEmoji());
+                        }
+                        if (post.getDisappointedEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setDisappointedEmojiCount(post.getDisappointedEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setDisappointedEmoji(post.getDisappointedEmoji());
+                        }
+                        if (post.getSmileEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setSmileEmojiCount(post.getSmileEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setSmileEmoji(post.getSmileEmoji());
+                        }
+                        if (post.getAngryEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setAngryEmojiCount(post.getAngryEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setAngryEmoji(post.getAngryEmoji());
+                        }
+                        if (post.getSmileWithHeartEyesCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setSmileWithHeartEyesCount(post.getSmileWithHeartEyesCount());
+                            mPosts.get(mPosts.size() - 1).setSmileWithHeartEyes(post.getSmileWithHeartEyes());
+                        }
+                        if (post.getScreamingEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setScreamingEmojiCount(post.getScreamingEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setScreamingEmoji(post.getScreamingEmoji());
+                        }
                     }
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
                     postAdapter = new PostAdapter(mPosts, getRouter());
@@ -487,7 +519,7 @@ public class ProfileController extends Controller {
             }
 
             @Override
-            public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<PostList> call, @NotNull Throwable t) {
             }
         });
     }

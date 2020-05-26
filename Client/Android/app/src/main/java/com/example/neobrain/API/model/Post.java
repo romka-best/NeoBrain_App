@@ -27,6 +27,58 @@ public class Post {
     @SerializedName("created_date")
     @Expose
     private String createdDate;
+    @SerializedName("modified_date")
+    @Expose
+    private String modifiedDate;
+    @SerializedName("like_emoji_count")
+    @Expose
+    private Integer likeEmojiCount;
+    @SerializedName("laughter_emoji_count")
+    @Expose
+    private Integer laughterEmojiCount;
+    @SerializedName("heart_emoji_count")
+    @Expose
+    private Integer heartEmojiCount;
+    @SerializedName("disappointed_emoji_count")
+    @Expose
+    private Integer disappointedEmojiCount;
+    @SerializedName("smile_emoji_count")
+    @Expose
+    private Integer smileEmojiCount;
+    @SerializedName("angry_emoji_count")
+    @Expose
+    private Integer angryEmojiCount;
+    @SerializedName("smile_with_heart_eyes_count")
+    @Expose
+    private Integer smileWithHeartEyesCount;
+    @SerializedName("screaming_emoji_count")
+    @Expose
+    private Integer screamingEmojiCount;
+
+    @SerializedName("like_emoji")
+    @Expose
+    private Boolean likeEmoji;
+    @SerializedName("laughter_emoji")
+    @Expose
+    private Boolean laughterEmoji;
+    @SerializedName("heart_emoji")
+    @Expose
+    private Boolean heartEmoji;
+    @SerializedName("disappointed_emoji")
+    @Expose
+    private Boolean disappointedEmoji;
+    @SerializedName("smile_emoji")
+    @Expose
+    private Boolean smileEmoji;
+    @SerializedName("angry_emoji")
+    @Expose
+    private Boolean angryEmoji;
+    @SerializedName("smile_with_heart_eyes")
+    @Expose
+    private Boolean smileWithHeartEyes;
+    @SerializedName("screaming_emoji")
+    @Expose
+    private Boolean screamingEmoji;
 
     public Post(Integer id, String title, String text, Integer photoId, String createdDate, Integer userId) {
         this.id = id;
@@ -95,6 +147,142 @@ public class Post {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(String modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public Integer getLikeEmojiCount() {
+        return likeEmojiCount;
+    }
+
+    public void setLikeEmojiCount(Integer likeEmojiCount) {
+        this.likeEmojiCount = likeEmojiCount;
+    }
+
+    public Integer getLaughterEmojiCount() {
+        return laughterEmojiCount;
+    }
+
+    public void setLaughterEmojiCount(Integer laughterEmojiCount) {
+        this.laughterEmojiCount = laughterEmojiCount;
+    }
+
+    public Integer getHeartEmojiCount() {
+        return heartEmojiCount;
+    }
+
+    public void setHeartEmojiCount(Integer heartEmojiCount) {
+        this.heartEmojiCount = heartEmojiCount;
+    }
+
+    public Integer getDisappointedEmojiCount() {
+        return disappointedEmojiCount;
+    }
+
+    public void setDisappointedEmojiCount(Integer disappointedEmojiCount) {
+        this.disappointedEmojiCount = disappointedEmojiCount;
+    }
+
+    public Integer getSmileEmojiCount() {
+        return smileEmojiCount;
+    }
+
+    public void setSmileEmojiCount(Integer smileEmojiCount) {
+        this.smileEmojiCount = smileEmojiCount;
+    }
+
+    public Integer getAngryEmojiCount() {
+        return angryEmojiCount;
+    }
+
+    public void setAngryEmojiCount(Integer angryEmojiCount) {
+        this.angryEmojiCount = angryEmojiCount;
+    }
+
+    public Integer getSmileWithHeartEyesCount() {
+        return smileWithHeartEyesCount;
+    }
+
+    public void setSmileWithHeartEyesCount(Integer smileWithHeartEyesCount) {
+        this.smileWithHeartEyesCount = smileWithHeartEyesCount;
+    }
+
+    public Integer getScreamingEmojiCount() {
+        return screamingEmojiCount;
+    }
+
+    public void setScreamingEmojiCount(Integer screamingEmojiCount) {
+        this.screamingEmojiCount = screamingEmojiCount;
+    }
+
+    public Boolean getLikeEmoji() {
+        return likeEmoji;
+    }
+
+    public void setLikeEmoji(Boolean likeEmoji) {
+        this.likeEmoji = likeEmoji;
+    }
+
+    public Boolean getLaughterEmoji() {
+        return laughterEmoji;
+    }
+
+    public void setLaughterEmoji(Boolean laughterEmoji) {
+        this.laughterEmoji = laughterEmoji;
+    }
+
+    public Boolean getHeartEmoji() {
+        return heartEmoji;
+    }
+
+    public void setHeartEmoji(Boolean heartEmoji) {
+        this.heartEmoji = heartEmoji;
+    }
+
+    public Boolean getDisappointedEmoji() {
+        return disappointedEmoji;
+    }
+
+    public void setDisappointedEmoji(Boolean disappointedEmoji) {
+        this.disappointedEmoji = disappointedEmoji;
+    }
+
+    public Boolean getSmileEmoji() {
+        return smileEmoji;
+    }
+
+    public void setSmileEmoji(Boolean smileEmoji) {
+        this.smileEmoji = smileEmoji;
+    }
+
+    public Boolean getAngryEmoji() {
+        return angryEmoji;
+    }
+
+    public void setAngryEmoji(Boolean angryEmoji) {
+        this.angryEmoji = angryEmoji;
+    }
+
+    public Boolean getSmileWithHeartEyes() {
+        return smileWithHeartEyes;
+    }
+
+    public void setSmileWithHeartEyes(Boolean smileWithHeartEyes) {
+        this.smileWithHeartEyes = smileWithHeartEyes;
+    }
+
+    public Boolean getScreamingEmoji() {
+        return screamingEmoji;
+    }
+
+    public void setScreamingEmoji(Boolean screamingEmoji) {
+        this.screamingEmoji = screamingEmoji;
     }
 
     public Integer getUserId() {

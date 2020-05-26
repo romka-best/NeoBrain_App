@@ -120,8 +120,11 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     count_upload_photos = sqlalchemy.Column(sqlalchemy.Integer,
                                             default=0)
 
-    # связь с Achievement
+    # Связь с Achievement
     achievements = orm.relation("AchievementAssociation")
+
+    # Связь с Post
+    posts = orm.relation("PostAssociation")
 
     # Связь с App
     apps = orm.relation("AppAssociation")

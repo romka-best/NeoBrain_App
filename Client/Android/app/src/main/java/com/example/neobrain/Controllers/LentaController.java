@@ -5,9 +5,13 @@ package com.example.neobrain.Controllers;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -17,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Post;
-import com.example.neobrain.API.model.PostModel;
+import com.example.neobrain.API.model.PostList;
 import com.example.neobrain.Adapters.LentaAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -48,7 +52,14 @@ public class LentaController extends Controller {
     public RecyclerView lentaRecycler;
     private LentaAdapter lentaAdapter;
 
-    private SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.swipeContainer)
+    public SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.progress_circular)
+    public ProgressBar progressBar;
+    @BindView(R.id.emoji)
+    public ImageView emoji;
+    @BindView(R.id.titleError)
+    public TextView textError;
 
     private SharedPreferences sp;
 
@@ -60,7 +71,7 @@ public class LentaController extends Controller {
         ButterKnife.bind(this, view);
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-        swipeContainer = view.findViewById(R.id.swipeContainer);
+
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
             getPosts();
@@ -72,6 +83,7 @@ public class LentaController extends Controller {
                 R.color.colorPrimaryDark);
 
         getPosts();
+        progressBar.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -82,30 +94,70 @@ public class LentaController extends Controller {
         lentaRecycler.setItemAnimator(new DefaultItemAnimator());
 
         Integer userIdSP = sp.getInt("userId", -1);
-        Call<PostModel> call = DataManager.getInstance().getLenta(userIdSP);
-        call.enqueue(new Callback<PostModel>() {
+        Call<PostList> call = DataManager.getInstance().getLenta(userIdSP);
+        call.enqueue(new Callback<PostList>() {
             @Override
-            public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
+            public void onResponse(@NotNull Call<PostList> call, @NotNull Response<PostList> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
                         mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
+                        if (post.getLikeEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setLikeEmojiCount(post.getLikeEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setLikeEmoji(post.getLikeEmoji());
+                        }
+                        if (post.getLaughterEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setLaughterEmojiCount(post.getLaughterEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setLaughterEmoji(post.getLaughterEmoji());
+                        }
+                        if (post.getHeartEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setHeartEmojiCount(post.getHeartEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setHeartEmoji(post.getHeartEmoji());
+                        }
+                        if (post.getDisappointedEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setDisappointedEmojiCount(post.getDisappointedEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setDisappointedEmoji(post.getDisappointedEmoji());
+                        }
+                        if (post.getSmileEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setSmileEmojiCount(post.getSmileEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setSmileEmoji(post.getSmileEmoji());
+                        }
+                        if (post.getAngryEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setAngryEmojiCount(post.getAngryEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setAngryEmoji(post.getAngryEmoji());
+                        }
+                        if (post.getSmileWithHeartEyesCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setSmileWithHeartEyesCount(post.getSmileWithHeartEyesCount());
+                            mPosts.get(mPosts.size() - 1).setSmileWithHeartEyes(post.getSmileWithHeartEyes());
+                        }
+                        if (post.getScreamingEmojiCount() != null) {
+                            mPosts.get(mPosts.size() - 1).setScreamingEmojiCount(post.getScreamingEmojiCount());
+                            mPosts.get(mPosts.size() - 1).setScreamingEmoji(post.getScreamingEmoji());
+                        }
                     }
+                    progressBar.setVisibility(View.INVISIBLE);
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
-                    lentaAdapter = new LentaAdapter(mPosts);
+                    lentaAdapter = new LentaAdapter(mPosts, getRouter());
                     lentaRecycler.setAdapter(lentaAdapter);
                 }
             }
 
             @Override
-            public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<PostList> call, @NotNull Throwable t) {
+                long mills = 1000L;
+                Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
 
+                assert vibrator != null;
+                if (vibrator.hasVibrator()) {
+                    vibrator.vibrate(mills);
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+                emoji.setVisibility(View.VISIBLE);
+                textError.setVisibility(View.VISIBLE);
             }
         });
-        lentaAdapter = new LentaAdapter(new ArrayList<>());
-        lentaRecycler.setAdapter(lentaAdapter);
 
         Date nowDate = new Date();
         Calendar calendar_now = Calendar.getInstance();
@@ -141,28 +193,6 @@ public class LentaController extends Controller {
                         .show();
             }
         }
-//        String nicknameSP = sp.getString("nickname", "");
-//        Call<PostModel> call = DataManager.getInstance().getPosts(nicknameSP);
-//        call.enqueue(new Callback<PostModel>() {
-//            @Override
-//            public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
-//                if (response.isSuccessful()) {
-//                    assert response.body() != null;
-//                    List<Post> posts = response.body().getPosts();
-//                    ArrayList<Post> mPosts = new ArrayList<>();
-//                    for (Post post : posts) {
-//                        mPosts.add(new Post(post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate()));
-//                    }
-//                    lentaAdapter = new LentaAdapter(mPosts);
-//                    lentaRecycler.setAdapter(lentaAdapter);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
-//
-//            }
-//        });
     }
 
     public static int rnd(int max) {

@@ -4,9 +4,9 @@ package com.example.neobrain;
 
 import com.example.neobrain.API.APIService;
 import com.example.neobrain.API.ServiceConstructor;
-import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.Achievement;
 import com.example.neobrain.API.model.Achievements;
+import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
@@ -17,6 +17,7 @@ import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.PeopleModel;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
+import com.example.neobrain.API.model.PostList;
 import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
@@ -137,8 +138,13 @@ public class DataManager {
         return mAPIService.createPeople(people);
     }
 
-    public Call<PostModel> getPosts(Integer user_id) {
+    public Call<PostModel> getPost(Integer post_id) {
+        return mAPIService.getPost(post_id);
+    }
+
+    public Call<PostList> getPosts(Integer author_id, Integer user_id) {
         return mAPIService.getPosts(
+                author_id,
                 user_id
         );
     }
@@ -149,11 +155,15 @@ public class DataManager {
         );
     }
 
+    public Call<Status> editPost(Integer post_id, Post post) {
+        return mAPIService.editPost(post_id, post);
+    }
+
     public Call<Status> deletePost(Integer post_id) {
         return mAPIService.deletePost(post_id);
     }
 
-    public Call<PostModel> getLenta(Integer user_id) {
+    public Call<PostList> getLenta(Integer user_id) {
         return mAPIService.getLenta(
                 user_id
         );
