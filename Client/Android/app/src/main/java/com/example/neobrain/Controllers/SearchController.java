@@ -1,18 +1,22 @@
 package com.example.neobrain.Controllers;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+import com.example.neobrain.API.model.App;
+import com.example.neobrain.API.model.Apps;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.Users;
 import com.example.neobrain.DataManager;
@@ -212,6 +216,7 @@ public class SearchController extends Controller {
 
     private ObservableSource<String> dataFromNetwork(String query) {
         return new Observable<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             protected void subscribeActual(Observer<? super String> observer) {
                 String[] s = query.toLowerCase().trim().split(" ");
@@ -254,8 +259,24 @@ public class SearchController extends Controller {
                     case 4:
                         break;
                     case 5:
-                        break;
-                    case 6:
+                        Call<Apps> appsCall = DataManager.getInstance().searchApp(String.join(" ", s));
+                        ArrayList<App> mApps = new ArrayList<>();
+                        appsCall.enqueue(new Callback<Apps>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Apps> call, @NotNull Response<Apps> response) {
+                                assert response.body() != null;
+                                List<App> apps = response.body().getApps();
+                                for (App app : apps) {
+                                    mApps.add(new App(app.getId(), app.getTitle(), app.getSecondaryText(), app.getDescription(), app.getLinkAndroid(), app.getPhotoId(), false));
+                                }
+                                Objects.requireNonNull(pagerAdapter.getRouter(5)).setRoot(RouterTransaction.with(new SearchAppsController(mApps, getRouter(), apps.size() != 0)));
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Apps> call, @NotNull Throwable t) {
+
+                            }
+                        });
                         break;
                 }
             }

@@ -22,7 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostList;
-import com.example.neobrain.Adapters.LentaAdapter;
+import com.example.neobrain.Adapters.PostAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -50,7 +50,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 public class LentaController extends Controller {
     @BindView(R.id.lentaRecycler)
     public RecyclerView lentaRecycler;
-    private LentaAdapter lentaAdapter;
+    private PostAdapter lentaAdapter;
 
     @BindView(R.id.swipeContainer)
     public SwipeRefreshLayout swipeContainer;
@@ -139,7 +139,7 @@ public class LentaController extends Controller {
                     }
                     progressBar.setVisibility(View.INVISIBLE);
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
-                    lentaAdapter = new LentaAdapter(mPosts, getRouter());
+                    lentaAdapter = new PostAdapter(mPosts, getRouter(), true);
                     lentaRecycler.setAdapter(lentaAdapter);
                 }
             }

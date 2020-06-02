@@ -22,8 +22,6 @@ def abort_if_music_not_found(music_id):
 # Основной ресурс для работы с Photo
 class MusicResource(Resource):
     def get(self, music_id):
-        if str(music_id).find("?") != -1:
-            music_id = int(music_id[:music_id.find("?")].strip())
         # Проверяем, есть ли фото
         abort_if_music_not_found(music_id)
         # Создаём сессию и получаем фото закодированую в Base64
@@ -38,8 +36,6 @@ class MusicResource(Resource):
                                   "photo_id": music.photo_id}})
 
     def delete(self, music_id):
-        if str(music_id).find("?") != -1:
-            music_id = int(music_id[:music_id.find("?")].strip())
         # Проверяем, есть ли фото
         abort_if_music_not_found(music_id)
         # Создаём сессию и получаем фото
@@ -53,8 +49,6 @@ class MusicResource(Resource):
 
 class MusicListResource(Resource):
     def get(self, user_id):
-        if str(user_id).find("?") != -1:
-            user_id = int(user_id[:user_id.find("?")].strip())
         # Проверяем, есть ли user
         abort_if_user_not_found(user_id)
         # Создаём сессию и получаем фото закодированую в Base64
@@ -64,7 +58,3 @@ class MusicListResource(Resource):
         return jsonify({'music': [music.to_dict(
             only=('id', 'title', 'author', 'duration', 'created_date',
                   'photo_id'), rules='get_music') for music in music_user]})
-
-
-class MusicSearchResource(Resource):
-    pass

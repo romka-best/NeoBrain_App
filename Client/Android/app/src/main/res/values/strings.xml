@@ -51,8 +51,11 @@
     <string name="detailed_information">Подробная информация</string>
     <string name="edit_information">Редактировать инвормацию</string>
     <string name="gender_w">Ж</string>
+    <string name="full_gender_w" translatable="false">Женский</string>
     <string name="gender_m">М</string>
-    <string name="empty_people">Вы ещё ни на кого не подписаны</string>
+    <string name="full_gender_m" translatable="false">Мужской</string>
+    <string name="full_gender_not_defined" translatable="false">Не определён</string>
+    <string name="empty_people">Подписок нет</string>
     <string name="empty_photos">Здесь ещё нет фотографий</string>
     <string name="empty_videos">Здесь ещё нет видео</string>
     <string name="empty_music">Здесь ещё нет музыки</string>
@@ -106,7 +109,16 @@
     <string name="statement">Требование</string>
     <string name="advice">Совет</string>
     <string name="add">Добавить</string>
+    <string name="save" translatable="false">Сохранить</string>
     <string name="emoji_rule" translatable="false">Пост можно выложить с тремя оценками максимум</string>
+    <string name="not_found" translatable="false">Не найдено</string>
+    <string name="empty_search" translatable="false">Начните вводить нужные слова в поле поиска</string>
+    <string name="country" translatable="false">Страна</string>
+    <string name="republic" translatable="false">Республика (Область)</string>
+    <string name="city" translatable="false">Город</string>
+    <string name="education" translatable="false">Образование</string>
+    <string name="birthday" translatable="false">День рождения</string>
+    <string name="gender" translatable="false">Пол</string>
     <string-array name="advices_list">
         <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
         <item>Помните: контроль над мыслями — ваша главная сила</item>

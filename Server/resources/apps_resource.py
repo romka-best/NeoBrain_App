@@ -1,6 +1,7 @@
 # Импортируем нужные библиотеки
 from flask import jsonify
 from flask_restful import Resource, reqparse
+from sqlalchemy.exc import IntegrityError
 
 from data import db_session
 from data.app_association import AppAssociation
@@ -55,7 +56,7 @@ class AppCreateResource(Resource):
         # Id пользователя, на которого подписывается человек
         self.parser.add_argument('app_id', required=True, type=int)
 
-    # Подписываемся на другого пользователя
+    # Подписываемся на приложение
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -63,9 +64,13 @@ class AppCreateResource(Resource):
         # Создаём сессию в БД
         session = db_session.create_session()
         # Добавляем приложение
-        app_association = AppAssociation()
-        app_association.user_id = args['user_id']
-        app_association.app_id = args['app_id']
+        try:
+            app_association = AppAssociation()
+            app_association.user_id = args['user_id']
+            app_association.app_id = args['app_id']
+        except IntegrityError:
+            return jsonify({'status': 400,
+                            'text': f'already exists'})
         session.add(app_association)
         session.commit()
         return jsonify({'status': 201,
@@ -74,6 +79,24 @@ class AppCreateResource(Resource):
     def get(self):
         session = db_session.create_session()
         apps = session.query(App).all()
+        return jsonify({'apps': [app.to_dict(
+            only=('id', 'title', 'secondary_text', 'description',
+                  'link_android', 'link_ios', 'photo_id'))
+            for app in apps]})
+
+
+class AppSearchResource(Resource):
+    def get(self, app_name):
+        if app_name.find("?") != -1:
+            app_name = app_name[:app_name.find("?")].lower().strip()
+        if not app_name:
+            return jsonify({'status': 400,
+                            'text': "Empty request"})
+        # Создаём сессию в БД и находим пользователей
+        session = db_session.create_session()
+        apps = session.query(App).filter(App.title.like(f"%{app_name}%")).all()
+        if not apps:
+            apps = session.query(App).filter(App.secondary_text.like(f"%{app_name}%")).all()
         return jsonify({'apps': [app.to_dict(
             only=('id', 'title', 'secondary_text', 'description',
                   'link_android', 'link_ios', 'photo_id'))

@@ -41,12 +41,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_NORMAL = 1;
     private List<User> mUsersList;
     private Context context;
-    private Router ChildRouter;
+    private Router childRouter;
 
     public PeopleAdapter(ArrayList<User> mUsersList, Context context, Router ChildRouter) {
         this.mUsersList = mUsersList;
         this.context = context;
-        this.ChildRouter = ChildRouter;
+        this.childRouter = ChildRouter;
     }
 
     @NonNull
@@ -170,7 +170,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             textTextView.setText(sb);
 
             itemView.setOnClickListener(v -> {
-                ChildRouter.pushController(RouterTransaction.with(new ProfileController(mUser.getId()))
+                childRouter.pushController(RouterTransaction.with(new ProfileController(mUser.getId()))
                         .popChangeHandler(new FadeChangeHandler())
                         .pushChangeHandler(new FadeChangeHandler()));
             });

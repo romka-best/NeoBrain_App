@@ -22,9 +22,18 @@ class AchievementUserResource(Resource):
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
-        # Создаём сессию в БД и получаем людей(друзей)
+        # Создаём сессию в БД и получаем достижения пользователя
         session = db_session.create_session()
         association = session.query(AchievementAssociation).filter(AchievementAssociation.user_id == user_id).all()
+        if not association:
+            for achievement in session.query(Achievement).all():
+                cur_association = AchievementAssociation(
+                    user_id=user_id,
+                    achievement_id=achievement.id
+                )
+                session.add(cur_association)
+                session.commit()
+            association = session.query(AchievementAssociation).filter(AchievementAssociation.user_id == user_id).all()
         achievements = {'achievements': []}
         for achievement in association:
             cur_achievement = session.query(Achievement).get(achievement.achievement_id)

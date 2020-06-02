@@ -53,17 +53,20 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PostAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
+    private static final int VIEW_TYPE_EMPTY_LENTA = 2;
 
     private List<Post> mPostList;
     private Router mRouter;
     private SharedPreferences sp;
     private Integer authorId;
+    private boolean isLenta;
 
-    public PostAdapter(List<Post> postList, Router router) {
+    public PostAdapter(List<Post> postList, Router router, boolean isLenta) {
         mPostList = postList;
         mRouter = router;
         sp = Objects.requireNonNull(router.getActivity()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+        this.isLenta = isLenta;
     }
 
     @NonNull
@@ -73,6 +76,10 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case VIEW_TYPE_NORMAL:
                 return new ViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item_post, parent, false)
+                );
+            case VIEW_TYPE_EMPTY_LENTA:
+                return new EmptyViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_empty_item_lenta, parent, false)
                 );
             case VIEW_TYPE_EMPTY:
             default:
@@ -91,6 +98,8 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public int getItemViewType(int position) {
         if (mPostList != null && mPostList.size() > 0) {
             return VIEW_TYPE_NORMAL;
+        } else if (isLenta) {
+            return VIEW_TYPE_EMPTY_LENTA;
         } else {
             return VIEW_TYPE_EMPTY;
         }
@@ -108,6 +117,11 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void addItems(List<Post> postList) {
         mPostList.addAll(postList);
         notifyDataSetChanged();
+    }
+
+    public void editItem(int position, Post post) {
+        mPostList.set(position, post);
+        notifyItemChanged(position);
     }
 
     public class ViewHolder extends BaseViewHolder {
@@ -195,73 +209,105 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             if (mPost.getLikeEmojiCount() != null && mPost.getLikeEmojiCount() != -1) {
                 chip1.setVisibility(View.VISIBLE);
                 if (!mPost.getLikeEmoji()) {
-                    Objects.requireNonNull(chip1.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip1.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip1.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getLikeEmojiCount() != 0) {
                     chip1.setText(mPost.getLikeEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip1.setText("");
                 }
             }
             if (mPost.getLaughterEmojiCount() != null && mPost.getLaughterEmojiCount() != -1) {
                 chip2.setVisibility(View.VISIBLE);
                 if (!mPost.getLaughterEmoji()) {
-                    Objects.requireNonNull(chip2.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip2.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip2.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getLaughterEmojiCount() != 0) {
                     chip2.setText(mPost.getLaughterEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip2.setText("");
                 }
             }
             if (mPost.getHeartEmojiCount() != null && mPost.getHeartEmojiCount() != -1) {
                 chip3.setVisibility(View.VISIBLE);
                 if (!mPost.getHeartEmoji()) {
-                    Objects.requireNonNull(chip3.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip3.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip3.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getHeartEmojiCount() != 0) {
                     chip3.setText(mPost.getHeartEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip3.setText("");
                 }
             }
             if (mPost.getDisappointedEmojiCount() != null && mPost.getDisappointedEmojiCount() != -1) {
                 chip4.setVisibility(View.VISIBLE);
                 if (!mPost.getDisappointedEmoji()) {
-                    Objects.requireNonNull(chip4.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip4.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip4.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getDisappointedEmojiCount() != 0) {
                     chip4.setText(mPost.getDisappointedEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip4.setText("");
                 }
             }
             if (mPost.getSmileEmojiCount() != null && mPost.getSmileEmojiCount() != -1) {
                 chip5.setVisibility(View.VISIBLE);
                 if (!mPost.getSmileEmoji()) {
-                    Objects.requireNonNull(chip5.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip5.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip5.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getSmileEmojiCount() != 0) {
                     chip5.setText(mPost.getSmileEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip5.setText("");
                 }
             }
             if (mPost.getAngryEmojiCount() != null && mPost.getAngryEmojiCount() != -1) {
                 chip6.setVisibility(View.VISIBLE);
                 if (!mPost.getAngryEmoji()) {
-                    Objects.requireNonNull(chip6.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip6.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip6.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getAngryEmojiCount() != 0) {
                     chip6.setText(mPost.getAngryEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip6.setText("");
                 }
             }
             if (mPost.getSmileWithHeartEyesCount() != null && mPost.getSmileWithHeartEyesCount() != -1) {
                 chip7.setVisibility(View.VISIBLE);
                 if (!mPost.getSmileWithHeartEyes()) {
-                    Objects.requireNonNull(chip7.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip7.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip7.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getSmileWithHeartEyesCount() != 0) {
                     chip7.setText(mPost.getSmileWithHeartEyesCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip7.setText("");
                 }
             }
             if (mPost.getScreamingEmojiCount() != null && mPost.getScreamingEmojiCount() != -1) {
                 chip8.setVisibility(View.VISIBLE);
                 if (!mPost.getScreamingEmoji()) {
-                    Objects.requireNonNull(chip8.getChipIcon()).setColorFilter(getFilter());
+                    Objects.requireNonNull(chip8.getChipIcon()).setColorFilter(getFilter(true));
+                } else {
+                    Objects.requireNonNull(chip8.getChipIcon()).setColorFilter(getFilter(false));
                 }
                 if (mPost.getScreamingEmojiCount() != 0) {
                     chip8.setText(mPost.getScreamingEmojiCount().toString(), TextView.BufferType.NORMAL);
+                } else {
+                    chip8.setText("");
                 }
             }
 
@@ -272,37 +318,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setLikeEmoji(!mPost.getLikeEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            Call<PostModel> postCall = DataManager.getInstance().getPost(mPost.getId());
-                            postCall.enqueue(new Callback<PostModel>() {
-                                @Override
-                                public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
-                                    if (response.isSuccessful()) {
-                                        assert response.body() != null;
-//                                        Post post = response.body().getPost();
-//                                        mPost.setLikeEmojiCount(post.getLikeEmojiCount());
-//                                        chip1.setChipIcon(Objects.requireNonNull(mRouter.getActivity()).getDrawable(R.drawable.thumbs_up_sign));
-//                                        notifyDataSetChanged();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip2.setOnClickListener(v -> {
@@ -310,20 +326,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setLaughterEmoji(!mPost.getLaughterEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip3.setOnClickListener(v -> {
@@ -331,20 +334,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setHeartEmoji(!mPost.getHeartEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip4.setOnClickListener(v -> {
@@ -352,20 +342,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setDisappointedEmoji(!mPost.getDisappointedEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip5.setOnClickListener(v -> {
@@ -373,20 +350,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setSmileEmoji(!mPost.getSmileEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip6.setOnClickListener(v -> {
@@ -394,20 +358,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setAngryEmoji(!mPost.getAngryEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip7.setOnClickListener(v -> {
@@ -415,41 +366,15 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 Post updatedPost = new Post();
                 updatedPost.setSmileWithHeartEyes(!mPost.getSmileWithHeartEyes());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             chip8.setOnClickListener(v -> {
                 chip8.setChecked(false);
                 Post updatedPost = new Post();
-                updatedPost.setScreamingEmoji(mPost.getScreamingEmoji());
+                updatedPost.setScreamingEmoji(!mPost.getScreamingEmoji());
                 updatedPost.setUserId(authorId);
-                Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
-                call.enqueue(new Callback<Status>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                        if (response.isSuccessful()) {
-                            // TODO
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-
-                    }
-                });
+                updatePost(mPost, updatedPost, position);
             });
 
             moreButton.setOnClickListener(v -> {
@@ -469,7 +394,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
                                                 mPostList.remove(mPost);
-                                                notifyDataSetChanged();
+                                                notifyItemRemoved(position);
                                             }
                                         }
 
@@ -497,11 +422,51 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             return hasImage;
         }
 
-        private ColorMatrixColorFilter getFilter() {
+        private ColorMatrixColorFilter getFilter(boolean isBlackAndWhite) {
             ColorMatrix matrix = new ColorMatrix();
-            matrix.setSaturation(0);
+            matrix.setSaturation(isBlackAndWhite ? 0 : 1);
 
             return new ColorMatrixColorFilter(matrix);
+        }
+
+        private void updatePost(Post mPost, Post updatedPost, int position) {
+            Call<Status> call = DataManager.getInstance().editPost(mPost.getId(), updatedPost);
+            call.enqueue(new Callback<Status>() {
+                @Override
+                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                    if (response.isSuccessful()) {
+                        Call<PostModel> postCall = DataManager.getInstance().getPost(mPost.getId());
+                        postCall.enqueue(new Callback<PostModel>() {
+                            @Override
+                            public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
+                                if (response.isSuccessful()) {
+                                    assert response.body() != null;
+                                    List<PostModel> posts = response.body().getUsers();
+                                    for (PostModel curPostModel : posts) {
+                                        Post curPost = curPostModel.getPost();
+                                        if (curPost.getUserId().equals(authorId)) {
+                                            mPostList.set(position, curPost);
+                                            notifyDataSetChanged();
+
+//                                            editItem(position, curPost); TODO (Не работает)
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                }
+            });
         }
     }
 

@@ -4,7 +4,6 @@ package com.example.neobrain.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Apps;
-import com.example.neobrain.API.model.Status;
 import com.example.neobrain.Adapters.AppsAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
@@ -37,7 +35,7 @@ import retrofit2.Response;
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 // Контроллер приложений
-public class AppsController extends Controller {
+public class AppsController extends Controller implements AppsAdapter.CallbackInterface {
     @BindView(R.id.appsRecycler)
     public RecyclerView myAppsRecycler;
     @BindView(R.id.appsRecycler2)
@@ -80,6 +78,7 @@ public class AppsController extends Controller {
                         mApps.add(new App(app.getId(), app.getTitle(), app.getSecondaryText(), app.getDescription(), app.getLinkAndroid(), app.getPhotoId(), true));
                     }
                     myAppsAdapter = new AppsAdapter(mApps, getRouter());
+                    myAppsAdapter.setCallback(AppsController.this::onEmptyViewRetryClick);
                     myAppsRecycler.setAdapter(myAppsAdapter);
                 }
             }
@@ -118,5 +117,10 @@ public class AppsController extends Controller {
 
             }
         });
+    }
+
+    @Override
+    public void onEmptyViewRetryClick() {
+        getMyApps();
     }
 }

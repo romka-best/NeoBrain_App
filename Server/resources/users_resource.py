@@ -98,8 +98,6 @@ class UserResource(Resource):
     # @login_required
     # Получаем пользователя по егу id
     def get(self, user_id):
-        if str(user_id).find("?") != -1:
-            user_id = int(user_id[:str(user_id).find("?")].strip())
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем пользователя
@@ -118,8 +116,6 @@ class UserResource(Resource):
 
     # Изменяем пользователя по его id
     def put(self, user_id):
-        if str(user_id).find("?") != -1:
-            user_id = int(user_id[:str(user_id).find("?")].strip())
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
         # Получаем аргументы
@@ -226,8 +222,6 @@ class UserResource(Resource):
 
     # Удаляем пользователя по егу id
     def delete(self, user_id):
-        if str(user_id).find("?") != -1:
-            user_id = int(user_id[:str(user_id).find("?")].strip())
         # Ищем пользователя
         abort_if_user_not_found(user_id)
         # Создаём сессию и получаем user
@@ -432,12 +426,5 @@ class UsersListResource(Resource):
         # Добавляем пользователя
         session.add(user)
         session.commit()
-        for achievement in session.query(Achievement).all():
-            association = AchievementAssociation(
-                user_id=user.id,
-                achievement_id=achievement.id
-            )
-            session.add(association)
-            session.commit()
         return jsonify({'status': 201,
                         'text': f'User {user.id} created'})

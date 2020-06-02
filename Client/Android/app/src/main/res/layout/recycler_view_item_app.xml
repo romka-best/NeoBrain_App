@@ -1,6 +1,4 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,11 +9,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Media -->
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="194dp"
+            android:layout_height="190dp"
             android:scaleType="centerCrop" />
 
         <LinearLayout

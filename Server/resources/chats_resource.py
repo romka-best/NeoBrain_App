@@ -54,8 +54,6 @@ class ChatResource(Resource):
 
     # Получаем чат по его id
     def get(self, chat_id):
-        if str(chat_id).find("?") != -1:
-            chat_id = int(chat_id[:chat_id.find("?")].strip())
         # Создаём сессию и получаем чат
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
@@ -66,8 +64,6 @@ class ChatResource(Resource):
 
     # Изменяем чат по его id
     def put(self, chat_id):
-        if str(chat_id).find("?") != -1:
-            chat_id = int(chat_id[:chat_id.find("?")].strip())
         # Получаем аргументы
         args = self.parser.parse_args()
         # Если нет аргументов, отправляем ошибку 400 с текстом 'Empty request'
@@ -114,8 +110,6 @@ class ChatResource(Resource):
 
     # Удаляем чат по его id
     def delete(self, chat_id):
-        if str(chat_id).find("?") != -1:
-            chat_id = int(chat_id[:chat_id.find("?")].strip())
         # Создаём сессию в БД и получаем чат, а затем его удаляем
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
@@ -195,8 +189,6 @@ class ChatTwoUsersResource(Resource):
 class ChatFindUsersResource(Resource):
     # Получаем юзеров по id чата
     def get(self, chat_id):
-        if str(chat_id).find("?") != -1:
-            chat_id = int(chat_id[:chat_id.find("?")].strip())
         # Создаём сессию и получаем чат
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)

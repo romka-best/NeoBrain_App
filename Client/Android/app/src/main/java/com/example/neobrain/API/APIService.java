@@ -35,9 +35,9 @@ import retrofit2.http.Path;
 // Интерфейс для работы с API NeoBrain
 public interface APIService {
 
-    @GET("users/{user_id}")
+    @GET("users/{userId}")
     Call<UserModel> getUser(
-            @Path("user_id") Integer user_id);
+            @Path("userId") Integer userId);
 
     @POST("users")
     Call<Status> createUser(
@@ -54,36 +54,36 @@ public interface APIService {
             @Body User user
     );
 
-    @PUT("users/{user_id}")
+    @PUT("users/{userId}")
     Call<Status> editUser(
-            @Path("user_id") Integer user_id,
+            @Path("userId") Integer userId,
             @Body User user
     );
 
-    @DELETE("users/{user_id}")
+    @DELETE("users/{userId}")
     Call<Status> deleteUser(
-            @Path("user_id") Integer user_id
+            @Path("userId") Integer userId
     );
 
-    @GET("users/search/{user_name_surname}")
+    @GET("users/search/{userNameSurname}")
     Call<Users> searchUser(
-            @Path("user_name_surname") String user_name_surname
+            @Path("userNameSurname") String userNameSurname
     );
 
-    @GET("chats/users_id/{user_id}")
+    @GET("chats/users_id/{userId}")
     Call<Users> getUsersChats(
-            @Path("user_id") Integer user_id
+            @Path("userId") Integer userId
     );
 
-    @GET("chats/two_users/{user_id1}/{user_id2}")
+    @GET("chats/two_users/{userId1}/{userId2}")
     Call<ChatModel> getUsersChat(
-            @Path("user_id1") Integer user_id1,
-            @Path("user_id2") Integer user_id2
+            @Path("userId1") Integer userId1,
+            @Path("userId2") Integer userId2
     );
 
-    @GET("people/{user_id}")
+    @GET("people/{userId}")
     Call<People> getPeople(
-            @Path("user_id") Integer user_id
+            @Path("userId") Integer userId
     );
 
     @POST("people")
@@ -91,36 +91,36 @@ public interface APIService {
             @Body PeopleModel people
     );
 
-    @DELETE("people/{user_id1}/{user_id2}")
+    @DELETE("people/{userId1}/{userId2}")
     Call<Status> deletePeople(
-            @Path("user_id1") Integer user_id1,
-            @Path("user_id2") Integer user_id2
+            @Path("userId1") Integer userId1,
+            @Path("userId2") Integer userId2
     );
 
-    @GET("chats/{chat_id}")
+    @GET("chats/{chatId}")
     Call<ChatModel> getChat(
-            @Path("chat_id") Integer chat_id
+            @Path("chatId") Integer chatId
     );
 
-    @GET("chats/users/{user_id}")
+    @GET("chats/users/{userId}")
     Call<Chats> getChats(
-            @Path("user_id") Integer user_id
+            @Path("userId") Integer userId
     );
 
-    @PUT("chats/{chat_id}")
+    @PUT("chats/{chatId}")
     Call<Status> editChat(
-            @Path("chat_id") Integer chat_id,
+            @Path("chatId") Integer chatId,
             @Body Chat chat
     );
 
-    @DELETE("chats/{chat_id}")
+    @DELETE("chats/{chatId}")
     Call<Status> deleteChat(
-            @Path("chat_id") Integer chat_id
+            @Path("chatId") Integer chatId
     );
 
-    @GET("chats/search/{chat_id}")
+    @GET("chats/search/{chatId}")
     Call<ChatUsers> searchUsersInChat(
-            @Path("chat_id") Integer chat_id
+            @Path("chatId") Integer chatId
     );
 
     @POST("chats")
@@ -128,40 +128,40 @@ public interface APIService {
             @Body Chat chat
     );
 
-    @GET("photos/{photo_id}")
+    @GET("photos/{photoId}")
     Call<Photo> getPhoto(
-            @Path("photo_id") Integer photo_id
+            @Path("photoId") Integer photoId
     );
 
-    @DELETE("photos/{photo_id}")
+    @DELETE("photos/{photoId}")
     Call<Status> deletePhoto(
-            @Path("photo_id") Integer photo_id
+            @Path("photoId") Integer photoId
     );
 
-    @GET("posts/users/{author_id}/{user_id}")
+    @GET("posts/users/{authorId}/{userId}")
     Call<PostList> getPosts(
-            @Path("author_id") Integer author_id,
-            @Path("user_id") Integer user_id
+            @Path("authorId") Integer authorId,
+            @Path("userId") Integer userId
     );
 
-    @GET("lenta/{user_id}")
+    @GET("lenta/{userId}")
     Call<PostList> getLenta(
-            @Path("user_id") Integer user_id
+            @Path("userId") Integer userId
     );
 
-    @GET("messages/{message_id}")
+    @GET("messages/{messageId}")
     Call<Message> getMessage(
-            @Path("message_id") Integer message_id
+            @Path("messageId") Integer messageId
     );
 
-    @GET("chats/{chat_id}/messages")
+    @GET("chats/{chatId}/messages")
     Observable<Messages> getMessages(
-            @Path("chat_id") Integer chat_id
+            @Path("chatId") Integer chatId
     );
 
-    @GET("posts/{post_id}")
+    @GET("posts/{postId}")
     Call<PostModel> getPost(
-            @Path("post_id") Integer post_id
+            @Path("postId") Integer postId
     );
 
     @POST("posts")
@@ -169,15 +169,15 @@ public interface APIService {
             @Body Post post
     );
 
-    @PUT("posts/{post_id}")
+    @PUT("posts/{postId}")
     Call<Status> editPost(
-            @Path("post_id") Integer post_id,
+            @Path("postId") Integer postId,
             @Body Post post
     );
 
-    @DELETE("posts/{post_id}")
+    @DELETE("posts/{postId}")
     Call<Status> deletePost(
-            @Path("post_id") Integer post_id
+            @Path("postId") Integer postId
     );
 
     @POST("messages")
@@ -185,21 +185,21 @@ public interface APIService {
             @Body Message message
     );
 
-    @PUT("messages/{message_id}")
+    @PUT("messages/{messageId}")
     Call<Status> editMessage(
-            @Path("message_id") Integer message_id,
+            @Path("messageId") Integer messageId,
             @Body Message message
     );
 
-    @GET("apps/{user_id}")
+    @GET("apps/{userId}")
     Call<Apps> getMyApps(
-            @Path("user_id") Integer user_id
+            @Path("userId") Integer userId
     );
 
-    @DELETE("apps/{user_id}/{app_id}")
+    @DELETE("apps/{userId}/{appId}")
     Call<Status> deleteApp(
-            @Path("user_id") Integer user_id,
-            @Path("app_id") Integer app_id
+            @Path("userId") Integer userId,
+            @Path("appId") Integer appId
     );
 
     @POST("apps")
@@ -210,14 +210,19 @@ public interface APIService {
     @GET("apps")
     Call<Apps> getOtherApps();
 
-    @GET("achievements/user/{user_id}")
-    Call<Achievements> getAchievements(
-            @Path("user_id") Integer user_id
+    @GET("apps/search/{appName}")
+    Call<Apps> searchApp(
+            @Path("appName") String appName
     );
 
-    @PUT("achievements/user/{user_id}")
+    @GET("achievements/user/{userId}")
+    Call<Achievements> getAchievements(
+            @Path("userId") Integer userId
+    );
+
+    @PUT("achievements/user/{userId}")
     Call<Status> editAchievements(
-            @Path("user_id") Integer user_id,
+            @Path("userId") Integer userId,
             @Body Achievement achievement
     );
 

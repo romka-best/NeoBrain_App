@@ -20,6 +20,33 @@ def abort_if_post_not_found(post_id):
         abort(404, message=f"Post {post_id} not found")
 
 
+def get_post(cur_post, post):
+    return {"id": cur_post.id,
+            "title": cur_post.title,
+            "text": cur_post.text,
+            "created_date": cur_post.created_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "modified_date": cur_post.modified_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "user_id": post.user_id,
+            "photo_id": cur_post.photo_id,
+            "like_emoji_count": cur_post.like_emoji_count,
+            "laughter_emoji_count": cur_post.laughter_emoji_count,
+            "heart_emoji_count": cur_post.heart_emoji_count,
+            "disappointed_emoji_count": cur_post.disappointed_emoji_count,
+            "smile_emoji_count": cur_post.smile_emoji_count,
+            "angry_emoji_count": cur_post.angry_emoji_count,
+            "smile_with_heart_eyes_count": cur_post.smile_with_heart_eyes_count,
+            "screaming_emoji_count": cur_post.screaming_emoji_count,
+            "like_emoji": post.like_emoji,
+            "laughter_emoji": post.laughter_emoji,
+            "heart_emoji": post.heart_emoji,
+            "disappointed_emoji": post.disappointed_emoji,
+            "smile_emoji": post.smile_emoji,
+            "angry_emoji": post.angry_emoji,
+            "smile_with_heart_eyes": post.smile_with_heart_eyes,
+            "screaming_emoji": post.screaming_emoji
+            }
+
+
 # Основной ресурс для работы с Post
 class PostResource(Resource):
     def __init__(self):
@@ -52,11 +79,16 @@ class PostResource(Resource):
         # Создаём сессию и получаем пост
         session = db_session.create_session()
         post = session.query(Post).get(post_id)
+        post_association = session.query(PostAssociation).filter(PostAssociation.post_id == post_id).all()
+        users = []
+        for post1 in post_association:
+            cur_post = session.query(Post).get(post1.post_id)
+            users.append({"post": get_post(cur_post, post1)})
         return jsonify({'post': post.to_dict(
             only=('id', 'title', 'text', 'created_date', 'photo_id',
                   'like_emoji_count', 'laughter_emoji_count', 'heart_emoji_count',
                   'disappointed_emoji_count', 'smile_emoji_count', 'angry_emoji_count',
-                  'smile_with_heart_eyes_count', 'screaming_emoji_count'))})
+                  'smile_with_heart_eyes_count', 'screaming_emoji_count')), 'users': users})
 
     def put(self, post_id):
         # Получаем аргументы
@@ -82,51 +114,51 @@ class PostResource(Resource):
             # Обновляем дату модификации поста
             post.modified_date = get_current_time()
         if args.get('like_emoji', None) is not None:
-            if not args['like_emoji']:
+            if not args['like_emoji'] and post_association.like_emoji:
                 post.like_emoji_count -= 1
-            else:
+            elif args['like_emoji'] and not post_association.like_emoji:
                 post.like_emoji_count += 1
             post_association.like_emoji = args['like_emoji']
         if args.get('laughter_emoji', None) is not None:
-            if not args['laughter_emoji']:
+            if not args['laughter_emoji'] and post_association.laughter_emoji:
                 post.laughter_emoji_count -= 1
-            else:
+            elif args['laughter_emoji'] and not post_association.laughter_emoji:
                 post.laughter_emoji_count += 1
             post_association.laughter_emoji = args['laughter_emoji']
         if args.get('heart_emoji', None) is not None:
-            if not args['heart_emoji']:
+            if not args['heart_emoji'] and post_association.heart_emoji:
                 post.heart_emoji_count -= 1
-            else:
+            elif args['heart_emoji'] and not post_association.heart_emoji:
                 post.heart_emoji_count += 1
             post_association.heart_emoji = args['heart_emoji']
         if args.get('disappointed_emoji', None) is not None:
-            if not args['disappointed_emoji']:
+            if not args['disappointed_emoji'] and post_association.disappointed_emoji:
                 post.disappointed_emoji_count -= 1
-            else:
+            elif args['disappointed_emoji'] and not post_association.disappointed_emoji:
                 post.disappointed_emoji_count += 1
             post_association.disappointed_emoji = args['disappointed_emoji']
         if args.get('smile_emoji', None) is not None:
-            if not args['smile_emoji']:
+            if not args['smile_emoji'] and post_association.smile_emoji:
                 post.smile_emoji_count -= 1
-            else:
+            elif args['smile_emoji'] and not post_association.smile_emoji:
                 post.smile_emoji_count += 1
             post_association.smile_emoji = args['smile_emoji']
         if args.get('angry_emoji', None) is not None:
-            if not args['angry_emoji']:
+            if not args['angry_emoji'] and post_association.angry_emoji:
                 post.angry_emoji_count -= 1
-            else:
+            elif args['angry_emoji'] and not post_association.angry_emoji:
                 post.angry_emoji_count += 1
             post_association.angry_emoji = args['angry_emoji']
         if args.get('smile_with_heart_eyes', None) is not None:
-            if not args['smile_with_heart_eyes_emoji']:
-                post.smile_with_heart_eyes_emoji_count -= 1
-            else:
-                post.smile_with_heart_eyes_emoji_count += 1
-            post_association.smile_with_heart_eyes_emoji = args['smile_with_heart_eyes_emoji']
+            if not args['smile_with_heart_eyes'] and post_association.smile_with_heart_eyes:
+                post.smile_with_heart_eyes_count -= 1
+            elif args['smile_with_heart_eyes'] and not post_association.smile_with_heart_eyes:
+                post.smile_with_heart_eyes_count += 1
+            post_association.smile_with_heart_eyes = args['smile_with_heart_eyes']
         if args.get('screaming_emoji', None) is not None:
-            if not args['screaming_emoji']:
+            if not args['screaming_emoji'] and post_association.screaming_emoji:
                 post.screaming_emoji_count -= 1
-            else:
+            elif args['screaming_emoji'] and not post_association.screaming_emoji:
                 post.screaming_emoji_count += 1
             post_association.screaming_emoji = args['screaming_emoji']
         session.commit()
@@ -174,30 +206,7 @@ class PostsListResource(Resource):
                     )
                     session.add(post)
                     session.commit()
-            posts['posts'].append({"id": cur_post.id,
-                                   "title": cur_post.title,
-                                   "text": cur_post.text,
-                                   "created_date": cur_post.created_date.strftime("%Y-%m-%d %H:%M:%S"),
-                                   "modified_date": cur_post.modified_date.strftime("%Y-%m-%d %H:%M:%S"),
-                                   "user_id": post.user_id,
-                                   "photo_id": cur_post.photo_id,
-                                   "like_emoji_count": cur_post.like_emoji_count,
-                                   "laughter_emoji_count": cur_post.laughter_emoji_count,
-                                   "heart_emoji_count": cur_post.heart_emoji_count,
-                                   "disappointed_emoji_count": cur_post.disappointed_emoji_count,
-                                   "smile_emoji_count": cur_post.smile_emoji_count,
-                                   "angry_emoji_count": cur_post.angry_emoji_count,
-                                   "smile_with_heart_eyes_count": cur_post.smile_with_heart_eyes_count,
-                                   "screaming_emoji_count": cur_post.screaming_emoji_count,
-                                   "like_emoji": post.like_emoji,
-                                   "laughter_emoji": post.laughter_emoji,
-                                   "heart_emoji": post.heart_emoji,
-                                   "disappointed_emoji": post.disappointed_emoji,
-                                   "smile_emoji": post.smile_emoji,
-                                   "angry_emoji": post.angry_emoji,
-                                   "smile_with_heart_eyes": post.smile_with_heart_eyes,
-                                   "screaming_emoji": post.screaming_emoji
-                                   })
+            posts['posts'].append(get_post(cur_post, post))
         return jsonify(posts)
 
 
