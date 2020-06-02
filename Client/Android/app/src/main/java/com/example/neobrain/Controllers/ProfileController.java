@@ -242,7 +242,7 @@ public class ProfileController extends Controller {
                                 @Override
                                 public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                     if (response.isSuccessful()) {
-                                        fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));
+                                        fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_remove, Objects.requireNonNull(getActivity()).getTheme()));
                                         inSubscribe = true;
                                     }
                                 }
@@ -261,7 +261,7 @@ public class ProfileController extends Controller {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
             if (userId == 0) {
-                getRouter().pushController(RouterTransaction.with(new ProfileEditController(bottomIsGone)));
+                getRouter().pushController(RouterTransaction.with(new ProfileEditController(true)));
             } else {
                 Call<ChatModel> chatModelCall = DataManager.getInstance().getUsersChat(userIdSP, userId);
                 chatModelCall.enqueue(new Callback<ChatModel>() {
@@ -416,7 +416,7 @@ public class ProfileController extends Controller {
                                             }
                                             for (int i = 0; i < personList.size(); i++) {
                                                 if (personList.get(i).getUserId() == userId) {
-                                                    fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add_disabled, Objects.requireNonNull(getActivity()).getTheme()));
+                                                    fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_remove, Objects.requireNonNull(getActivity()).getTheme()));
                                                     inSubscribe = true;
                                                     break;
                                                 } else {
@@ -512,7 +512,7 @@ public class ProfileController extends Controller {
                         }
                     }
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
-                    postAdapter = new PostAdapter(mPosts, getRouter());
+                    postAdapter = new PostAdapter(mPosts, getRouter(), false);
                     postRecycler.setNestedScrollingEnabled(false);
                     postRecycler.setAdapter(postAdapter);
                 }

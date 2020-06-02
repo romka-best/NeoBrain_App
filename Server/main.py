@@ -10,6 +10,7 @@ from flask_mail import Mail, Message
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from conf.routes import generate_routes
+from conf.config import generate_config
 from data import db_session
 from data.users import User
 from resources.corona_scrapper import scrap_countries
@@ -18,14 +19,7 @@ from resources.corona_scrapper import scrap_countries
 
 app = Flask(__name__)
 # Добавляем к приложению config файлы
-app.config['SECRET_KEY'] = 'NeoBrainKey'
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'neo.brain.team@gmail.com'
-app.config['MAIL_DEFAULT_SENDER'] = 'neo.brain.team@gmail.com'
-app.config['MAIL_PASSWORD'] = '9BP-Ha9-5Tn-6rm'
+generate_config(app)
 
 # # Запись логов
 # logger = logging.getLogger("NeoBrain")
@@ -42,7 +36,7 @@ generate_routes(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-#
+# Создаём объект почты, для рассылки
 mail = Mail(app)
 
 # Добавляем постоянную задачу
@@ -99,7 +93,8 @@ def send_mail():
     numbers = [random.randrange(10), random.randrange(10), random.randrange(10),
                random.randrange(10), random.randrange(10), random.randrange(10)]
     msg = Message("Подтверждение электронной почты", recipients=[request.json['email']])
-    msg.html = f"<h1>{' '.join(str(digit) for digit in numbers)}</h1>\n<p>Код подтверждения вашей почты в приложении NeoBrain</p>"
+    msg.html = f"<h1>{' '.join(str(digit) for digit in numbers)}</h1>\n" \
+               f"<p>Код подтверждения вашей почты в приложении NeoBrain</p>"
     mail.send(msg)
     return jsonify({'status': 200,
                     'text': ''.join(str(digit) for digit in numbers)})

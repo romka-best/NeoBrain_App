@@ -23,6 +23,7 @@ import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -352,8 +353,13 @@ public class AchievementsController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<Achievements> call, @NotNull Throwable t) {
+                assert getView() != null;
+                Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.errors_with_connection), Snackbar.LENGTH_LONG).show();
             }
         });
+
+        achievementAdapter = new AchievementAdapter(achievementList);
+        achievementRecycler.setAdapter(achievementAdapter);
     }
 
     @Override

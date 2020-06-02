@@ -2,8 +2,11 @@ package com.example.neobrain.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +26,9 @@ import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.Music;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
+import com.example.neobrain.API.model.UserApp;
 import com.example.neobrain.Controllers.MessagesController;
 import com.example.neobrain.Controllers.ProfileController;
 import com.example.neobrain.DataManager;
@@ -31,6 +36,7 @@ import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
 import com.example.neobrain.utils.TimeFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +47,10 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "SearchAdapter";
@@ -64,6 +73,7 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private Chat chat;
     private Router mRouter;
+    private SharedPreferences sp;
     private boolean found = false;
 
     public SearchAdapter(Router router) {
@@ -197,11 +207,6 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         } else {
             return 1;
         }
-    }
-
-    public void addItems(ArrayList<Object> arrayList) {
-        // TODO
-        notifyDataSetChanged();
     }
 
     public class AllViewHolder extends BaseViewHolder {
@@ -406,6 +411,17 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public class AppViewHolder extends BaseViewHolder {
+        @BindView(R.id.image)
+        ImageView coverImageView;
+        @BindView(R.id.title)
+        TextView titleTextView;
+        @BindView(R.id.secondaryText)
+        TextView secondaryTextView;
+        @BindView(R.id.description)
+        TextView descriptionTextView;
+        @BindView(R.id.button)
+        MaterialButton button;
+
         public AppViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -413,11 +429,100 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         public void onBind(int position) {
             super.onBind(position);
+            final App mApp = mAppsList.get(position);
+
+            if (mApp.getPhotoId() != null) {
+                Call<Photo> call = DataManager.getInstance().getPhoto(mApp.getPhotoId());
+                call.enqueue(new retrofit2.Callback<Photo>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            String photo = response.body().getPhoto();
+                            byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            coverImageView.setImageBitmap(decodedByte);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
+                        Log.e(TAG, "Чёрт...");
+                    }
+                });
+            }
+
+            if (mApp.getTitle() != null) {
+                titleTextView.setText(mApp.getTitle());
+            }
+            if (mApp.getSecondaryText() != null) {
+                secondaryTextView.setText(mApp.getSecondaryText());
+            }
+            if (mApp.getDescription() != null) {
+                descriptionTextView.setText(mApp.getDescription());
+            }
+            if (mApp.getAdded()) {
+                button.setText(R.string.delete);
+            } else {
+                button.setText(R.string.add);
+            }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mApp.getLinkAndroid()));
+                    Objects.requireNonNull(mRouter.getActivity()).startActivity(browserIntent);
+                }
+            });
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sp = Objects.requireNonNull(mRouter.getActivity()).getSharedPreferences(MY_SETTINGS,
+                            Context.MODE_PRIVATE);
+                    Integer userIdSP = sp.getInt("userId", -1);
+                    if (mApp.getAdded()) {
+                        Call<Status> call = DataManager.getInstance().deleteApp(userIdSP, mApp.getId());
+                        call.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    mAppsList.remove(mApp);
+                                    notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                            }
+                        });
+                    } else {
+                        UserApp userApp = new UserApp(userIdSP, mApp.getId());
+                        Call<Status> call = DataManager.getInstance().addApp(userApp);
+                        call.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    // TODO корректно обновить recyclerview
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                            }
+                        });
+                    }
+                }
+            });
         }
 
         @Override
         protected void clear() {
-
+            coverImageView.setImageDrawable(null);
+            titleTextView.setText("");
+            secondaryTextView.setText("");
+            descriptionTextView.setText("");
+            button.setText("");
         }
     }
 

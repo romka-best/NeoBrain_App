@@ -45,9 +45,9 @@ public class DataManager {
         return instance;
     }
 
-    public Call<UserModel> getUser(Integer user_id) {
+    public Call<UserModel> getUser(Integer userId) {
         return mAPIService.getUser(
-                user_id
+                userId
         );
     }
 
@@ -57,9 +57,9 @@ public class DataManager {
         );
     }
 
-    public Call<Status> editUser(Integer user_id, User user) {
+    public Call<Status> editUser(Integer userId, User user) {
         return mAPIService.editUser(
-                user_id,
+                userId,
                 user
         );
     }
@@ -74,33 +74,33 @@ public class DataManager {
         return mAPIService.sendEmail(user);
     }
 
-    public Call<Users> searchUser(String user_name_surname) {
+    public Call<Users> searchUser(String userNameSurname) {
         return mAPIService.searchUser(
-                user_name_surname
+                userNameSurname
         );
     }
 
-    public Call<Photo> getPhoto(Integer photo_id) {
+    public Call<Photo> getPhoto(Integer photoId) {
         return mAPIService.getPhoto(
-                photo_id
+                photoId
         );
     }
 
-    public Call<Status> deletePhoto(Integer photo_id) {
+    public Call<Status> deletePhoto(Integer photoId) {
         return mAPIService.deletePhoto(
-                photo_id
+                photoId
         );
     }
 
-    public Call<ChatModel> getChat(Integer chat_id) {
+    public Call<ChatModel> getChat(Integer chatId) {
         return mAPIService.getChat(
-                chat_id
+                chatId
         );
     }
 
-    public Call<Chats> getChats(Integer user_id) {
+    public Call<Chats> getChats(Integer userId) {
         return mAPIService.getChats(
-                user_id
+                userId
         );
     }
 
@@ -110,29 +110,29 @@ public class DataManager {
         );
     }
 
-    public Call<Status> editChat(Integer chat_id, Chat chat) {
+    public Call<Status> editChat(Integer chatId, Chat chat) {
         return mAPIService.editChat(
-                chat_id,
+                chatId,
                 chat
         );
     }
 
-    public Call<ChatUsers> searchUsersInChat(Integer chat_id) {
+    public Call<ChatUsers> searchUsersInChat(Integer chatId) {
         return mAPIService.searchUsersInChat(
-                chat_id
+                chatId
         );
     }
 
-    public Call<People> getPeople(Integer user_id) {
+    public Call<People> getPeople(Integer userId) {
         return mAPIService.getPeople(
-                user_id
+                userId
         );
     }
 
-    public Call<Status> deletePeople(Integer user_id1, Integer user_id2) {
+    public Call<Status> deletePeople(Integer userId1, Integer userId2) {
         return mAPIService.deletePeople(
-                user_id1,
-                user_id2
+                userId1,
+                userId2
         );
     }
 
@@ -140,14 +140,14 @@ public class DataManager {
         return mAPIService.createPeople(people);
     }
 
-    public Call<PostModel> getPost(Integer post_id) {
-        return mAPIService.getPost(post_id);
+    public Call<PostModel> getPost(Integer postId) {
+        return mAPIService.getPost(postId);
     }
 
-    public Call<PostList> getPosts(Integer author_id, Integer user_id) {
+    public Call<PostList> getPosts(Integer authorId, Integer userId) {
         return mAPIService.getPosts(
-                author_id,
-                user_id
+                authorId,
+                userId
         );
     }
 
@@ -157,30 +157,30 @@ public class DataManager {
         );
     }
 
-    public Call<Status> editPost(Integer post_id, Post post) {
-        return mAPIService.editPost(post_id, post);
+    public Call<Status> editPost(Integer postId, Post post) {
+        return mAPIService.editPost(postId, post);
     }
 
-    public Call<Status> deletePost(Integer post_id) {
-        return mAPIService.deletePost(post_id);
+    public Call<Status> deletePost(Integer postId) {
+        return mAPIService.deletePost(postId);
     }
 
-    public Call<PostList> getLenta(Integer user_id) {
+    public Call<PostList> getLenta(Integer userId) {
         return mAPIService.getLenta(
-                user_id
+                userId
         );
     }
 
-    public Call<Users> getUsersChats(Integer user_id) {
+    public Call<Users> getUsersChats(Integer userId) {
         return mAPIService.getUsersChats(
-                user_id
+                userId
         );
     }
 
-    public Call<ChatModel> getUsersChat(Integer user_id1, Integer user_id2) {
+    public Call<ChatModel> getUsersChat(Integer userId1, Integer userId2) {
         return mAPIService.getUsersChat(
-                user_id1,
-                user_id2
+                userId1,
+                userId2
         );
     }
 
@@ -190,35 +190,35 @@ public class DataManager {
         );
     }
 
-    public Call<Message> getMessage(Integer message_id) {
-        return mAPIService.getMessage(message_id);
+    public Call<Message> getMessage(Integer messageId) {
+        return mAPIService.getMessage(messageId);
     }
 
-    public Call<Status> editMessage(Integer message_id, Message message) {
+    public Call<Status> editMessage(Integer messageId, Message message) {
         return mAPIService.editMessage(
-                message_id,
+                messageId,
                 message
         );
     }
 
-    public Call<Achievements> getAchievements(Integer user_id) {
-        return mAPIService.getAchievements(user_id);
+    public Call<Achievements> getAchievements(Integer userId) {
+        return mAPIService.getAchievements(userId);
     }
 
-    public Call<Status> editAchievements(Integer user_id, Achievement achievement) {
-        return mAPIService.editAchievements(user_id, achievement);
+    public Call<Status> editAchievements(Integer userId, Achievement achievement) {
+        return mAPIService.editAchievements(userId, achievement);
     }
 
-    public Observable<Messages> getMessages(Integer chat_id) {
-        return mAPIService.getMessages(chat_id);
+    public Observable<Messages> getMessages(Integer chatId) {
+        return mAPIService.getMessages(chatId);
     }
 
-    public Call<Apps> getMyApps(Integer user_id) {
-        return mAPIService.getMyApps(user_id);
+    public Call<Apps> getMyApps(Integer userId) {
+        return mAPIService.getMyApps(userId);
     }
 
-    public Call<Status> deleteApp(Integer user_id, Integer app_id) {
-        return mAPIService.deleteApp(user_id, app_id);
+    public Call<Status> deleteApp(Integer userId, Integer appId) {
+        return mAPIService.deleteApp(userId, appId);
     }
 
     public Call<Status> addApp(UserApp userApp) {
@@ -227,6 +227,10 @@ public class DataManager {
 
     public Call<Apps> getOtherApps() {
         return mAPIService.getOtherApps();
+    }
+
+    public Call<Apps> searchApp(String appName) {
+        return mAPIService.searchApp(appName);
     }
 
     public Call<Corona> getOneCoronaCountry(Integer country_id) {

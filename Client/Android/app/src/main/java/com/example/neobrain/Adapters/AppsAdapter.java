@@ -18,12 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.UserApp;
-import com.example.neobrain.Controllers.AppsController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
@@ -48,6 +46,7 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
 
+    private CallbackInterface mCallback;
     private List<App> mAppsList;
     private Router mRouter;
     private SharedPreferences sp;
@@ -57,6 +56,10 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         mRouter = router;
         sp = Objects.requireNonNull(router.getActivity()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+    }
+
+    public void setCallback(CallbackInterface callback) {
+        this.mCallback = callback;
     }
 
     @NonNull
@@ -100,6 +103,10 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void addItems(List<App> AppsList) {
         mAppsList.addAll(AppsList);
         notifyDataSetChanged();
+    }
+
+    public interface CallbackInterface {
+        void onEmptyViewRetryClick();
     }
 
     public class ViewHolder extends BaseViewHolder {
@@ -199,10 +206,6 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         call.enqueue(new Callback<Status>() {
                             @Override
                             public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                if (response.isSuccessful()) {
-                                    // TODO корректно обновить recyclerview
-                                    mRouter.pushController(RouterTransaction.with(new AppsController()));
-                                }
                             }
 
                             @Override
@@ -216,15 +219,19 @@ public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    public static class EmptyViewHolder extends BaseViewHolder {
+    public class EmptyViewHolder extends BaseViewHolder {
         @BindView(R.id.emoji)
         ImageView emoji;
         @BindView(R.id.titleApp)
         TextView titleApp;
+        @BindView(R.id.reloadButton)
+        MaterialButton reloadButton;
 
         EmptyViewHolder(View itemView) {
             super(itemView);
+
             ButterKnife.bind(this, itemView);
+            reloadButton.setOnClickListener(v -> mCallback.onEmptyViewRetryClick());
         }
 
         @Override
