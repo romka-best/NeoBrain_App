@@ -7,12 +7,15 @@ import random
 from flask import Flask, redirect, render_template, request, jsonify
 from flask_login import LoginManager, logout_user, login_required
 from flask_mail import Mail, Message
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from conf.routes import generate_routes
 from data import db_session
 from data.users import User
+from resources.corona_scrapper import scrap_countries
 
 # Инициализируем Flask
+
 app = Flask(__name__)
 # Добавляем к приложению config файлы
 app.config['SECRET_KEY'] = 'NeoBrainKey'
@@ -41,6 +44,11 @@ login_manager.init_app(app)
 
 #
 mail = Mail(app)
+
+# Добавляем постоянную задачу
+scheduler = BackgroundScheduler()
+job = scheduler.add_job(scrap_countries, 'interval', minutes=30)
+scheduler.start()
 
 
 # Главный метод для работы с сервером

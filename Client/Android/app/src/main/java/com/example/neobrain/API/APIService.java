@@ -9,6 +9,8 @@ import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Chats;
+import com.example.neobrain.API.model.Corona;
+import com.example.neobrain.API.model.Coronas;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
 import com.example.neobrain.API.model.People;
@@ -219,6 +221,14 @@ public interface APIService {
     Call<Status> editAchievements(
             @Path("user_id") Integer user_id,
             @Body Achievement achievement
+    );
+
+    @GET("countries")
+    Call<Coronas> getAllCoronaCountry();
+
+    @GET("countries/{country_id}")
+    Call<Corona> getOneCoronaCountry(
+            @Path("country_id") Integer country_id
     );
 
 }

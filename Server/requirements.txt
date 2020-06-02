@@ -8,3 +8,4 @@ flask-restful
 sqlalchemy_serializer
 alembic
 flask_wtf
+APScheduler

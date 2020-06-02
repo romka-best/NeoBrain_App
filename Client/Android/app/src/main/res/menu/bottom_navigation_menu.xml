@@ -7,7 +7,7 @@
         android:title="" />
     <item
         android:id="@+id/action_navigation"
-        android:icon="@drawable/ic_aim"
+        android:icon="@drawable/ic_virus"
         android:title="" />
     <item
         android:id="@+id/action_messages"

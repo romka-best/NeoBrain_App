@@ -118,4 +118,19 @@
         <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
     </string-array>
     <string name="add">Өҫтәп</string>
+    <string name="covid">Covid-19</string>
+    <string name="inRussia">В России</string>
+    <string name="inOtherCountries">Во всем мире</string>
+    <string name="new_admitted">Подтверждено новых</string>
+    <string name="all_admitted">Всего подтверждено</string>
+    <string name="new_deaths">Новых смертей</string>
+    <string name="all_deaths">Всего смертей</string>
+    <string name="tests_count">Проведено тестов</string>
+    <string name="all_recovered">Всего выздоровевших</string>
+    <string name="deathsPerOneMillion">Смертей на миллион</string>
+    <string name="casesPerOneMillion">Случаев заражения на миллион</string>
+    <string name="activePerOneMillion">Переносят на миллион</string>
+    <string name="updated">Обновлено: </string>
+    <string name="recoveredPerOneMillion">Излеченных на миллион</string>
+    <string name="county_name">Страна/регион</string>
 </resources>

@@ -32,6 +32,7 @@ import com.example.neobrain.API.model.Status;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
+import com.example.neobrain.utils.TimeFormatter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -190,7 +191,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 textTextView.setText(mPost.getText());
             }
             if (mPost.getCreatedDate() != null) {
-                timeTextView.setText(mPost.getCreatedDate());
+                timeTextView.setText(new TimeFormatter(mPost.getCreatedDate()).timeForChat(itemView.getContext()));
             }
             if (mPost.getLikeEmojiCount() != null && mPost.getLikeEmojiCount() != -1) {
                 chip1.setVisibility(View.VISIBLE);

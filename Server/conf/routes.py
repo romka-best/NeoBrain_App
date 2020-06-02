@@ -6,6 +6,7 @@ from resources.achievements_resource import AchievementResource, AchievementUser
 from resources.apps_resource import AppCreateResource, AppDeleteResource, AppResource
 from resources.chats_resource import ChatResource, ChatsListResource, ChatCreateResource, ChatFindUsersResource, \
     ChatUsersResource, ChatTwoUsersResource
+from resources.country_resource import CountryResource, CountryListResource
 from resources.lenta_resource import LentaResource
 from resources.messages_resource import MessageListResource, MessageCreateResource, MessageResource
 from resources.music_resource import MusicResource, MusicListResource, MusicSearchResource
@@ -79,5 +80,9 @@ def generate_routes(app):
     api.add_resource(AchievementResource, '/api/achievements/<int:achievement_id>')
     api.add_resource(AchievementUserResource, '/api/achievements/user/<int:user_id>')
     api.add_resource(AchievementCreateResource, '/api/achievements')
+
+    # Ресурсы с Corona
+    api.add_resource(CountryResource, '/api/countries/<int:country_id>')
+    api.add_resource(CountryListResource, '/api/countries')
 
     # logger.debug("Added API resources")
