@@ -119,6 +119,8 @@
     <string name="education" translatable="false">Образование</string>
     <string name="birthday" translatable="false">День рождения</string>
     <string name="gender" translatable="false">Пол</string>
+    <string name="setting_soon" translatable="false">Скоро здесь будут настройки</string>
+    <string name="empty_profile_info" translatable="false">Пользователь ещё не заполнил данные о себе</string>
     <string-array name="advices_list">
         <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
         <item>Помните: контроль над мыслями — ваша главная сила</item>

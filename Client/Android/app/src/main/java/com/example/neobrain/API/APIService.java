@@ -9,7 +9,7 @@ import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Chats;
-import com.example.neobrain.API.model.Corona;
+import com.example.neobrain.API.model.CoronaModel;
 import com.example.neobrain.API.model.Coronas;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
@@ -232,7 +232,7 @@ public interface APIService {
     Call<Coronas> getAllCoronaCountry();
 
     @GET("countries/{country_id}")
-    Call<Corona> getOneCoronaCountry(
+    Call<CoronaModel> getOneCoronaCountry(
             @Path("country_id") Integer country_id
     );
 

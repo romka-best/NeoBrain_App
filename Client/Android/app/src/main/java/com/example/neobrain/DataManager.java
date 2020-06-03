@@ -11,7 +11,7 @@ import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Chats;
-import com.example.neobrain.API.model.Corona;
+import com.example.neobrain.API.model.CoronaModel;
 import com.example.neobrain.API.model.Coronas;
 import com.example.neobrain.API.model.Message;
 import com.example.neobrain.API.model.Messages;
@@ -233,7 +233,7 @@ public class DataManager {
         return mAPIService.searchApp(appName);
     }
 
-    public Call<Corona> getOneCoronaCountry(Integer country_id) {
+    public Call<CoronaModel> getOneCoronaCountry(Integer country_id) {
         return mAPIService.getOneCoronaCountry(country_id);
     }
 

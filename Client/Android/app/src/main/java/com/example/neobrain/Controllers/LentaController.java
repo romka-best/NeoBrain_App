@@ -62,6 +62,7 @@ public class LentaController extends Controller {
     public TextView textError;
 
     private SharedPreferences sp;
+    private boolean isLoaded = false;
 
 
     @NonNull
@@ -103,7 +104,7 @@ public class LentaController extends Controller {
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
-                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
+                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId(), post.getAuthor()));
                         if (post.getLikeEmojiCount() != null) {
                             mPosts.get(mPosts.size() - 1).setLikeEmojiCount(post.getLikeEmojiCount());
                             mPosts.get(mPosts.size() - 1).setLikeEmoji(post.getLikeEmoji());
@@ -141,21 +142,24 @@ public class LentaController extends Controller {
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
                     lentaAdapter = new PostAdapter(mPosts, getRouter(), true);
                     lentaRecycler.setAdapter(lentaAdapter);
+                    isLoaded = true;
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<PostList> call, @NotNull Throwable t) {
-                long mills = 1000L;
-                Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
+                if (!isLoaded) {
+                    long mills = 1000L;
+                    Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
 
-                assert vibrator != null;
-                if (vibrator.hasVibrator()) {
-                    vibrator.vibrate(mills);
+                    assert vibrator != null;
+                    if (vibrator.hasVibrator()) {
+                        vibrator.vibrate(mills);
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+                    emoji.setVisibility(View.VISIBLE);
+                    textError.setVisibility(View.VISIBLE);
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                emoji.setVisibility(View.VISIBLE);
-                textError.setVisibility(View.VISIBLE);
             }
         });
 

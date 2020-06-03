@@ -80,18 +80,24 @@ public class Post {
     @Expose
     private Boolean screamingEmoji;
 
-    public Post(Integer id, String title, String text, Integer photoId, String createdDate, Integer userId) {
+    public Post(Integer id, String title, String text, Integer photoId, String createdDate,
+                Integer userId, Boolean isAuthor) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.photoId = photoId;
         this.createdDate = createdDate;
         this.userId = userId;
+        this.isAuthor = isAuthor;
     }
 
     @SerializedName("user_id")
     @Expose
     private Integer userId;
+
+    @SerializedName("is_author")
+    @Expose
+    private Boolean isAuthor;
 
     @SerializedName("user_nickname")
     @Expose
@@ -291,6 +297,14 @@ public class Post {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Boolean getAuthor() {
+        return isAuthor;
+    }
+
+    public void setAuthor(Boolean author) {
+        isAuthor = author;
     }
 
     public static final Comparator<Post> COMPARE_BY_TIME = new Comparator<Post>() {

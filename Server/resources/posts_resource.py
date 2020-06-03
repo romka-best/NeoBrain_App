@@ -27,6 +27,7 @@ def get_post(cur_post, post):
             "created_date": cur_post.created_date.strftime("%Y-%m-%d %H:%M:%S"),
             "modified_date": cur_post.modified_date.strftime("%Y-%m-%d %H:%M:%S"),
             "user_id": post.user_id,
+            "is_author": post.is_author,
             "photo_id": cur_post.photo_id,
             "like_emoji_count": cur_post.like_emoji_count,
             "laughter_emoji_count": cur_post.laughter_emoji_count,

@@ -379,7 +379,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             });
 
             moreButton.setOnClickListener(v -> {
-                if (!mPost.getUserId().equals(authorId)) {
+                if (!mPost.getAuthor()) {
                     return;
                 }
                 PopupMenu popupMenu = new PopupMenu(mRouter.getActivity(), moreButton);

@@ -1,7 +1,6 @@
 package com.example.neobrain.Adapters;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.neobrain.API.model.Corona;
+import com.example.neobrain.API.model.CoronaModel;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -78,9 +79,9 @@ public class CoronaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.name)
         TextView name;
         @BindView(R.id.all_admitted)
-        TextView all_admitted;
+        TextView allAdmitted;
         @BindView(R.id.new_admitted)
-        TextView new_admitted;
+        TextView newAdmitted;
         @BindView(R.id.deaths)
         TextView deaths;
 
@@ -92,33 +93,33 @@ public class CoronaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         protected void clear() {
             flag.setImageDrawable(null);
             name.setText("");
-            all_admitted.setText("");
-            new_admitted.setText("");
+            allAdmitted.setText("");
+            newAdmitted.setText("");
             deaths.setText("");
         }
 
-        @SuppressLint("ResourceType")
         public void onBind(int position) {
             super.onBind(position);
             final Corona mCorona = mCoronaList.get(position);
 
-            Call<Corona> corona = DataManager.getInstance().getOneCoronaCountry(mCorona.getId());
-            corona.enqueue(new Callback<Corona>() {
+            Call<CoronaModel> coronaCall = DataManager.getInstance().getOneCoronaCountry(mCorona.getId());
+            coronaCall.enqueue(new Callback<CoronaModel>() {
                 @SuppressLint("SetTextI18n")
                 @Override
-                public void onResponse(@NotNull Call<Corona> call, @NotNull Response<Corona> response) {
+                public void onResponse(@NotNull Call<CoronaModel> call, @NotNull Response<CoronaModel> response) {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
-                        name.setText(response.body().getName());
-                        all_admitted.setText(response.body().getAll_admitted());
-                        new_admitted.setText("+" + response.body().getNew_admitted());
-                        deaths.setText(response.body().getAll_deaths());
-                        flag.setImageURI(Uri.parse(response.body().getUri()));
+                        Corona corona = response.body().getCorona();
+                        name.setText(corona.getName());
+                        allAdmitted.setText(corona.getAll_admitted() + "");
+                        newAdmitted.setText("+" + corona.getNew_admitted());
+                        deaths.setText(corona.getAll_deaths() + "");
+                        Picasso.get().load(corona.getUri()).into(flag);
                     }
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<Corona> call, @NotNull Throwable t) {
+                public void onFailure(@NotNull Call<CoronaModel> call, @NotNull Throwable t) {
                 }
             });
         }

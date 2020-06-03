@@ -84,9 +84,9 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public int getItemViewType(int position) {
-        if (mUser != null && !isEdit) {
+        if (mUser != null && !isEdit && isNormalInfo()) {
             return VIEW_TYPE_DETAILED_INFO;
-        } else if (isEdit) {
+        } else if (mUser != null && isEdit && isNormalInfo()) {
             return VIEW_TYPE_EDIT_INFO;
         } else if (titles != null) {
             return VIEW_TYPE_HELPER_TEXT;
@@ -97,14 +97,18 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mUser != null && (mUser.getNumber() != null ||
-                mUser.getBirthday() != null || mUser.getCountry() != null ||
-                mUser.getRepublic() != null || mUser.getCity() != null ||
-                mUser.getEducation() != null || mUser.getGender() != null)) {
+        if (mUser != null && isNormalInfo()) {
             return 7;
         } else {
             return 1;
         }
+    }
+
+    public boolean isNormalInfo() {
+        return mUser.getNumber() != null ||
+                mUser.getBirthday() != null || mUser.getCountry() != null ||
+                mUser.getRepublic() != null || mUser.getCity() != null ||
+                mUser.getEducation() != null || mUser.getGender() != null;
     }
 
     public User getInfo() {

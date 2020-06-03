@@ -17,6 +17,8 @@ import com.example.neobrain.Adapters.CoronaAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,16 +54,18 @@ public class WorldCoronaController extends Controller {
         Call<Coronas> all_corona = DataManager.getInstance().getAllCoronaCountry();
         all_corona.enqueue(new Callback<Coronas>() {
             @Override
-            public void onResponse(Call<Coronas> call, Response<Coronas> response) {
+            public void onResponse(@NotNull Call<Coronas> call, @NotNull Response<Coronas> response) {
                 if (response.isSuccessful()) {
+                    assert response.body() != null;
                     int len_rec = response.body().getCountries().size();
-                    for (int i = 0; i < len_rec; i++) {
+                    for (int i = 1; i <= len_rec; i++) {
                         mCorona.add(new Corona(i));
                     }
                     if (mCorona.size() < 1) {
                         Log.e("Error", "fail_request");
                     } else {
                         coronaAdapter = new CoronaAdapter(mCorona);
+                        corona_recycler.setAdapter(coronaAdapter);
                     }
                 } else {
                     Log.e("Error", "fail_request");
@@ -69,7 +73,7 @@ public class WorldCoronaController extends Controller {
             }
 
             @Override
-            public void onFailure(Call<Coronas> call, Throwable t) {
+            public void onFailure(@NotNull Call<Coronas> call, @NotNull Throwable t) {
 
             }
         });

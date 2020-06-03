@@ -132,6 +132,7 @@ public class ProfileController extends Controller {
     private int userId = 0;
     private boolean inSubscribe = false;
     private boolean bottomIsGone = false;
+    private boolean isLoaded = false;
     private Integer userIdSP;
 
     public int getPhotoId() {
@@ -423,6 +424,7 @@ public class ProfileController extends Controller {
                                                     fabAdd.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_person_add, Objects.requireNonNull(getActivity()).getTheme()));
                                                 }
                                             }
+                                            isLoaded = true;
                                         }
                                     }
 
@@ -443,16 +445,18 @@ public class ProfileController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                long mills = 1000L;
-                Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
+                if (!isLoaded) {
+                    long mills = 1000L;
+                    Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
 
-                assert vibrator != null;
-                if (vibrator.hasVibrator()) {
-                    vibrator.vibrate(mills);
+                    assert vibrator != null;
+                    if (vibrator.hasVibrator()) {
+                        vibrator.vibrate(mills);
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+                    emoji.setVisibility(View.VISIBLE);
+                    textError.setVisibility(View.VISIBLE);
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                emoji.setVisibility(View.VISIBLE);
-                textError.setVisibility(View.VISIBLE);
             }
         });
         getPosts();
@@ -477,7 +481,7 @@ public class ProfileController extends Controller {
                     List<Post> posts = response.body().getPosts();
                     ArrayList<Post> mPosts = new ArrayList<>();
                     for (Post post : posts) {
-                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId()));
+                        mPosts.add(new Post(post.getId(), post.getTitle(), post.getText(), post.getPhotoId(), post.getCreatedDate(), post.getUserId(), post.getAuthor()));
                         if (post.getLikeEmojiCount() != null) {
                             mPosts.get(mPosts.size() - 1).setLikeEmojiCount(post.getLikeEmojiCount());
                             mPosts.get(mPosts.size() - 1).setLikeEmoji(post.getLikeEmoji());

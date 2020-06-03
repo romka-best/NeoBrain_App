@@ -83,8 +83,7 @@ public class RussiaCoronaController extends Controller {
                     while ((line = in.readLine()) != null) {
                         sb.append(line.trim());
                     }
-                    JSONObject obj = new JSONObject(sb.toString());
-                    return obj;
+                    return new JSONObject(sb.toString());
                 } else {
                     Log.e("Error", "fail " + con.getResponseCode() + ", " + con.getResponseMessage());
                 }
@@ -100,25 +99,25 @@ public class RussiaCoronaController extends Controller {
             super.onPostExecute(s);
             if (s != null) {
                 try {
-                    String new_add = (String) s.get("todayCases").toString();
+                    String new_add = s.get("todayCases").toString();
                     new_admitted.setText("+" + new_add);
-                    String cases = (String) s.get("cases").toString();
+                    String cases = s.get("cases").toString();
                     all.setText(cases);
-                    String deaths = (String) s.get("deaths").toString();
+                    String deaths = s.get("deaths").toString();
                     all_deaths.setText(deaths);
-                    String todayDeaths = (String) s.get("todayDeaths").toString();
+                    String todayDeaths = s.get("todayDeaths").toString();
                     new_deaths.setText("+" + todayDeaths);
-                    String recovered = (String) s.get("recovered").toString();
+                    String recovered = s.get("recovered").toString();
                     all_recovered.setText(recovered);
-                    String test = (String) s.get("tests").toString();
+                    String test = s.get("tests").toString();
                     tests.setText(test);
-                    String cas_per_mil = (String) s.get("casesPerOneMillion").toString();
+                    String cas_per_mil = s.get("casesPerOneMillion").toString();
                     casesPerOneMillion.setText(cas_per_mil);
-                    String det_per_mil = (String) s.get("deathsPerOneMillion").toString();
+                    String det_per_mil = s.get("deathsPerOneMillion").toString();
                     deathsPerOneMillion.setText(det_per_mil);
-                    String recPerOneMillion = (String) s.get("recoveredPerOneMillion").toString();
+                    String recPerOneMillion = s.get("recoveredPerOneMillion").toString();
                     recoveredPerOneMillion.setText(recPerOneMillion);
-                    String actPerOneMillion = (String) s.get("activePerOneMillion").toString();
+                    String actPerOneMillion = s.get("activePerOneMillion").toString();
                     activePerOneMillion.setText(actPerOneMillion);
                 } catch (JSONException e) {
                     e.printStackTrace();
