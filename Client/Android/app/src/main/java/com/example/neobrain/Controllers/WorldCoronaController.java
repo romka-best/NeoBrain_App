@@ -16,6 +16,7 @@ import com.example.neobrain.API.model.Coronas;
 import com.example.neobrain.Adapters.CoronaAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.utils.SpacesItemDecoration;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +34,7 @@ public class WorldCoronaController extends Controller {
     @BindView(R.id.corona_recycler)
     public RecyclerView corona_recycler;
     private CoronaAdapter coronaAdapter;
-
+    private Boolean space = false;
 
     @NonNull
     @Override
@@ -66,6 +67,13 @@ public class WorldCoronaController extends Controller {
                     } else {
                         coronaAdapter = new CoronaAdapter(mCorona);
                         corona_recycler.setAdapter(coronaAdapter);
+                        if (!space) {
+                            corona_recycler.addItemDecoration(new SpacesItemDecoration(20));
+                            space = true;
+                        }
+                        if (mCorona.size() > 0) {
+                            corona_recycler.scrollToPosition(0);
+                        }
                     }
                 } else {
                     Log.e("Error", "fail_request");
