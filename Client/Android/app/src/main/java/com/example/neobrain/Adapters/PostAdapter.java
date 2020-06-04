@@ -122,7 +122,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public void editItem(int position, Post post) {
         mPostList.set(position, post);
-        notifyItemChanged(position);
+        notifyItemChanged(position, post);
     }
 
     public class ViewHolder extends BaseViewHolder {
@@ -206,6 +206,9 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             if (mPost.getCreatedDate() != null) {
                 timeTextView.setText(new TimeFormatter(mPost.getCreatedDate()).timeForChat(itemView.getContext()));
+            }
+            if (!mPost.getAuthor()) {
+                moreButton.setVisibility(View.GONE);
             }
             if (mPost.getLikeEmojiCount() != null && mPost.getLikeEmojiCount() != -1) {
                 chip1.setVisibility(View.VISIBLE);
@@ -446,10 +449,7 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                                     for (PostModel curPostModel : posts) {
                                         Post curPost = curPostModel.getPost();
                                         if (curPost.getUserId().equals(authorId)) {
-                                            mPostList.set(position, curPost);
-                                            notifyDataSetChanged();
-
-//                                            editItem(position, curPost); TODO (Не работает)
+                                            editItem(position, curPost);
                                             return;
                                         }
                                     }

@@ -6,8 +6,6 @@ from flask import jsonify
 from flask_restful import reqparse, abort, Resource
 
 from data import db_session
-from data.achievement_association import AchievementAssociation
-from data.achievements import Achievement
 from data.chats import Chat
 from data.photos import Photo
 from data.posts import Post
@@ -145,7 +143,8 @@ class UserResource(Resource):
         if args.get('about', None):
             user.about = args['about']
         if args.get('birthday', None):
-            user.birthday = args['birthday']
+            day, month, year = map(int, args['birthday'].split("."))
+            user.birthday = datetime.date(year, month, day)
         if args.get('age', None):
             user.age = args['age']
         if args.get('can_see_audio', None) is not None:

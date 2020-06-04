@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
+import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.ProfileInfoAdapter;
@@ -22,6 +23,7 @@ import com.example.neobrain.R;
 import com.example.neobrain.utils.BundleBuilder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -103,22 +105,28 @@ public class ProfileEditController extends Controller {
 
     @OnClick(R.id.saveButton)
     void save() {
-//        User user = profileInfoAdapter.getInfo();
-//        Call<Status> call = DataManager.getInstance().editUser(sp.getInt("userId", -1), user);
-//        call.enqueue(new Callback<Status>() {
-//            @Override
-//            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-//                if (response.isSuccessful()) {
-//                    // TODO Снэкбар "Сохранено"
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-//
-//            }
-//        });
-//        // TODO
+        User user = profileInfoAdapter.getInfo();
+        if (user.getGender() != null && user.getGender() == -2) {
+            Snackbar.make(getView(), R.string.not_correct_gender, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        Call<Status> call = DataManager.getInstance().editUser(sp.getInt("userId", -1), user);
+        call.enqueue(new Callback<Status>() {
+            @Override
+            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                assert getView() != null;
+                if (response.isSuccessful()) {
+                    Snackbar.make(getView(), R.string.save_successful, Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(getView(), R.string.problems_with_server, Snackbar.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+            }
+        });
     }
 
     @Override

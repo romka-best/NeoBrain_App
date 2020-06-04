@@ -26,9 +26,11 @@ import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.ChatAdapter;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
+import com.example.neobrain.changehandler.ScaleFadeChangeHandler;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,6 +98,17 @@ public class ChatController extends Controller {
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
 
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setVisibility(View.GONE);
+                getRouter().pushController(RouterTransaction.with(new PeopleController(sp.getInt("userId", -1), true, true))
+                        .popChangeHandler(new ScaleFadeChangeHandler())
+                        .pushChangeHandler(new ScaleFadeChangeHandler()));
+            }
+        });
+
         getChats();
         return view;
     }
@@ -156,6 +169,7 @@ public class ChatController extends Controller {
 
                                                 @Override
                                                 public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                                                    Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
                                                 }
                                             });
                                         }
@@ -165,6 +179,7 @@ public class ChatController extends Controller {
 
                                 @Override
                                 public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
+                                    Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
                                 }
                             });
                         } else {

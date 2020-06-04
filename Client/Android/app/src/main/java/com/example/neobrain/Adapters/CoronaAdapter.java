@@ -47,7 +47,7 @@ public class CoronaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case VIEW_TYPE_EMPTY:
             default:
                 return new CoronaAdapter.EmptyViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.recycler_view_item_corona_empty, parent, false));
+                        .inflate(R.layout.recycler_view_empty_item_corona, parent, false));
         }
     }
 
