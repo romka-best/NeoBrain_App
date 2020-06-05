@@ -1,16 +1,14 @@
 # Импортируем нужные библиотеки
-import datetime
-import logging
 import os
 import random
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, redirect, render_template, request, jsonify
 from flask_login import LoginManager, logout_user, login_required
 from flask_mail import Mail, Message
-from apscheduler.schedulers.background import BackgroundScheduler
 
-from conf.routes import generate_routes
 from conf.config import generate_config
+from conf.routes import generate_routes
 from data import db_session
 from data.users import User
 from resources.corona_scrapper import scrap_countries

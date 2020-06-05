@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from flask import jsonify
+from flask_login import login_required
 from flask_restful import reqparse, Resource, abort
 
 from data import db_session
@@ -50,6 +51,9 @@ def get_post(cur_post, post):
 
 # Основной ресурс для работы с Post
 class PostResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -183,6 +187,9 @@ class PostResource(Resource):
 
 # Ресурс для получения постов
 class PostsListResource(Resource):
+
+    decorators = [login_required]
+
     # Получаем посты user-a по его id
     def get(self, author_id, user_id):
         # Проверяем, есть ли пользователь
@@ -212,6 +219,9 @@ class PostsListResource(Resource):
 
 
 class PostCreateResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов

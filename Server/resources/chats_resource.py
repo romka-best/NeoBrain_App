@@ -3,6 +3,7 @@ from base64 import decodebytes
 import datetime
 
 from flask import jsonify
+from flask_login import login_required, current_user
 from flask_restful import reqparse, abort, Resource
 
 from data import db_session
@@ -27,6 +28,8 @@ def get_current_time() -> datetime:
 
 #  Основной ресурс чата
 class ChatResource(Resource):
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -121,6 +124,8 @@ class ChatResource(Resource):
 
 # Ресурс для получения чатов
 class ChatsListResource(Resource):
+    decorators = [login_required]
+
     # Получаем чаты user-a по его id
     def get(self, user_id):
         # Проверяем, есть ли пользователь
@@ -136,8 +141,11 @@ class ChatsListResource(Resource):
 
 
 class ChatUsersResource(Resource):
+    decorators = [login_required]
+
     # Получаем пользователей с которым переписывался user_id
     def get(self, user_id):
+        if user_id != current_user.id: return abort(401)
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
         # Создаём сессию в БД и получаем пользователей
@@ -163,8 +171,11 @@ class ChatUsersResource(Resource):
 
 
 class ChatTwoUsersResource(Resource):
+    decorators = [login_required]
+
     # Возвращаем chat_id двух пользователей
     def get(self, user_id1, user_id2):
+        if user_id1 != current_user.id and user_id2 != current_user.id: return abort(401)
         # Проверяем, есть ли пользователм
         abort_if_user_not_found(user_id1)
         abort_if_user_not_found(user_id2)
@@ -187,6 +198,8 @@ class ChatTwoUsersResource(Resource):
 
 
 class ChatFindUsersResource(Resource):
+    decorators = [login_required]
+
     # Получаем юзеров по id чата
     def get(self, chat_id):
         # Создаём сессию и получаем чат
@@ -197,6 +210,8 @@ class ChatFindUsersResource(Resource):
 
 
 class ChatCreateResource(Resource):
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов

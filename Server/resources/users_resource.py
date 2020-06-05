@@ -3,11 +3,10 @@ import datetime
 from base64 import decodebytes
 
 from flask import jsonify
+from flask_login import login_user, logout_user, login_required, current_user
 from flask_restful import reqparse, abort, Resource
 
 from data import db_session
-from data.achievement_association import AchievementAssociation
-from data.achievements import Achievement
 from data.chats import Chat
 from data.photos import Photo
 from data.posts import Post
@@ -29,6 +28,9 @@ def get_current_time() -> datetime:
 
 # Основной ресурс для работы с User
 class UserResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -94,8 +96,9 @@ class UserResource(Resource):
         self.parser.add_argument('photo', required=False, type=str)
         # id Фото пользователя
         self.parser.add_argument('photo_id', required=False, type=int)
+        # Выходит ли пользователь
+        self.parser.add_argument('exit', required=False, type=bool)
 
-    # @login_required
     # Получаем пользователя по егу id
     def get(self, user_id):
         # Проверяем, есть ли пользователь
@@ -116,6 +119,7 @@ class UserResource(Resource):
 
     # Изменяем пользователя по его id
     def put(self, user_id):
+        if current_user.id != user_id: return abort(401)
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
         # Получаем аргументы
@@ -128,6 +132,8 @@ class UserResource(Resource):
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         # В зависимости от аргументов, меняем пользователя
+        if args.get('exit', None):
+            logout_user()
         if args.get('name', None):
             user.name = args['name'].title()
         if args.get('surname', None):
@@ -222,6 +228,7 @@ class UserResource(Resource):
 
     # Удаляем пользователя по егу id
     def delete(self, user_id):
+        if current_user.id != user_id: return abort(401)
         # Ищем пользователя
         abort_if_user_not_found(user_id)
         # Создаём сессию и получаем user
@@ -235,6 +242,9 @@ class UserResource(Resource):
 
 
 class UsersSearchResource(Resource):
+
+    decorators = [login_required]
+
     # Получаем пользователей по имени и фамилии
     def get(self, user_name_surname):
         if user_name_surname.find("?") != -1:
@@ -264,6 +274,9 @@ class UsersSearchResource(Resource):
 
 # Ресурс входа пользователя
 class UserLoginResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -300,6 +313,7 @@ class UserLoginResource(Resource):
                             'text': 'Bad request'})
         # Проверяем корректен ли пароль пользователя
         if user and user.check_password(args.get('hashed_password', None)):
+            login_user(session.query(User).filter(User.nickname == args['nickname']).first())
             return jsonify({'status': 200,
                             'text': f'Login {user.id} allowed'})
         elif user and not user.check_password(args.get('hashed_password', None)):
@@ -311,6 +325,9 @@ class UserLoginResource(Resource):
 
 # Ресурс для создания пользователя, а также для получения всех пользователей
 class UsersListResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -426,5 +443,6 @@ class UsersListResource(Resource):
         # Добавляем пользователя
         session.add(user)
         session.commit()
+        login_user(user)
         return jsonify({'status': 201,
                         'text': f'User {user.id} created'})

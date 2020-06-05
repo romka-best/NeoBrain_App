@@ -1,5 +1,6 @@
 # Импортируем нужные библиотеки
 from flask import jsonify
+from flask_login import login_required
 from flask_restful import Resource, reqparse
 
 from data import db_session
@@ -10,6 +11,9 @@ from .users_resource import abort_if_user_not_found
 
 # Основной ресурс для работы с People
 class PeopleResource(Resource):
+
+    decorators = [login_required]
+
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
@@ -22,6 +26,9 @@ class PeopleResource(Resource):
 
 
 class PeopleDeleteResource(Resource):
+
+    decorators = [login_required]
+
     # Отписываемся. user_id1 - кто отписывается, user_id2 - от кого отписывается
     def delete(self, user_id1, user_id2):
         # Проверяем, есть ли пользователи
@@ -51,6 +58,9 @@ class PeopleDeleteResource(Resource):
 
 # Ресурс для добавления в Люди(Подписчики)
 class PeopleCreateResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов

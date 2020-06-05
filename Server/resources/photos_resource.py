@@ -2,6 +2,7 @@
 from base64 import encodebytes
 
 from flask import jsonify
+from flask_login import login_required
 from flask_restful import reqparse, Resource, abort
 
 from data import db_session
@@ -23,6 +24,9 @@ def abort_if_photo_not_found(photo_id):
 
 # Основной ресурс для работы с Photo
 class PhotoResource(Resource):
+
+    decorators = [login_required]
+
     def get(self, photo_id):
         if str(photo_id).find("?") != -1:
             photo_id = int(photo_id[:photo_id.find("?")].strip())
@@ -71,6 +75,9 @@ class PhotoResource(Resource):
 
 # Создаём фото
 class PhotoCreateResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов

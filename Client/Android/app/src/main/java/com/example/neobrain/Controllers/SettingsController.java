@@ -55,6 +55,7 @@ public class SettingsController extends Controller {
         Integer userIdSP = sp.getInt("userId", -1);
         User user = new User();
         user.setStatus(0);
+        user.setExit(true);
         Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
         call.enqueue(new Callback<Status>() {
             @Override

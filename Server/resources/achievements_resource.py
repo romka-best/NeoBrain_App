@@ -1,5 +1,6 @@
 # Импортируем нужные библиотеки
 from flask import jsonify
+from flask_login import login_required
 from flask_restful import Resource, reqparse
 
 from data import db_session
@@ -11,6 +12,9 @@ from .users_resource import abort_if_user_not_found
 
 # Основной ресурс для работы с Achievement
 class AchievementUserResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -61,6 +65,9 @@ class AchievementUserResource(Resource):
 
 
 class AchievementResource(Resource):
+
+    decorators = [login_required]
+
     def get(self, achievement_id):
         # Создаём сессию в БД и получаем достижение
         session = db_session.create_session()
@@ -69,6 +76,9 @@ class AchievementResource(Resource):
 
 
 class AchievementCreateResource(Resource):
+
+    decorators = [login_required]
+
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов

@@ -108,6 +108,17 @@ public class User {
     @SerializedName("count_outgoing_messages")
     @Expose
     private Integer count_outgoing_messages;
+    @SerializedName("exit")
+    @Expose
+    private Boolean exit;
+
+    public Boolean getExit() {
+        return exit;
+    }
+
+    public void setExit(Boolean exit) {
+        this.exit = exit;
+    }
 
     public User() {
 
