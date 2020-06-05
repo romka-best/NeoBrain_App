@@ -106,7 +106,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(0);
                                             }
                                         }
 
@@ -123,7 +123,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(1);
                                             }
                                         }
 
@@ -140,7 +140,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(2);
                                             }
                                         }
 
@@ -157,7 +157,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(3);
                                             }
                                         }
 
@@ -174,7 +174,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(4);
                                             }
                                         }
 
@@ -191,7 +191,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(5);
                                             }
                                         }
 
@@ -208,7 +208,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(6);
                                             }
                                         }
 
@@ -225,7 +225,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(2);
                                             }
                                         }
 
@@ -242,7 +242,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(7);
                                             }
                                         }
 
@@ -259,7 +259,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(8);
                                             }
                                         }
 
@@ -276,7 +276,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(9);
                                             }
                                         }
 
@@ -295,7 +295,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(10);
                                             }
                                         }
 
@@ -313,7 +313,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(11);
                                             }
                                         }
 
@@ -330,7 +330,7 @@ public class AchievementsController extends Controller {
                                         @Override
                                         public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
                                             if (response.isSuccessful()) {
-                                                achievementAdapter.notifyDataSetChanged();
+                                                achievementAdapter.notifyItemChanged(12);
                                             }
                                         }
 

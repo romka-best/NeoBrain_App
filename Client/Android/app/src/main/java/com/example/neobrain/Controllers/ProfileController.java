@@ -185,7 +185,7 @@ public class ProfileController extends Controller {
                 .pushChangeHandler(new VerticalChangeHandler())));
 
         View peopleButton = view.findViewById(R.id.button_second);
-        peopleButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PeopleController((userId == 0) ? userIdSP : userId, bottomIsGone))
+        peopleButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PeopleController((userId == 0) ? userIdSP : userId, bottomIsGone, false))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
@@ -294,16 +294,13 @@ public class ProfileController extends Controller {
                     .pushChangeHandler(new VerticalChangeHandler()));
         });
 
-        moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userId == 0) {
-                    getRouter().pushController(RouterTransaction.with(new SettingsController())
-                            .popChangeHandler(new HorizontalChangeHandler())
-                            .pushChangeHandler(new HorizontalChangeHandler()));
-                } else {
-                    // TODO
-                }
+        moreButton.setOnClickListener(v -> {
+            if (userId == 0) {
+                getRouter().pushController(RouterTransaction.with(new SettingsController())
+                        .popChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler()));
+            } else {
+                // TODO
             }
         });
 

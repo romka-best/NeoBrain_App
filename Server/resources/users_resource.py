@@ -151,7 +151,8 @@ class UserResource(Resource):
         if args.get('about', None):
             user.about = args['about']
         if args.get('birthday', None):
-            user.birthday = args['birthday']
+            day, month, year = map(int, args['birthday'].split("."))
+            user.birthday = datetime.date(year, month, day)
         if args.get('age', None):
             user.age = args['age']
         if args.get('can_see_audio', None) is not None:

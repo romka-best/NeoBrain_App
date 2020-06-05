@@ -110,6 +110,8 @@
     <string name="advice">Совет</string>
     <string name="add">Добавить</string>
     <string name="save" translatable="false">Сохранить</string>
+    <string name="save_successful" translatable="false">Данные успешно сохранены</string>
+    <string name="problems_with_server" translatable="false">Проблемы с сервером. Мы уже их решаем</string>
     <string name="emoji_rule" translatable="false">Пост можно выложить с тремя оценками максимум</string>
     <string name="not_found" translatable="false">Не найдено</string>
     <string name="empty_search" translatable="false">Начните вводить нужные слова в поле поиска</string>
@@ -121,6 +123,8 @@
     <string name="gender" translatable="false">Пол</string>
     <string name="setting_soon" translatable="false">Скоро здесь будут настройки</string>
     <string name="empty_profile_info" translatable="false">Пользователь ещё не заполнил данные о себе</string>
+    <string name="not_correct_gender" translatable="false">Такого пола не существует</string>
+    <string name="be_careful" translatable="false">Будьте осторожны!\nКоманда NeoTeam любит и ценит пользователей</string>
     <string-array name="advices_list">
         <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
         <item>Помните: контроль над мыслями — ваша главная сила</item>

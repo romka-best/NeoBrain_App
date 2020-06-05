@@ -52,16 +52,18 @@ public class PeopleController extends Controller {
     private ArrayList<User> mUsers = new ArrayList<>();
     private SharedPreferences sp;
     private boolean bottomIsGone = false;
+    private boolean isFromChat = false;
     private int userId;
 
     public PeopleController() {
 
     }
 
-    public PeopleController(int userId, boolean bottomIsGone) {
+    public PeopleController(int userId, boolean bottomIsGone, boolean isFromChat) {
         this(new BundleBuilder(new Bundle())
                 .putInt("userId", userId)
                 .putBoolean("bottomIsGone", bottomIsGone)
+                .putBoolean("isFromChat", isFromChat)
                 .build());
     }
 
@@ -70,6 +72,7 @@ public class PeopleController extends Controller {
         assert args != null;
         this.bottomIsGone = args.getBoolean("bottomIsGone");
         this.userId = args.getInt("userId");
+        this.isFromChat = args.getBoolean("isFromChat");
     }
 
     @NonNull
@@ -150,7 +153,7 @@ public class PeopleController extends Controller {
         if (mUsers.size() >= 2) {
             Collections.sort(mUsers, User.COMPARE_BY_SURNAME);
         }
-        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter());
+        peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter(), isFromChat);
         peopleRecycler.setAdapter(peopleAdapter);
     }
 

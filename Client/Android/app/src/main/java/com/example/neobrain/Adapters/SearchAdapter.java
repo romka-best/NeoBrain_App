@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.ChatModel;
 import com.example.neobrain.API.model.Music;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Status;
@@ -130,7 +132,6 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
-                // TODO
                 return new AllViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recycler_view_empty_item_all, parent, false));
             case VIEW_TYPE_PEOPLE:
@@ -153,7 +154,6 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         .inflate(R.layout.recycler_view_not_found_item, parent, false));
             case VIEW_TYPE_EMPTY:
             default:
-                // TODO
                 return new EmptyViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recycler_view_empty_item_all, parent, false));
         }
@@ -235,6 +235,9 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.city_age_gender)
         TextView textTextView;
 
+        @BindView(R.id.doButton)
+        ImageButton doButton;
+
         public PeopleViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -292,6 +295,32 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             }
             textTextView.setText(sb);
+
+            doButton.setOnClickListener(v -> {
+                sp = Objects.requireNonNull(mRouter.getActivity()).getSharedPreferences(MY_SETTINGS,
+                        Context.MODE_PRIVATE);
+                Call<ChatModel> chatModelCall = DataManager.getInstance().getUsersChat(sp.getInt("userId", -1), mPerson.getId());
+                chatModelCall.enqueue(new Callback<ChatModel>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ChatModel> call, @NotNull Response<ChatModel> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            Chat chat = response.body().getChat();
+                            if (chat == null) {
+                                chat = new Chat();
+                                chat.setId(-1);
+                            }
+                            chat.setPhotoId(mPerson.getPhotoId());
+                            mRouter.pushController(RouterTransaction.with(new MessagesController(chat, mPerson.getId())));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ChatModel> call, @NotNull Throwable t) {
+
+                    }
+                });
+            });
 
             itemView.setOnClickListener(v -> {
                 InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(mRouter.getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -466,52 +495,46 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             } else {
                 button.setText(R.string.add);
             }
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mApp.getLinkAndroid()));
-                    Objects.requireNonNull(mRouter.getActivity()).startActivity(browserIntent);
-                }
+            itemView.setOnClickListener(v -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mApp.getLinkAndroid()));
+                Objects.requireNonNull(mRouter.getActivity()).startActivity(browserIntent);
             });
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sp = Objects.requireNonNull(mRouter.getActivity()).getSharedPreferences(MY_SETTINGS,
-                            Context.MODE_PRIVATE);
-                    Integer userIdSP = sp.getInt("userId", -1);
-                    if (mApp.getAdded()) {
-                        Call<Status> call = DataManager.getInstance().deleteApp(userIdSP, mApp.getId());
-                        call.enqueue(new Callback<Status>() {
-                            @Override
-                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                if (response.isSuccessful()) {
-                                    mAppsList.remove(mApp);
-                                    notifyDataSetChanged();
-                                }
+            button.setOnClickListener(v -> {
+                sp = Objects.requireNonNull(mRouter.getActivity()).getSharedPreferences(MY_SETTINGS,
+                        Context.MODE_PRIVATE);
+                Integer userIdSP = sp.getInt("userId", -1);
+                if (mApp.getAdded()) {
+                    Call<Status> call = DataManager.getInstance().deleteApp(userIdSP, mApp.getId());
+                    call.enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            if (response.isSuccessful()) {
+                                mAppsList.remove(mApp);
+                                notifyItemRemoved(position);
                             }
+                        }
 
-                            @Override
-                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                        @Override
+                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
 
+                        }
+                    });
+                } else {
+                    UserApp userApp = new UserApp(userIdSP, mApp.getId());
+                    Call<Status> call = DataManager.getInstance().addApp(userApp);
+                    call.enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            if (response.isSuccessful()) {
+                                // TODO корректно обновить recyclerview
                             }
-                        });
-                    } else {
-                        UserApp userApp = new UserApp(userIdSP, mApp.getId());
-                        Call<Status> call = DataManager.getInstance().addApp(userApp);
-                        call.enqueue(new Callback<Status>() {
-                            @Override
-                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                if (response.isSuccessful()) {
-                                    // TODO корректно обновить recyclerview
-                                }
-                            }
+                        }
 
-                            @Override
-                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                        @Override
+                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
 
-                            }
-                        });
-                    }
+                        }
+                    });
                 }
             });
         }
@@ -542,7 +565,7 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    public class NotFoundViewHolder extends BaseViewHolder {
+    public static class NotFoundViewHolder extends BaseViewHolder {
         public NotFoundViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

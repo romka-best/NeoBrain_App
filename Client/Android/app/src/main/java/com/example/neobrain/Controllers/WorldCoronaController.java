@@ -85,5 +85,7 @@ public class WorldCoronaController extends Controller {
 
             }
         });
+        coronaAdapter = new CoronaAdapter(new ArrayList<>());
+        corona_recycler.setAdapter(coronaAdapter);
     }
 }

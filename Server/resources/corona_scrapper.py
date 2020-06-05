@@ -7,10 +7,9 @@ from data.countries import Country
 def scrap_countries():
     corona_server = "https://corona.lmao.ninja/v2/countries?yesterday=false&sort"
     response = requests.get(corona_server)
-    db_session.global_init("db/neobrain.db")
     session = db_session.create_session()
     if not response:
-        pass
+        return
     json_response = response.json()
     for county in json_response:
 
@@ -23,7 +22,6 @@ def scrap_countries():
         countries = Country()
 
         if session.query(Country).filter(Country.country_name == name).first():
-
             county_exist = session.query(Country).filter(Country.country_name == name).first()
             county_exist.cases = cases
             county_exist.deaths_count = deaths
@@ -31,7 +29,6 @@ def scrap_countries():
 
             session.commit()
         else:
-
             countries.country_name = name
             countries.flag = county_flag
             countries.cases = cases

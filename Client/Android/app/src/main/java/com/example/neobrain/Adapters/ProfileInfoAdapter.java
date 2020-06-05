@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,7 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         sp = Objects.requireNonNull(router.getActivity()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
         this.isEdit = isEdit;
+        this.infoUser = new User();
     }
 
     @NonNull
@@ -204,13 +207,55 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void onBind(int position) {
             super.onBind(position);
+            title.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (textInputLayout.getStartIconContentDescription() != null && s != null) {
+                        if (textInputLayout.getStartIconContentDescription().equals(Objects.requireNonNull(mRouter.getActivity()).getString(R.string.hint_number))) {
+                            infoUser.setNumber(s.toString());
+                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.birthday))) {
+                            infoUser.setBirthday(s.toString());
+                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.country))) {
+                            infoUser.setCountry(s.toString());
+                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.republic))) {
+                            infoUser.setRepublic(s.toString());
+                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.city))) {
+                            infoUser.setCity(s.toString());
+                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.education))) {
+                            infoUser.setEducation(s.toString());
+                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.gender))) {
+                            if (s.toString().equals(mRouter.getActivity().getString(R.string.full_gender_w))) {
+                                infoUser.setGender(0);
+                            } else if (s.toString().equals(mRouter.getActivity().getString(R.string.full_gender_m))) {
+                                infoUser.setGender(1);
+                            } else if (s.toString().equals(mRouter.getActivity().getString(R.string.full_gender_not_defined))) {
+                                infoUser.setGender(2);
+                            } else {
+                                infoUser.setGender(-2);
+                            }
+                        }
+                    }
+                }
+            });
             if (mUser.getNumber() != null && !mUser.getNumber().equals("null")) {
                 title.setText(mUser.getNumber());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_phone);
+                textInputLayout.setStartIconContentDescription(R.string.hint_number);
                 mUser.setNumber("null");
             } else if (mUser.getNumber() == null) {
                 title.setHint(R.string.hint_number);
                 textInputLayout.setStartIconDrawable(R.drawable.ic_phone);
+                textInputLayout.setStartIconContentDescription(R.string.hint_number);
                 mUser.setNumber("null");
             } else if (mUser.getBirthday() != null && !mUser.getBirthday().equals("null")) {
                 String userBirthday = mUser.getBirthday();
@@ -224,6 +269,7 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     e.printStackTrace();
                 }
                 textInputLayout.setStartIconDrawable(R.drawable.ic_cake);
+                textInputLayout.setStartIconContentDescription(R.string.birthday);
                 mUser.setBirthday("null");
                 title.setInputType(InputType.TYPE_NULL);
                 title.setOnFocusChangeListener((v, hasFocus) -> {
@@ -235,6 +281,7 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             } else if (mUser.getBirthday() == null) {
                 title.setHint(R.string.birthday);
                 textInputLayout.setStartIconDrawable(R.drawable.ic_cake);
+                textInputLayout.setStartIconContentDescription(R.string.birthday);
                 mUser.setBirthday("null");
                 title.setInputType(InputType.TYPE_NULL);
                 title.setOnFocusChangeListener((v, hasFocus) -> {
@@ -246,34 +293,42 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             } else if (mUser.getCountry() != null && !mUser.getCountry().equals("null")) {
                 title.setText(mUser.getCountry());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_flag);
+                textInputLayout.setStartIconContentDescription(R.string.country);
                 mUser.setCountry("null");
             } else if (mUser.getCountry() == null) {
                 title.setHint(R.string.country);
                 textInputLayout.setStartIconDrawable(R.drawable.ic_flag);
+                textInputLayout.setStartIconContentDescription(R.string.country);
                 mUser.setCountry("null");
             } else if (mUser.getRepublic() != null && !mUser.getRepublic().equals("null")) {
                 title.setText(mUser.getRepublic());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_republic);
+                textInputLayout.setStartIconContentDescription(R.string.republic);
                 mUser.setRepublic("null");
             } else if (mUser.getRepublic() == null) {
                 title.setHint(R.string.republic);
                 textInputLayout.setStartIconDrawable(R.drawable.ic_republic);
+                textInputLayout.setStartIconContentDescription(R.string.republic);
                 mUser.setRepublic("null");
             } else if (mUser.getCity() != null && !mUser.getCity().equals("null")) {
                 title.setText(mUser.getCity());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_location_city);
+                textInputLayout.setStartIconContentDescription(R.string.city);
                 mUser.setCity("null");
             } else if (mUser.getCity() == null) {
                 title.setHint(R.string.city);
                 textInputLayout.setStartIconDrawable(R.drawable.ic_location_city);
+                textInputLayout.setStartIconContentDescription(R.string.city);
                 mUser.setCity("null");
             } else if (mUser.getEducation() != null && !mUser.getEducation().equals("null")) {
                 title.setText(mUser.getEducation());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_school);
+                textInputLayout.setStartIconContentDescription(R.string.education);
                 mUser.setEducation("null");
             } else if (mUser.getEducation() == null) {
                 title.setHint(R.string.education);
                 textInputLayout.setStartIconDrawable(R.drawable.ic_school);
+                textInputLayout.setStartIconContentDescription(R.string.education);
                 mUser.setEducation("null");
             } else if (mUser.getGender() != null && mUser.getGender() != -1) {
                 textInputLayout.setVisibility(View.GONE);
@@ -292,6 +347,7 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     filledExposedDropdown.setText(R.string.full_gender_not_defined);
                 }
                 textInputLayout2.setStartIconDrawable(R.drawable.ic_gender);
+                textInputLayout.setStartIconContentDescription(R.string.gender);
                 mUser.setGender(-1);
             } else if (mUser.getGender() == null) {
                 textInputLayout.setVisibility(View.GONE);
@@ -305,6 +361,7 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 filledExposedDropdown.setAdapter(adapter);
                 filledExposedDropdown.setHint(R.string.gender);
                 textInputLayout2.setStartIconDrawable(R.drawable.ic_gender);
+                textInputLayout.setStartIconContentDescription(R.string.gender);
                 mUser.setGender(-1);
             }
         }
