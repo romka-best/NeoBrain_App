@@ -118,7 +118,6 @@
         <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
     </string-array>
     <string name="add">Өҫтәп</string>
-    <string name="covid">Covid-19</string>
     <string name="inRussia">В России</string>
     <string name="inOtherCountries">Во всем мире</string>
     <string name="new_admitted">Подтверждено новых</string>
@@ -133,4 +132,23 @@
     <string name="updated">Обновлено: </string>
     <string name="recoveredPerOneMillion">Излеченных на миллион</string>
     <string name="county_name">Страна/регион</string>
+    <string name="full_gender_w">Ҡатын-ҡыҙ</string>
+    <string name="full_gender_m">Ир-ат</string>
+    <string name="full_gender_not_defined">Билдәләнгән</string>
+    <string name="save">Һаҡлау</string>
+    <string name="save_successful">Уңышлы мәғлүмәт һаҡлау</string>
+    <string name="problems_with_server">Сервер менән проблема. Беҙ уларҙы хәл итә инде.</string>
+    <string name="emoji_rule">Өс пост максимум ҡағыҙ менән баһаларға мөмкин.</string>
+    <string name="not_found">Таба алмай</string>
+    <string name="empty_search">Ҡырҙан эҙләп башланы һүҙен индерергә кәрәк.</string>
+    <string name="country">Илдә</string>
+    <string name="republic">Республикаһы (Өлкәһе)</string>
+    <string name="city">Ҡала</string>
+    <string name="education">Белем</string>
+    <string name="birthday">Тыуған көнө</string>
+    <string name="gender">Пол</string>
+    <string name="setting_soon">Бында бер аҙ көй</string>
+    <string name="empty_profile_info">Файҙаланыусыларына үҙе тураһында тағы ла мәғлүмәт тултырыу</string>
+    <string name="not_correct_gender">Бындай зат юҡ</string>
+    <string name="be_careful">Һаҡ булырға! Ҡулланыусылар баһалаған һәм яратҡан командаһы NeoTeam</string>
 </resources>

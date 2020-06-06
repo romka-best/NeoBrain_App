@@ -25,10 +25,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.example.neobrain.API.model.Photo;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostModel;
 import com.example.neobrain.API.model.Status;
+import com.example.neobrain.Controllers.ProfileController;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
@@ -379,6 +382,34 @@ public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 updatedPost.setScreamingEmoji(!mPost.getScreamingEmoji());
                 updatedPost.setUserId(authorId);
                 updatePost(mPost, updatedPost, position);
+            });
+
+            avatarImageView.setOnClickListener(v -> {
+                if (isLenta) {
+                    Call<PostModel> postCall = DataManager.getInstance().getPost(mPost.getId());
+                    postCall.enqueue(new Callback<PostModel>() {
+                        @Override
+                        public void onResponse(@NotNull Call<PostModel> call, @NotNull Response<PostModel> response) {
+                            if (response.isSuccessful()) {
+                                assert response.body() != null;
+                                List<PostModel> posts = response.body().getUsers();
+                                for (PostModel curPostModel : posts) {
+                                    Post curPost = curPostModel.getPost();
+                                    if (curPost.getAuthor()) {
+                                        mRouter.pushController(RouterTransaction.with(new ProfileController(curPost.getUserId(), false))
+                                                .popChangeHandler(new FadeChangeHandler())
+                                                .pushChangeHandler(new FadeChangeHandler()));
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<PostModel> call, @NotNull Throwable t) {
+                        }
+                    });
+                }
             });
 
             moreButton.setOnClickListener(v -> {

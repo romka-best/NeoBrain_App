@@ -1,6 +1,5 @@
 # Импортируем нужные библиотеки
 from flask import jsonify
-from flask_login import login_required
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
 
@@ -12,9 +11,6 @@ from .users_resource import abort_if_user_not_found
 
 # Основной ресурс для работы с App
 class AppResource(Resource):
-
-    decorators = [login_required]
-
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
@@ -35,9 +31,6 @@ class AppResource(Resource):
 
 
 class AppDeleteResource(Resource):
-
-    decorators = [login_required]
-
     # Удаляем приложение. user_id - кто удаляет, app_id - какое приложение удаляем
     def delete(self, user_id, app_id):
         # Проверяем, есть ли пользователи
@@ -54,9 +47,6 @@ class AppDeleteResource(Resource):
 
 # Ресурс для добавления в Люди(Подписчики)
 class AppCreateResource(Resource):
-
-    decorators = [login_required]
-
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
         # переданным в теле POST-запроса, осуществляется с помощью парсера аргументов
@@ -96,9 +86,6 @@ class AppCreateResource(Resource):
 
 
 class AppSearchResource(Resource):
-
-    decorators = [login_required]
-
     def get(self, app_name):
         if app_name.find("?") != -1:
             app_name = app_name[:app_name.find("?")].lower().strip()

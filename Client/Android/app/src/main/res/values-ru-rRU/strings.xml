@@ -105,6 +105,22 @@
     <string name="settings">Настройки</string>
     <string name="statement">Требование</string>
     <string name="advice">Совет</string>
+    <string name="save">Сохранить</string>
+    <string name="save_successful">Данные успешно сохранены</string>
+    <string name="problems_with_server">Проблемы с сервером. Мы уже их решаем</string>
+    <string name="emoji_rule">Пост можно выложить с тремя оценками максимум</string>
+    <string name="not_found">Не найдено</string>
+    <string name="empty_search">Начните вводить нужные слова в поле поиска</string>
+    <string name="country">Страна</string>
+    <string name="republic">Республика (Область)</string>
+    <string name="city">Город</string>
+    <string name="education">Образование</string>
+    <string name="birthday">День рождения</string>
+    <string name="gender">Пол</string>
+    <string name="setting_soon">Скоро здесь будут настройки</string>
+    <string name="empty_profile_info">Пользователь ещё не заполнил данные о себе</string>
+    <string name="not_correct_gender">Такого пола не существует</string>
+    <string name="be_careful">Будьте осторожны! Команда NeoTeam любит и ценит пользователей</string>
     <string-array name="advices_list">
         <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
         <item>Помните: контроль над мыслями — ваша главная сила</item>
@@ -118,7 +134,6 @@
         <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
     </string-array>
     <string name="add">Добавить</string>
-    <string name="covid">Covid-19</string>
     <string name="inRussia">В России</string>
     <string name="inOtherCountries">Во всем мире</string>
     <string name="new_admitted">Подтверждено новых</string>
@@ -133,4 +148,7 @@
     <string name="updated">Обновлено: </string>
     <string name="recoveredPerOneMillion">Излеченных на миллион</string>
     <string name="county_name">Страна/регион</string>
+    <string name="full_gender_w">Женский</string>
+    <string name="full_gender_m">Мужской</string>
+    <string name="full_gender_not_defined">Не определён</string>
 </resources>

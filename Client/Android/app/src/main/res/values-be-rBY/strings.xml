@@ -1,2 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="auth">Аўтарызацыя</string>
+    <string name="entry">Увайсці</string>
+    <string name="reg2">Зарэгістравацца</string>
+    <string name="hint_name">Імя</string>
+    <string name="hint_nickname">Никнейм</string>
+    <string name="hint_username">Нікнэйм / Эл. пошта</string>
+    <string name="hint_number">Нумар тэлефона</string>
+    <string name="hint_password">Пароль</string>
+    <string name="hint_password_repeat">Паўтор пароля</string>
+    <string name="reg">Рэгістрацыя</string>
+    <string name="hint_surname">Прозвішча</string>
+    <string name="password_forget">Забыліся пароль?</string>
+    <string name="cancel">Адмена</string>
+    <string name="delete">Выдаліць</string>
+    <string name="delete_question">Выдаліць фатаграфію?</string>
+    <string name="messages">Паведамленне</string>
+    <string name="apps">Прыкладанне</string>
+    <string name="images">Фатаграфія</string>
+    <string name="lenta">Стужка</string>
+    <string name="music">Музыка</string>
+    <string name="navigation">Агляд</string>
+    <string name="people">Людзі</string>
+    <string name="videos">Відэа</string>
+    <string name="achievements">Дасягненьне</string>
+    <string name="empty_posts">Пастоў пакуль няма</string>
+    <string name="empty_screen">Тут пакуль што нічога няма!</string>
+    <string name="btn_retry">Абнавіць</string>
+    <string name="email">Пошта</string>
+    <string name="pass_not_same">Паролі адрозніваюцца!</string>
+    <string name="pass_not_corr">Пароль некарэктны! Пароль павінен змяшчаць у сабе як мінімум адну загалоўную літару, адну ніжняга рэгістра, адну лічбу і складацца мінімум з 8-мі знакаў</string>
+    <string name="not_correct">Некарэктна!</string>
+    <string name="email_not_correct">Такі пошты не існуе!</string>
+    <string name="empty_name">Імя не ўведзена!</string>
+    <string name="empty_surname">Прозвішча не ўведзена!</string>
+    <string name="empty_nickname">Нікнэйм не ўведзены!</string>
+    <string name="undo">Прыбраць</string>
+    <string name="errors_with_connection">Праблемы з Інтэрнэт злучэннем</string>
+    <string name="loading">Ідзе загрузка</string>
+    <string name="new_post">Новы пост</string>
+    <string name="empty_chat">На дадзены момант у вас няма чатаў. Напішыце каму-небудзь</string>
+    <string name="empty_lenta">Стужка пустая. Падпішыцеся на каго-небудзь ці на што-то</string>
+    <string name="empty_apps">Прыкладанняў пакуль няма</string>
+    <string name="your_apps">Вашы</string>
+    <string name="recommended_apps">Рэкамендаваны</string>
+    <string name="edit">Рэдагаваць</string>
+    <string name="subscribers">Падпіска</string>
+    <string name="followers">Падпісчык</string>
+    <string name="detailed_information">Падрабязная інфармацыя</string>
+    <string name="gender_w">Ж</string>
+    <string name="gender_m">М</string>
+    <string name="empty_people">Падпісак няма</string>
+    <string name="empty_photos">Тут яшчэ няма фатаграфій</string>
+    <string name="empty_videos">Тут яшчэ няма відэа</string>
+    <string name="empty_music">Тут яшчэ няма музыкі</string>
+    <string name="empty_achievements">Раздзел дасягненняў у распрацоўцы</string>
+    <string name="empty_navigation">Раздзел \"агляд\" у распрацоўцы</string>
+    <string name="empty_messages">Пачніце чат першым</string>
+    <string name="all">Усе</string>
+    <string name="groups">Групы</string>
+    <string name="chats">Чат</string>
+    <string name="edit_information">Рэдагаваць інфармацыю</string>
+    <string name="less_than_one_minute">Менш 1 хвіліны таму</string>
+    <string name="n_minutes_before">хвілін таму</string>
+    <string name="n_hours_before">гадзін таму</string>
+    <string name="n_days_before">дзён таму</string>
+    <string name="n_years_before">гады таму</string>
+    <string name="m_years_before">5 гадоў таму</string>
+    <string name="week_before">Тыдзень таму</string>
+    <string name="Mn">Пн</string>
+    <string name="Tu">Аў</string>
+    <string name="Wd">Ср</string>
+    <string name="Th">Чц</string>
+    <string name="Fr">Пт</string>
+    <string name="Su">Сб</string>
+    <string name="St">Нд</string>
+    <string name="error_in_date">Нешта не так!</string>
+    <string name="photo">Фатаграфія</string>
+    <string name="load_device">Загрузіць з прылады</string>
+    <string name="do_photo">Зрабіць здымак</string>
+    <string name="open">Адкрыць</string>
+    <string name="close">Зачыніць</string>
+    <string name="write_message">Напісаць паведамленне</string>
+    <string name="in_development">Дадзены раздзел у распрацоўцы</string>
+    <string name="today">Сёння</string>
+    <string name="yesterday">Учора</string>
+    <string name="online">Анлайн</string>
+    <string name="offline">Афлайн</string>
+    <string name="error">Памылка</string>
+    <string name="delete_post">Выдаліць пост?</string>
+    <string name="empty">Пуста</string>
+    <string name="error_with_password">Пароль некарэктны</string>
+    <string name="empty_field">Поле не можа быць пустым</string>
+    <string name="invalid_password_or_username">Няправільны лагін ці пароль</string>
+    <string name="invalid_password">Няправільны пароль</string>
+    <string name="nickname_already_exists">Нікнэйм ўжо існуе</string>
+    <string name="email_already_exists">Емайл ўжо заняты</string>
+    <string name="phone_already_exists">Тэлефон ужо заняты</string>
+    <string name="check_code">Калі ласка, увядзіце код, які прыйшоў вам на пошту</string>
+    <string name="code">Шасцізначны код</string>
+    <string name="accept">Пацвердзіць</string>
+    <string name="invalid_code">Код Няправільны</string>
+    <string name="exit">Выхад</string>
+    <string name="settings">Наладжваньне</string>
+    <string name="statement">Патрабаванне</string>
+    <string name="advice">Парада</string>
+    <string name="save">Захаваць</string>
+    <string name="save_successful">Данные успешно сохранены</string>
+    <string name="problems_with_server">Дадзеныя паспяхова захаваны</string>
+    <string name="emoji_rule">Пост можна выкласці з трыма ацэнкамі максімум</string>
+    <string name="not_found">Не знойдзена</string>
+    <string name="empty_search">Пачніце ўводзіць патрэбныя словы ў поле пошуку</string>
+    <string name="country">Краіна</string>
+    <string name="republic">Рэспубліка (Вобласць)</string>
+    <string name="city">Горад</string>
+    <string name="education">Адукацыя</string>
+    <string name="birthday">Дзень нараджэння</string>
+    <string name="gender">Пол</string>
+    <string name="setting_soon">Хутка тут будуць Налады</string>
+    <string name="empty_profile_info">Карыстальнік яшчэ не запоўніў дадзеныя пра сябе</string>
+    <string name="not_correct_gender">Такога падлогі не існуе</string>
+    <string name="be_careful">Будзьце асцярожныя! Каманда NeoTeam любіць і шануе карыстальнікаў</string>
+    <string-array name="advices_list">
+        <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
+        <item>Помните: контроль над мыслями — ваша главная сила</item>
+        <item>Осознавайте личный опыт в глобальной перспективе</item>
+        <item>Сохраняйте ясность разума с помощью медитативных практик</item>
+        <item>Пересматривайте свои основные ценности каждую неделю</item>
+        <item>Не ищите коротких путей</item>
+        <item>Исследуйте, размышляйте, экспериментируйте</item>
+        <item>Счастье - как поцелуй: чтобы насладиться им, его нужно с кем-то разделить.</item>
+        <item>Цените людей, которые приходят в те моменты, когда плохо не им, а вам.</item>
+        <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
+    </string-array>
+    <string name="add">Дадаць</string>
+    <string name="inRussia">У Расіі</string>
+    <string name="inOtherCountries">Ва ўсім свеце</string>
+    <string name="new_admitted">Пацверджана новых</string>
+    <string name="all_admitted">Усяго пацверджана</string>
+    <string name="new_deaths">Новых смерцяў</string>
+    <string name="all_deaths">Усяго смерцяў</string>
+    <string name="tests_count">Праведзена тэстаў</string>
+    <string name="all_recovered">Усяго выздаравелых</string>
+    <string name="deathsPerOneMillion">Смерцяў на мільён</string>
+    <string name="casesPerOneMillion">Выпадкаў заражэння на мільён</string>
+    <string name="activePerOneMillion">Пераносяць на мільён</string>
+    <string name="updated">"Абноўлены: "</string>
+    <string name="recoveredPerOneMillion">Вылечаных на мільён</string>
+    <string name="county_name">Краіна / рэгіён</string>
+    <string name="full_gender_w">Жаночы</string>
+    <string name="full_gender_m">Мужчынскі</string>
+    <string name="full_gender_not_defined">Не вызначаны</string>
+</resources>

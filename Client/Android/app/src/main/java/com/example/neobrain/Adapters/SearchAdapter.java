@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,7 +56,7 @@ import retrofit2.Response;
 
 import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
-public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
     private static final String TAG = "SearchAdapter";
     private static final short VIEW_TYPE_EMPTY = 0;
     private static final short VIEW_TYPE_NORMAL = 1;
@@ -70,6 +72,8 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<User> mPersonList;
     //    private List<Group> mGroupsList;
     private List<Chat> mChatList;
+    private List<Chat> mFilteredList;
+    private ItemFilter mFilter = new ItemFilter();
     private List<Music> mMusicList;
     private List<App> mAppsList;
 
@@ -87,6 +91,14 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.found = found;
     }
 
+    public boolean isFound() {
+        return found;
+    }
+
+    public void setFound(boolean found) {
+        this.found = found;
+    }
+
     public List<User> getPersonList() {
         return mPersonList;
     }
@@ -101,6 +113,7 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public void setChatList(List<Chat> mChatList) {
         this.mChatList = mChatList;
+        this.mFilteredList = mChatList;
     }
 
     public List<Object> getAllList() {
@@ -406,6 +419,9 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             itemView.setOnClickListener(v -> {
                 chat = mChatList.get(this.getCurrentPosition());
+                InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(mRouter.getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(itemView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(mRouter.getActivity()).findViewById(R.id.bottom_navigation);
                 bottomNavigationView.setVisibility(View.GONE);
                 mRouter.pushController(RouterTransaction.with(new MessagesController(chat))
@@ -421,6 +437,49 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             lastMessTextView.setText("");
             timeTextView.setText("");
         }
+    }
+
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<Chat> list = mChatList;
+
+            int count = list.size();
+            final ArrayList<Chat> newList = new ArrayList<>(count);
+
+            Chat filterableChat;
+
+            for (int i = 0; i < count; i++) {
+                filterableChat = list.get(i);
+                if (filterableChat.getName().toLowerCase().contains(filterString)) {
+                    newList.add(filterableChat);
+                }
+            }
+
+            results.values = newList;
+            results.count = newList.size();
+
+            mChatList = newList;
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mFilteredList = (ArrayList<Chat>) results.values;
+            notifyDataSetChanged();
+        }
+
     }
 
     public class MusicViewHolder extends BaseViewHolder {

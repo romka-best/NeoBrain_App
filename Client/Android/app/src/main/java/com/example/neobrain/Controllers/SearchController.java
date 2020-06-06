@@ -1,6 +1,8 @@
 package com.example.neobrain.Controllers;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +19,16 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import com.example.neobrain.API.model.App;
 import com.example.neobrain.API.model.Apps;
+import com.example.neobrain.API.model.Chat;
+import com.example.neobrain.API.model.ChatUsers;
+import com.example.neobrain.API.model.Chats;
 import com.example.neobrain.API.model.User;
+import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.API.model.Users;
 import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +52,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
+
 @SuppressLint("ValidController")
 public class SearchController extends Controller {
     private String TAG = "SearchController";
@@ -58,6 +67,9 @@ public class SearchController extends Controller {
 
     private short currentItem;
     private final RouterPagerAdapter pagerAdapter;
+    private SharedPreferences sp;
+
+    private ArrayList<Chat> mChats;
 
     public SearchController() {
         currentItem = 0;
@@ -177,6 +189,8 @@ public class SearchController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.search_controller, container, false);
         ButterKnife.bind(this, view);
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
 
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(currentItem);
@@ -254,7 +268,87 @@ public class SearchController extends Controller {
                     case 2:
                         break;
                     case 3:
-                        List<String> chatStrings = Arrays.asList(s);
+//                        if (mChats != null) {
+//                            String chatString = String.join(" ", s);
+//                            Objects.requireNonNull(pagerAdapter.getRouter(3)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
+//                            break;
+//                        }
+                        Integer userIdSP = sp.getInt("userId", -1);
+                        mChats = new ArrayList<>();
+                        Call<Chats> chatsCall = DataManager.getInstance().getChats(userIdSP);
+                        chatsCall.enqueue(new Callback<Chats>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Chats> call, @NotNull Response<Chats> response) {
+                                if (response.isSuccessful()) {
+                                    assert response.body() != null;
+                                    final List<Chat> chats = response.body().getChats();
+                                    if (chats.size() == 0) {
+                                        String chatString = String.join(" ", s);
+                                        Objects.requireNonNull(pagerAdapter.getRouter(3)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
+                                        return;
+                                    }
+                                    for (Chat chat : chats) {
+                                        if (chat.getTypeOfChat() == 0) {
+                                            Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
+                                            chatUsersCall.enqueue(new Callback<ChatUsers>() {
+                                                @Override
+                                                public void onResponse(@NotNull Call<ChatUsers> call, @NotNull Response<ChatUsers> response) {
+                                                    if (response.isSuccessful()) {
+                                                        assert response.body() != null;
+                                                        List<Integer> users = response.body().getUsers();
+                                                        for (Integer userId : users) {
+                                                            if (userId.equals(userIdSP)) {
+                                                                continue;
+                                                            }
+                                                            Call<UserModel> userCall = DataManager.getInstance().getUser(userId);
+                                                            userCall.enqueue(new Callback<UserModel>() {
+                                                                @Override
+                                                                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                                                                    if (response.isSuccessful()) {
+                                                                        assert response.body() != null;
+                                                                        User user = response.body().getUser();
+                                                                        String curNameChat = user.getName() + " " + user.getSurname();
+                                                                        Integer curPhotoId = user.getPhotoId();
+                                                                        for (Chat queueChat : mChats) {
+                                                                            if (queueChat.getId().equals(chat.getId())) {
+                                                                                return;
+                                                                            }
+                                                                        }
+                                                                        mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), curNameChat, curPhotoId));
+                                                                        if (chats.size() == mChats.size()) {
+                                                                            String chatString = String.join(" ", s);
+                                                                            Objects.requireNonNull(pagerAdapter.getRouter(3)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                                                                    Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                }
+
+
+                                                @Override
+                                                public void onFailure(@NotNull Call<ChatUsers> call, @NotNull Throwable t) {
+                                                    Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
+                                                }
+                                            });
+                                        } else {
+                                            mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), chat.getName(), chat.getPhotoId()));
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Chats> call, @NotNull Throwable t) {
+                                Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
+                            }
+                        });
                         break;
                     case 4:
                         break;

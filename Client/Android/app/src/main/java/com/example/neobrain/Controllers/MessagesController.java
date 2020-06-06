@@ -100,7 +100,9 @@ public class MessagesController extends Controller {
     private int userId = 0;
     private SharedPreferences sp;
 
-    private Boolean space = false;
+    private boolean space = false;
+    private boolean isLoaded = false;
+    private int curPosition = 0;
     private Disposable disposable;
 
     public MessagesController() {
@@ -128,7 +130,7 @@ public class MessagesController extends Controller {
                     imm.hideSoftInputFromWindow(backButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
                         try {
-                            if (routerTransaction.controller() == getRouter().getBackstack().get(2).controller()) {
+                            if (routerTransaction.controller() == getRouter().getBackstack().get(3).controller()) {
                                 bottomNavigationView.setVisibility(View.GONE);
                                 getRouter().popCurrentController();
                                 return;
@@ -342,19 +344,19 @@ public class MessagesController extends Controller {
         ArrayList<Message> mMessages = new ArrayList<>();
         for (int i = 0; i < messages.size(); i++) {
             Message message = messages.get(i);
-            TimeFormatter timeFormater = new TimeFormatter(message.getCreatedDate());
+            TimeFormatter timeFormatter = new TimeFormatter(message.getCreatedDate());
             if (message.getAuthorId().equals(-1)) {
                 continue;
             }
             if (i == 0) {
                 String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
-                mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
+                mMessages.add(new Message(helperText, timeFormatter.onFewEarlier(), -1));
             } else {
-                if (!timeFormater.compareDatesDays(messages.get(i - 1).getCreatedDate())) {
+                if (!timeFormatter.compareDatesDays(messages.get(i - 1).getCreatedDate())) {
                     String helperText = new TimeFormatter(message.getCreatedDate()).timeForMessageSeparator(getApplicationContext());
-                    mMessages.add(new Message(helperText, timeFormater.onFewEarlier(), -1));
+                    mMessages.add(new Message(helperText, timeFormatter.onFewEarlier(), -1));
                 }
-                if (timeFormater.compareDates(messages.get(i - 1).getCreatedDate()) && !message.getAuthorId().equals(-1)) {
+                if (timeFormatter.compareDates(messages.get(i - 1).getCreatedDate()) && !message.getAuthorId().equals(-1)) {
                     mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId(), false));
                     continue;
                 }
@@ -368,8 +370,11 @@ public class MessagesController extends Controller {
             messagesRecycler.addItemDecoration(new SpacesItemDecoration(20));
             space = true;
         }
-        if (mMessages.size() > 0) {
+        if (mMessages.size() > 0 && !isLoaded) {
             messagesRecycler.scrollToPosition(mMessages.size() - 1);
+            isLoaded = true;
+        } else if (isLoaded) {
+            messagesRecycler.scrollToPosition(curPosition);
         }
     }
 
@@ -428,7 +433,7 @@ public class MessagesController extends Controller {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
             try {
-                if (routerTransaction.controller() == getRouter().getBackstack().get(2).controller()) {
+                if (routerTransaction.controller() == getRouter().getBackstack().get(3).controller()) {
                     bottomNavigationView.setVisibility(View.GONE);
                     return super.handleBack();
                 }

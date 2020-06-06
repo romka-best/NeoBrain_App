@@ -1,7 +1,6 @@
 package com.example.neobrain.Controllers;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -73,7 +72,7 @@ public class HomeController extends Controller {
                 childRouter.setRoot(RouterTransaction.with(new LentaController()));
                 return true;
             case R.id.action_navigation:
-                childRouter.setRoot(RouterTransaction.with(new NavigationController()));
+                childRouter.setRoot(RouterTransaction.with(new CoronaController()));
                 return true;
             case R.id.action_messages:
                 childRouter.setRoot(RouterTransaction.with(new ChatController()));

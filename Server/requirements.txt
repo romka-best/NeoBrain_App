@@ -1,6 +1,7 @@
 wtforms
 sqlalchemy
 werkzeug
+requests
 flask
 flask-login
 flask-mail

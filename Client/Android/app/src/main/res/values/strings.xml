@@ -51,10 +51,10 @@
     <string name="detailed_information">Подробная информация</string>
     <string name="edit_information">Редактировать инвормацию</string>
     <string name="gender_w">Ж</string>
-    <string name="full_gender_w" translatable="false">Женский</string>
+    <string name="full_gender_w">Женский</string>
     <string name="gender_m">М</string>
-    <string name="full_gender_m" translatable="false">Мужской</string>
-    <string name="full_gender_not_defined" translatable="false">Не определён</string>
+    <string name="full_gender_m">Мужской</string>
+    <string name="full_gender_not_defined">Не определён</string>
     <string name="empty_people">Подписок нет</string>
     <string name="empty_photos">Здесь ещё нет фотографий</string>
     <string name="empty_videos">Здесь ещё нет видео</string>
@@ -109,22 +109,22 @@
     <string name="statement">Требование</string>
     <string name="advice">Совет</string>
     <string name="add">Добавить</string>
-    <string name="save" translatable="false">Сохранить</string>
-    <string name="save_successful" translatable="false">Данные успешно сохранены</string>
-    <string name="problems_with_server" translatable="false">Проблемы с сервером. Мы уже их решаем</string>
-    <string name="emoji_rule" translatable="false">Пост можно выложить с тремя оценками максимум</string>
-    <string name="not_found" translatable="false">Не найдено</string>
-    <string name="empty_search" translatable="false">Начните вводить нужные слова в поле поиска</string>
-    <string name="country" translatable="false">Страна</string>
-    <string name="republic" translatable="false">Республика (Область)</string>
-    <string name="city" translatable="false">Город</string>
-    <string name="education" translatable="false">Образование</string>
-    <string name="birthday" translatable="false">День рождения</string>
-    <string name="gender" translatable="false">Пол</string>
-    <string name="setting_soon" translatable="false">Скоро здесь будут настройки</string>
-    <string name="empty_profile_info" translatable="false">Пользователь ещё не заполнил данные о себе</string>
-    <string name="not_correct_gender" translatable="false">Такого пола не существует</string>
-    <string name="be_careful" translatable="false">Будьте осторожны!\nКоманда NeoTeam любит и ценит пользователей</string>
+    <string name="save">Сохранить</string>
+    <string name="save_successful">Данные успешно сохранены</string>
+    <string name="problems_with_server">Проблемы с сервером. Мы уже их решаем</string>
+    <string name="emoji_rule">Пост можно выложить с тремя оценками максимум</string>
+    <string name="not_found">Не найдено</string>
+    <string name="empty_search">Начните вводить нужные слова в поле поиска</string>
+    <string name="country">Страна</string>
+    <string name="republic">Республика (Область)</string>
+    <string name="city">Город</string>
+    <string name="education">Образование</string>
+    <string name="birthday">День рождения</string>
+    <string name="gender">Пол</string>
+    <string name="setting_soon">Скоро здесь будут настройки</string>
+    <string name="empty_profile_info">Пользователь ещё не заполнил данные о себе</string>
+    <string name="not_correct_gender">Такого пола не существует</string>
+    <string name="be_careful">Будьте осторожны! Команда NeoTeam любит и ценит пользователей</string>
     <string-array name="advices_list">
         <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
         <item>Помните: контроль над мыслями — ваша главная сила</item>
@@ -137,7 +137,7 @@
         <item>Цените людей, которые приходят в те моменты, когда плохо не им, а вам.</item>
         <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
     </string-array>
-    <string name="covid">Covid-19</string>
+    <string name="covid" translatable="false">Covid-19</string>
     <string name="inRussia">В России</string>
     <string name="inOtherCountries">Во всем мире</string>
     <string name="new_admitted">Подтверждено новых</string>

@@ -118,7 +118,6 @@
         <item>There is no point in trying to help people who do not help themselves. You can not force a person to go up the stairs if they do not want to go up themselves.</item>
     </string-array>
     <string name="add">Add</string>
-    <string name="covid">Covid-19</string>
     <string name="inRussia">In Russia</string>
     <string name="inOtherCountries">All around the world</string>
     <string name="new_admitted">New cases</string>
@@ -133,4 +132,23 @@
     <string name="updated">Updated: </string>
     <string name="recoveredPerOneMillion">Recovered per one million</string>
     <string name="county_name">Country/region</string>
+    <string name="be_careful">Будьте осторожны! Команда NeoTeam любит и ценит пользователей</string>
+    <string name="not_correct_gender">There is no such gender</string>
+    <string name="empty_profile_info">The user has not yet filled in their personal data</string>
+    <string name="setting_soon">Soon there will be settings here</string>
+    <string name="gender">Gender</string>
+    <string name="birthday">Birthday</string>
+    <string name="education">Education</string>
+    <string name="city">City</string>
+    <string name="republic">Republic (Region)</string>
+    <string name="country">Country</string>
+    <string name="empty_search">Start entering the desired words in the search field</string>
+    <string name="not_found">Not found</string>
+    <string name="emoji_rule">The post can be spread from the three estimated high</string>
+    <string name="problems_with_server">Server problem. We are already solving them</string>
+    <string name="save_successful">Data was saved successfully</string>
+    <string name="save">Save</string>
+    <string name="full_gender_not_defined">Not defined</string>
+    <string name="full_gender_m">Male</string>
+    <string name="full_gender_w">Female</string>
 </resources>

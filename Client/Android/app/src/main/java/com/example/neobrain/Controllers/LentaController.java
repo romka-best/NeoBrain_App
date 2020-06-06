@@ -84,6 +84,7 @@ public class LentaController extends Controller {
                 R.color.colorPrimaryDark);
 
         getPosts();
+        getAdvice();
         progressBar.setVisibility(View.VISIBLE);
         return view;
     }
@@ -162,12 +163,14 @@ public class LentaController extends Controller {
                 }
             }
         });
+    }
 
+    private void getAdvice() {
         Date nowDate = new Date();
-        Calendar calendar_now = Calendar.getInstance();
-        calendar_now.setTime(nowDate);
-        calendar_now.add(Calendar.HOUR_OF_DAY, 3);
-        nowDate = calendar_now.getTime();
+        Calendar calendarNow = Calendar.getInstance();
+        calendarNow.setTime(nowDate);
+        calendarNow.add(Calendar.HOUR_OF_DAY, 3);
+        nowDate = calendarNow.getTime();
 
         if (sp.getString("lastEntrance", "").equals("")) {
             String[] myResArray = Objects.requireNonNull(getResources()).getStringArray(R.array.advices_list);
@@ -176,18 +179,19 @@ public class LentaController extends Controller {
                     .setTitle(R.string.advice)
                     .setMessage(advice)
                     .show();
-            sp.edit().putString("lastEntrance", nowDate.toString()).apply();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date(nowDate.getTime());
+            sp.edit().putString("lastEntrance", formatHours.format(date)).apply();
         } else {
-            Calendar calendar_then = Calendar.getInstance();
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar calendarThen = Calendar.getInstance();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                calendar_then.setTime(Objects.requireNonNull(FormatHours.parse(sp.getString("lastEntrance", ""))));
+                calendarThen.setTime(Objects.requireNonNull(formatHours.parse(sp.getString("lastEntrance", ""))));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            ;
-            calendar_then.add(Calendar.HOUR_OF_DAY, 3);
-            if (calendar_now.get(Calendar.DATE) != calendar_then.get(Calendar.DATE)) {
+            calendarThen.add(Calendar.HOUR_OF_DAY, 3);
+            if (calendarNow.get(Calendar.DATE) != calendarThen.get(Calendar.DATE)) {
                 sp.edit().putString("lastEntrance", nowDate.toString()).apply();
                 String[] myResArray = Objects.requireNonNull(getResources()).getStringArray(R.array.advices_list);
                 String advice = myResArray[rnd(myResArray.length - 1)];
@@ -199,7 +203,7 @@ public class LentaController extends Controller {
         }
     }
 
-    public static int rnd(int max) {
+    private static int rnd(int max) {
         return (int) (Math.random() * ++max);
     }
 }

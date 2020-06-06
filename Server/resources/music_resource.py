@@ -2,7 +2,6 @@
 from base64 import encodebytes
 
 from flask import jsonify
-from flask_login import login_required
 from flask_restful import Resource, abort
 
 from data import db_session
@@ -22,9 +21,6 @@ def abort_if_music_not_found(music_id):
 
 # Основной ресурс для работы с Photo
 class MusicResource(Resource):
-
-    decorators = [login_required]
-
     def get(self, music_id):
         # Проверяем, есть ли фото
         abort_if_music_not_found(music_id)
@@ -52,9 +48,6 @@ class MusicResource(Resource):
 
 
 class MusicListResource(Resource):
-
-    decorators = [login_required]
-
     def get(self, user_id):
         # Проверяем, есть ли user
         abort_if_user_not_found(user_id)

@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 // Конструктор для работы с Retrofit
 public class ServiceConstructor {
+    private static final String BASE_URL = "https://neobrain.herokuapp.com/api/";
 
     public static <T> T CreateService(Class<T> serviceClass) {
 
@@ -31,7 +32,7 @@ public class ServiceConstructor {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIConfig.BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))

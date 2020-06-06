@@ -46,7 +46,6 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private User user;
     private Integer userId;
     private List<Message> mMessageList;
-    private Callback mCallback;
     private SharedPreferences sp;
     private Context context;
 
@@ -130,7 +129,6 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public void setCallback(Callback callback) {
-        mCallback = callback;
     }
 
     public interface Callback {

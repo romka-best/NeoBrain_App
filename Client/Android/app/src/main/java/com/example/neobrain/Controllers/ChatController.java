@@ -51,7 +51,7 @@ import static com.example.neobrain.MainActivity.MY_SETTINGS;
 @SuppressLint("ValidController")
 public class ChatController extends Controller {
     @BindView(R.id.ChatsRecycler)
-    public RecyclerView messagesRecycler;
+    public RecyclerView chatRecycler;
     private ChatAdapter chatAdapter;
     private FloatingActionButton floatingActionButton;
     private ShimmerFrameLayout shimmerViewContainer;
@@ -115,8 +115,8 @@ public class ChatController extends Controller {
 
     private void getChats() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        messagesRecycler.setLayoutManager(mLayoutManager);
-        messagesRecycler.setItemAnimator(new DefaultItemAnimator());
+        chatRecycler.setLayoutManager(mLayoutManager);
+        chatRecycler.setItemAnimator(new DefaultItemAnimator());
         Integer userIdSP = sp.getInt("userId", -1);
         Call<Chats> call = DataManager.getInstance().getChats(userIdSP);
         call.enqueue(new Callback<Chats>() {
@@ -196,6 +196,8 @@ public class ChatController extends Controller {
 
             @Override
             public void onFailure(@NotNull Call<Chats> call, @NotNull Throwable t) {
+                assert getView() != null;
+                Snackbar.make(getView(), R.string.errors_with_connection, Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -205,7 +207,7 @@ public class ChatController extends Controller {
             Collections.sort(mChats, Chat.COMPARE_BY_TIME);
         }
         chatAdapter = new ChatAdapter(mChats, getRouter());
-        messagesRecycler.setAdapter(chatAdapter);
+        chatRecycler.setAdapter(chatAdapter);
         shimmerViewContainer.stopShimmer();
         shimmerViewContainer.setVisibility(View.GONE);
     }

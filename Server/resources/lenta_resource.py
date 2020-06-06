@@ -1,6 +1,5 @@
 # Импортируем нужные библиотеки
 from flask import jsonify
-from flask_login import login_required
 from flask_restful import Resource
 
 from data import db_session
@@ -12,9 +11,6 @@ from resources.users_resource import abort_if_user_not_found
 
 
 class LentaResource(Resource):
-
-    decorators = [login_required]
-
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)

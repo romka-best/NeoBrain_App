@@ -1,5 +1,7 @@
 package com.example.neobrain.Controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,40 +14,52 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.example.neobrain.API.model.Chat;
-import com.example.neobrain.API.model.User;
 import com.example.neobrain.Adapters.SearchAdapter;
 import com.example.neobrain.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.neobrain.MainActivity.MY_SETTINGS;
 
 public class SearchChatsController extends Controller {
     @BindView(R.id.chatRecycler)
     public RecyclerView chatRecycler;
     private SearchAdapter chatAdapter;
     private ArrayList<Chat> mChats = new ArrayList<>();
+    private String curNameChat;
+    private Integer curPhotoId;
 
+    private SharedPreferences sp;
     private Router mainRouter;
     private boolean found;
+    private String mChatString;
 
     public SearchChatsController() {
         found = true;
+        mChatString = "";
     }
 
-    public SearchChatsController(ArrayList<Chat> mChats, Router router, boolean found) {
+    public SearchChatsController(ArrayList<Chat> mChats, String mChatString, Router router) {
         this.mChats = mChats;
+        this.mChatString = mChatString;
         this.mainRouter = router;
-        this.found = found;
+        found = true;
     }
+
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.search_chats_controller, container, false);
         ButterKnife.bind(this, view);
 
-//        getChats();
+        sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
+
+        getChats();
         return view;
     }
 
@@ -54,9 +68,12 @@ public class SearchChatsController extends Controller {
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         chatRecycler.setLayoutManager(mLayoutManager);
         chatRecycler.setItemAnimator(new DefaultItemAnimator());
+        if (!mChatString.equals("")) {
+            found = false;
+        }
         chatAdapter = new SearchAdapter(mainRouter, found);
         chatAdapter.setChatList(mChats);
-        chatAdapter.notifyDataSetChanged();
+        chatAdapter.getFilter().filter(mChatString);
         chatRecycler.setAdapter(chatAdapter);
     }
 }

@@ -117,7 +117,6 @@
         <item>Цінуйте людей, які приходять в ті моменти, коли погано не їм, а вам</item>
         <item>Немає ніякого сенсу намагатися допомогти людям, які не допомагають собі самі. Людину неможливо змусити підніматися по сходах, якщо він сам не бажає підніматися</item>
     </string-array>
-    <string name="covid">Covid-19</string>
     <string name="inRussia">В России</string>
     <string name="inOtherCountries">Во всем мире</string>
     <string name="new_admitted">Подтверждено новых</string>
@@ -132,4 +131,23 @@
     <string name="updated">Обновлено: </string>
     <string name="recoveredPerOneMillion">Излеченных на миллион</string>
     <string name="county_name">Страна/регион</string>
+    <string name="full_gender_m">Чоловічий</string>
+    <string name="full_gender_w">Жіночий</string>
+    <string name="full_gender_not_defined">Не визначено</string>
+    <string name="save">Зберігши</string>
+    <string name="save_successful">Дані успішно збережені</string>
+    <string name="problems_with_server">Проблеми з сервером. Ми вже їх вирішуємо</string>
+    <string name="emoji_rule">Пост можна викласти з трьома оцінками максимум</string>
+    <string name="not_found">Не знайдено</string>
+    <string name="empty_search">Почніть вводити потрібні слова в поле пошуку</string>
+    <string name="country">Країна</string>
+    <string name="republic">Республіка (Область)</string>
+    <string name="city">Місто</string>
+    <string name="education">Освіта</string>
+    <string name="birthday">Уродини</string>
+    <string name="gender">Стать</string>
+    <string name="setting_soon">Скоро тут будуть Налаштування</string>
+    <string name="empty_profile_info">Користувач ще не заповнив дані про себе</string>
+    <string name="not_correct_gender">Такої статі не існує</string>
+    <string name="be_careful">Будьте обережні! Команда NeoTeam любить і цінує користувачів</string>
 </resources>
