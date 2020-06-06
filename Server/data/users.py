@@ -164,14 +164,6 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
-    # Активный ли пользователь
-    def is_active(self):
-        return bool(self.status)
-
-    # Анонимус ли пользователь (Всегда False, потому что он зарегестрирован)
-    def is_anonymous(self):
-        return False
-
     # Возвращаем id пользователя
     def get_id(self):
         return self.id

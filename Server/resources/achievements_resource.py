@@ -25,7 +25,6 @@ class AchievementUserResource(Resource):
         # Создаём сессию в БД и получаем достижения пользователя
         session = db_session.create_session()
         association = session.query(AchievementAssociation).filter(AchievementAssociation.user_id == user_id).all()
-        print(association)
         if not association:
             for achievement in session.query(Achievement).all():
                 cur_association = AchievementAssociation(

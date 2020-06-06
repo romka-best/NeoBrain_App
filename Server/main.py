@@ -21,13 +21,13 @@ app = Flask(__name__)
 # Добавляем к приложению config файлы
 generate_config(app)
 
-# # Запись логов
-# logger = logging.getLogger("NeoBrain")
-# logger.setLevel(logging.DEBUG)
-# logging.basicConfig(
-#     filename='neo.log',
-#     format='%(asctime)s %(levelname)s %(name)s %(message)s'
-# )
+# Запись логов
+logger = logging.getLogger("NeoBrain")
+logger.setLevel(logging.DEBUG)
+logging.basicConfig(
+    filename='neo.log',
+    format='%(asctime)s %(levelname)s %(name)s %(message)s'
+)
 
 # Добавляем к приложению API
 generate_routes(app)
@@ -41,13 +41,14 @@ mail = Mail(app)
 
 # Добавляем постоянную задачу
 scheduler = BackgroundScheduler()
+logger.debug("Background task added")
 job = scheduler.add_job(scrap_countries, 'interval', minutes=30)
 scheduler.start()
 
 
 # Главный метод для работы с сервером
 def main():
-    # logger.debug("START")
+    logger.debug("START")
     # Инициализируем базу данных
     db_session.global_init("db/neobrain.db")
     # Если не найден PORT среди файлов, поставь порт 5000
@@ -59,7 +60,7 @@ def main():
 # Загружаем пользователя
 @login_manager.user_loader
 def load_user(user_id):
-    # logger.debug("Отправлен запрос в базу данных на сохранение пользователя")
+    logger.debug("Отправлен запрос в базу данных на сохранение пользователя")
     session = db_session.create_session()
     return session.query(User).get(user_id)
 
@@ -68,7 +69,7 @@ def load_user(user_id):
 @app.route('/logout')
 @login_required
 def logout():
-    # logger.debug("Отправлен запрос в базу данных на выход пользователя")
+    logger.debug("Отправлен запрос в базу данных на выход пользователя")
     logout_user()
     return redirect("/")
 
@@ -96,6 +97,7 @@ def send_mail():
     msg.html = f"<h1>{' '.join(str(digit) for digit in numbers)}</h1>\n" \
                f"<p>Код подтверждения вашей почты в приложении NeoBrain</p>"
     mail.send(msg)
+    logger.debug("Mail was send to user")
     return jsonify({'status': 200,
                     'text': ''.join(str(digit) for digit in numbers)})
 

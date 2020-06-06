@@ -18,7 +18,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import sys
-sys.path.insert(0, 'C:/NeoBrain/Server')
+sys.path.insert(0, 'PATH TO PROJECT')
 from data.db_session import SqlAlchemyBase
 import data.__all_models
 target_metadata = SqlAlchemyBase.metadata

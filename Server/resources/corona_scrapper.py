@@ -1,3 +1,5 @@
+import logging
+
 import requests
 
 from data import db_session
@@ -9,6 +11,7 @@ def scrap_countries():
     response = requests.get(corona_server)
     session = db_session.create_session()
     if not response:
+        logging.getLogger("NeoBrain").warning("Corona response unsuccessful")
         return
     json_response = response.json()
     for county in json_response:

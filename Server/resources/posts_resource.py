@@ -1,5 +1,4 @@
 # Импортируем нужные библиотеки
-from datetime import datetime
 
 from flask import jsonify
 from flask_restful import reqparse, Resource, abort
@@ -7,7 +6,6 @@ from flask_restful import reqparse, Resource, abort
 from data import db_session
 from data.post_association import PostAssociation
 from data.posts import Post, get_current_time
-
 from data.users import User
 from resources.users_resource import abort_if_user_not_found
 

@@ -1,5 +1,6 @@
 # Импортируем библиотеки
 import datetime
+import logging
 from base64 import decodebytes
 
 from flask import jsonify
@@ -98,7 +99,6 @@ class UserResource(Resource):
         # id Фото пользователя
         self.parser.add_argument('photo_id', required=False, type=int)
 
-    # @login_required
     # Получаем пользователя по егу id
     def get(self, user_id):
         # Проверяем, есть ли пользователь
@@ -106,6 +106,7 @@ class UserResource(Resource):
         # Создаём сессию в БД и получаем пользователя
         session = db_session.create_session()
         user = session.query(User).get(user_id)
+        logging.getLogger("NeoBrain").debug("User with id " + str(user_id) + " information was get")
         if user.birthday is not None:
             age = calculate_age(user.birthday)
             user.age = age
@@ -308,6 +309,7 @@ class UserLoginResource(Resource):
                             'text': 'Bad request'})
         # Проверяем корректен ли пароль пользователя
         if user and user.check_password(args.get('hashed_password', None)):
+            logging.getLogger("NeoBrain").debug("User entered")
             return jsonify({'status': 200,
                             'text': f'Login {user.id} allowed'})
         elif user and not user.check_password(args.get('hashed_password', None)):
@@ -434,5 +436,6 @@ class UsersListResource(Resource):
         # Добавляем пользователя
         session.add(user)
         session.commit()
+        logging.getLogger("NeoBrain").info("User created")
         return jsonify({'status': 201,
                         'text': f'User {user.id} created'})

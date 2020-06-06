@@ -6,8 +6,6 @@ from flask_restful import Resource, abort
 
 from data import db_session
 from data.music import Music
-
-# Если photo не найдено, то приходит ответа сервера
 from data.users import User
 from resources.users_resource import abort_if_user_not_found
 
@@ -19,12 +17,12 @@ def abort_if_music_not_found(music_id):
         abort(404, message=f"Music {music_id} not found")
 
 
-# Основной ресурс для работы с Photo
+# Основной ресурс для работы с Music
 class MusicResource(Resource):
     def get(self, music_id):
-        # Проверяем, есть ли фото
+        # Проверяем, есть ли песня
         abort_if_music_not_found(music_id)
-        # Создаём сессию и получаем фото закодированую в Base64
+        # Создаём сессию и получаем песню закодированую в Base64
         session = db_session.create_session()
         music = session.query(Music).get(music_id)
         data = encodebytes(music.data).decode()
@@ -36,9 +34,9 @@ class MusicResource(Resource):
                                   "photo_id": music.photo_id}})
 
     def delete(self, music_id):
-        # Проверяем, есть ли фото
+        # Проверяем, есть ли песня
         abort_if_music_not_found(music_id)
-        # Создаём сессию и получаем фото
+        # Создаём сессию и получаем песню
         session = db_session.create_session()
         music = session.query(Music).get(music_id)
         session.delete(music)
@@ -51,7 +49,7 @@ class MusicListResource(Resource):
     def get(self, user_id):
         # Проверяем, есть ли user
         abort_if_user_not_found(user_id)
-        # Создаём сессию и получаем фото закодированую в Base64
+        # Создаём сессию и получаем песню закодированую в Base64
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         music_user = user.music
