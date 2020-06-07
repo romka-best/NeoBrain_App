@@ -1,5 +1,4 @@
 # Импортируем нужные библиотеки
-import datetime
 import logging
 import os
 import random
@@ -97,7 +96,7 @@ def send_mail():
     msg.html = f"<h1>{' '.join(str(digit) for digit in numbers)}</h1>\n" \
                f"<p>Код подтверждения вашей почты в приложении NeoBrain</p>"
     mail.send(msg)
-    logger.debug("Mail was send to user")
+    logger.info("Mail was send to user")
     return jsonify({'status': 200,
                     'text': ''.join(str(digit) for digit in numbers)})
 

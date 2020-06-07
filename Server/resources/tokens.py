@@ -1,3 +1,5 @@
+# Здесь ведуться разработки связанные с token-защитой запросов!
+
 # import json
 # from functools import wraps
 #

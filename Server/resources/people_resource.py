@@ -1,4 +1,6 @@
 # Импортируем нужные библиотеки
+import logging
+
 from flask import jsonify
 from flask_restful import Resource, reqparse
 
@@ -17,6 +19,7 @@ class PeopleResource(Resource):
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         people = user.people
+        logging.getLogger("NeoBrain").debug(f"People returned")
         return jsonify({'people': [profile.to_dict(
             only=('id', 'user_id')) for profile in people]})
 
@@ -45,6 +48,7 @@ class PeopleDeleteResource(Resource):
         user.subscriptions_count -= 1
         user2.followers_count -= 1
         session.commit()
+        logging.getLogger("NeoBrain").info(f"User {user_id1} unsubscribed of user {user_id2}")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
@@ -66,6 +70,8 @@ class PeopleCreateResource(Resource):
         args = self.parser.parse_args()
         # Защита от дурака
         if args['user_author_id'] == args['user_subscribe_id']:
+            logging.getLogger("NeoBrain")\
+                .debug(f"User {args['user_author_id']} can't subscribe on himself")
             return jsonify({'status': 400,
                             'text': "Bad request"})
         abort_if_user_not_found(args['user_author_id'])
@@ -84,5 +90,6 @@ class PeopleCreateResource(Resource):
         user.subscriptions_count += 1
         user2.followers_count += 1
         session.commit()
+        logging.getLogger("NeoBrain").debug("User subscribed!")
         return jsonify({'status': 201,
                         'text': f'{people.id} created'})

@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from flask import jsonify
 from flask_restful import abort, Resource, reqparse
@@ -14,6 +15,7 @@ def abort_if_message_not_found(message_id):
     session = db_session.create_session()
     message = session.query(Message).get(message_id)
     if not message:
+        logging.getLogger("NeoBrain").warning(f"Message {message_id} not found")
         abort(404, message=f"Message {message_id} not found")
 
 
@@ -41,6 +43,7 @@ class MessageResource(Resource):
         # Создаём сессию и получаем сообщение
         session = db_session.create_session()
         message = session.query(Message).get(message_id)
+        logging.getLogger("NeoBrain").debug(f"Message {message_id} returned")
         return jsonify({'message': message.to_dict(
             only=('id', 'text', 'status', 'created_date',
                   'modified_date', 'author_id', 'chat_id'))})
@@ -51,6 +54,7 @@ class MessageResource(Resource):
         args = self.parser.parse_args()
         # Если нет аргументов, отправляем ошибку 400 с текстом 'Empty request'
         if not args:
+            logging.getLogger("NeoBrain").debug("Empty PUT message request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Создаём сессию в БД и получаем сообщение
@@ -63,6 +67,7 @@ class MessageResource(Resource):
             message.status = args['status']
         message.modified_date = get_current_time()
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Message {message_id} edited")
         return jsonify({'status': 200,
                         'text': 'edited'})
 
@@ -76,6 +81,7 @@ class MessageListResource(Resource):
         # Создаём сессию в БД и получаем сообщения
         session = db_session.create_session()
         messages = session.query(Message).filter(Message.chat_id == chat_id).all()
+        logging.getLogger("NeoBrain").debug(f"Messages from chat {chat_id} returned")
         return jsonify({'messages': [message.to_dict(
             only=('id', 'text', 'status',
                   'created_date', 'modified_date', 'author_id'))
@@ -114,5 +120,6 @@ class MessageCreateResource(Resource):
         # Добавляем в БД сообщение
         session.add(message)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Message {message.id} created")
         return jsonify({'status': 201,
                         'text': f'{message.id} created'})

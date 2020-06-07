@@ -1,4 +1,5 @@
 # Импортируем нужные библиотеки
+import logging
 from base64 import encodebytes
 
 from flask import jsonify
@@ -14,6 +15,7 @@ def abort_if_music_not_found(music_id):
     session = db_session.create_session()
     music = session.query(Music).get(music_id)
     if not music:
+        logging.getLogger("NeoBrain").warning(f"Music {music_id} not found")
         abort(404, message=f"Music {music_id} not found")
 
 
@@ -26,6 +28,7 @@ class MusicResource(Resource):
         session = db_session.create_session()
         music = session.query(Music).get(music_id)
         data = encodebytes(music.data).decode()
+        logging.getLogger("NeoBrain").debug(f"Music {music_id} returned")
         return jsonify({'music': {"data": data,
                                   "title": music.title,
                                   "author": music.author,
@@ -41,6 +44,7 @@ class MusicResource(Resource):
         music = session.query(Music).get(music_id)
         session.delete(music)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Music {music_id} deleted")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
@@ -53,6 +57,7 @@ class MusicListResource(Resource):
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         music_user = user.music
+        logging.getLogger("NeoBrain").debug(f"User {user_id} music returned")
         return jsonify({'music': [music.to_dict(
             only=('id', 'title', 'author', 'duration', 'created_date',
                   'photo_id'), rules='get_music') for music in music_user]})

@@ -18,6 +18,7 @@ def abort_if_user_not_found(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     if not user:
+        logging.getLogger("NeoBrain").warning(f"User {user_id} not found")
         abort(404, message=f"User {user_id} not found")
 
 
@@ -28,6 +29,7 @@ def get_current_time() -> datetime:
 
 def calculate_age(born):
     today = datetime.date.today()
+    logging.getLogger("NeoBrain").debug(f"Age calculated")
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
 
@@ -106,11 +108,11 @@ class UserResource(Resource):
         # Создаём сессию в БД и получаем пользователя
         session = db_session.create_session()
         user = session.query(User).get(user_id)
-        logging.getLogger("NeoBrain").debug("User with id " + str(user_id) + " information was get")
         if user.birthday is not None:
             age = calculate_age(user.birthday)
             user.age = age
             session.commit()
+        logging.getLogger("NeoBrain").debug("User with id " + str(user_id) + " information was get")
         return jsonify({'user': user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
@@ -130,6 +132,7 @@ class UserResource(Resource):
         args = self.parser.parse_args()
         # Если нет аргументов, передаём статус 400
         if not args:
+            logging.getLogger("NeoBrain").debug("Empty PUT user request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Создаём сессию в БД и получаем пользователя
@@ -225,6 +228,7 @@ class UserResource(Resource):
         # Обновляем дату модификации пользователя
         user.modified_date = get_current_time()
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"User {user_id} profile was edited")
         return jsonify({'status': 200,
                         'text': 'edited',
                         'message': str(user.photo_id)})
@@ -239,6 +243,7 @@ class UserResource(Resource):
         # Удаляем пользователя из БД
         session.delete(user)
         session.commit()
+        logging.getLogger("NeoBrain").info(f"User {user_id} deleted")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
@@ -254,6 +259,7 @@ class UsersSearchResource(Resource):
         elif len(user_name_surname_list) == 1:
             param1, param2 = user_name_surname_list[0].title(), user_name_surname_list[0].title()
         else:
+            logging.getLogger("NeoBrain").debug("Empty users search GET request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Создаём сессию в БД и находим пользователей
@@ -262,6 +268,7 @@ class UsersSearchResource(Resource):
                                            (User.name.like(f"%{param2}%")) |
                                            (User.surname.like(f"%{param1}%")) |
                                            (User.surname.like(f"%{param2}%"))).all()
+        logging.getLogger("NeoBrain").debug("Successful GET users search request")
         return jsonify({'users': [user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
@@ -291,9 +298,11 @@ class UserLoginResource(Resource):
         # Получаем аргументы
         args = self.parser.parse_args()
         if not args:
+            logging.getLogger("NeoBrain").debug("Empty POST user login request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         elif not any(key in args for key in ['number', 'nickname', 'email']):
+            logging.getLogger("NeoBrain").debug("Wrong POST user login request")
             return jsonify({'status': 400,
                             'text': "Bad request"})
         # Создаём сессию и берём пользователя
@@ -305,6 +314,7 @@ class UserLoginResource(Resource):
         elif args.get('email', None):
             user = session.query(User).filter(User.email == args['email'].lower()).first()
         else:
+            logging.getLogger("NeoBrain").debug("Wrong POST user login request")
             return jsonify({'status': 400,
                             'text': 'Bad request'})
         # Проверяем корректен ли пароль пользователя
@@ -313,8 +323,10 @@ class UserLoginResource(Resource):
             return jsonify({'status': 200,
                             'text': f'Login {user.id} allowed'})
         elif user and not user.check_password(args.get('hashed_password', None)):
+            logging.getLogger("NeoBrain").debug("Wrong POST user login request (password is not correct)")
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})
+        logging.getLogger("NeoBrain").debug("Wrong POST user login request (Password or login is not correct)")
         return jsonify({'status': 404,
                         'text': 'Password or login is not correct'})
 
@@ -378,6 +390,7 @@ class UsersListResource(Resource):
     def get(self):
         session = db_session.create_session()
         users = session.query(User).all()
+        logging.getLogger("NeoBrain").debug("All users info is got")
         return jsonify({'users': [user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
@@ -396,29 +409,40 @@ class UsersListResource(Resource):
         args = self.parser.parse_args()
         session = db_session.create_session()
         if not args:
+            logging.getLogger("NeoBrain").debug("Empty POST user's list request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Обязательно либо номер, либо почта
         if not args['number'] and not args['email']:
+            logging.getLogger("NeoBrain")\
+                .debug("Wrong POST user's list request (missing number and email)")
             return jsonify({'status': 400,
                             'text': "Bad request"})
         # Проверяем занят ли никнейм
         elif session.query(User).filter(
                 User.nickname == args['nickname']).first():
+            logging.getLogger("NeoBrain")\
+                .debug("Wrong POST user's list request (Nickname already exists)")
             return jsonify({'status': 449,
                             'text': 'Nickname already exists'})
         # Проверяем корректность пароля
         if correct_password(args['hashed_password'])[0] == "WRONG":
+            logging.getLogger("NeoBrain") \
+                .debug("Wrong POST user's list request (Password is not correct)")
             return jsonify({'status': 449,
                             'text': 'Password is not correct'})
         if args.get('number', None):
             # Проверяем занят ли номер телефона
             if session.query(User).filter(User.number == args['number'].lower()).first():
+                logging.getLogger("NeoBrain") \
+                    .debug("Wrong POST user's list request (Phone number already exists)")
                 return jsonify({'status': 449,
                                 'text': 'Phone number already exists'})
         if args.get('email', None):
             # Проверяем занята ли почта
             if session.query(User).filter(User.email == args['email'].lower()).first():
+                logging.getLogger("NeoBrain") \
+                    .debug("Wrong POST user's list request (Email already exists)")
                 return jsonify({'status': 449,
                                 'text': 'Email already exists'})
         # Создаём пользователя

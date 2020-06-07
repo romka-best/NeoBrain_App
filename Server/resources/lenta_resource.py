@@ -1,4 +1,6 @@
 # Импортируем нужные библиотеки
+import logging
+
 from flask import jsonify
 from flask_restful import Resource
 
@@ -35,4 +37,5 @@ class LentaResource(Resource):
                     session.add(cur_association)
                     session.commit()
                 posts['posts'].append(get_post(cur_post, cur_association))
+        logging.getLogger("NeoBrain").debug(f"Feed for user {user_id} returned")
         return jsonify(posts)

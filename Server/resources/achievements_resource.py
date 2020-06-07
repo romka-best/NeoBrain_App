@@ -1,4 +1,6 @@
 # Импортируем нужные библиотеки
+import logging
+
 from flask import jsonify
 from flask_restful import Resource, reqparse
 
@@ -42,6 +44,7 @@ class AchievementUserResource(Resource):
                                                  "description": cur_achievement.description,
                                                  "is_got": achievement.is_get,
                                                  "photo_id": cur_achievement.photo_id})
+        logging.getLogger("NeoBrain").debug(f"User's {user_id} achievements returned")
         return jsonify(achievements)
 
     def put(self, user_id):
@@ -56,6 +59,7 @@ class AchievementUserResource(Resource):
                 AchievementAssociation.user_id == user_id).first()
             achievement.is_get = args['is_got']
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"User's {user_id} achievements edited")
         return jsonify({'status': 200,
                         'text': 'edited'})
 
@@ -65,6 +69,7 @@ class AchievementResource(Resource):
         # Создаём сессию в БД и получаем достижение
         session = db_session.create_session()
         achievement = session.query(Achievement).get(achievement_id)
+        logging.getLogger("NeoBrain").debug(f"Achievement {achievement_id} returned")
         return jsonify({'achievement': achievement})
 
 
@@ -93,12 +98,14 @@ class AchievementCreateResource(Resource):
         achievement_association.achievement_id = achievement.id
         session.add(achievement_association)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Achievements attached to user")
         return jsonify({'status': 201,
                         'text': f'successful'})
 
     def get(self):
         session = db_session.create_session()
         achievements = session.query(Achievement).all()
+        logging.getLogger("NeoBrain").debug(f"All achievements returned")
         return jsonify({'achievements': [achievement.to_dict(
             only=('id', 'title', 'description', 'photo_id'))
             for achievement in achievements]})

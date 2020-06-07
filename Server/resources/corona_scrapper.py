@@ -40,3 +40,4 @@ def scrap_countries():
 
             session.add(countries)
             session.commit()
+        logging.getLogger("NeoBrain").debug(f"Countries info about Covid-19 updated")

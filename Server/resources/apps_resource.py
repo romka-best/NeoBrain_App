@@ -1,4 +1,6 @@
 # Импортируем нужные библиотеки
+import logging
+
 from flask import jsonify
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
@@ -27,6 +29,7 @@ class AppResource(Resource):
                                  "link_android": cur_app.link_android,
                                  "link_ios": cur_app.link_ios,
                                  "photo_id": cur_app.photo_id})
+        logging.getLogger("NeoBrain").debug(f"Apps of user {user_id} returned")
         return jsonify(apps)
 
 
@@ -41,11 +44,12 @@ class AppDeleteResource(Resource):
                                                    AppAssociation.app_id == app_id).first()
         session.delete(app)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"App {app_id} of user {user_id} deleted")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
 
-# Ресурс для добавления в Люди(Подписчики)
+# Ресурс для добавления в App-список пользователя
 class AppCreateResource(Resource):
     def __init__(self):
         # Инициализируем parser, так как доступ к данным,
@@ -69,16 +73,21 @@ class AppCreateResource(Resource):
             app_association.user_id = args['user_id']
             app_association.app_id = args['app_id']
         except IntegrityError:
+            logging.getLogger("NeoBrain").\
+                debug(f"App {args['app_id']} already in user's {args['user_id']} library")
             return jsonify({'status': 400,
                             'text': f'already exists'})
         session.add(app_association)
         session.commit()
+        logging.getLogger("NeoBrain")\
+            .debug(f"User {args['user_id']} successfully subscribed on app {args['app_id']}")
         return jsonify({'status': 201,
                         'text': f'successful'})
 
     def get(self):
         session = db_session.create_session()
         apps = session.query(App).all()
+        logging.getLogger("NeoBrain").debug("All apps returned")
         return jsonify({'apps': [app.to_dict(
             only=('id', 'title', 'secondary_text', 'description',
                   'link_android', 'link_ios', 'photo_id'))
@@ -90,6 +99,7 @@ class AppSearchResource(Resource):
         if app_name.find("?") != -1:
             app_name = app_name[:app_name.find("?")].lower().strip()
         if not app_name:
+            logging.getLogger("NeoBrain").debug("Empty app search GET request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Создаём сессию в БД и находим пользователей
@@ -97,6 +107,7 @@ class AppSearchResource(Resource):
         apps = session.query(App).filter(App.title.like(f"%{app_name}%")).all()
         if not apps:
             apps = session.query(App).filter(App.secondary_text.like(f"%{app_name}%")).all()
+        logging.getLogger("NeoBrain").debug("Apps returned from GET app search request")
         return jsonify({'apps': [app.to_dict(
             only=('id', 'title', 'secondary_text', 'description',
                   'link_android', 'link_ios', 'photo_id'))

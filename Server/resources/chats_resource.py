@@ -1,4 +1,5 @@
 # Импортируем нужные библиотеки
+import logging
 from base64 import decodebytes
 import datetime
 
@@ -17,6 +18,7 @@ def abort_if_chat_not_found(chat_id):
     session = db_session.create_session()
     chat = session.query(Chat).get(chat_id)
     if not chat:
+        logging.getLogger("NeoBrain").warning(f"Chat {chat_id} not found")
         abort(404, message=f"Chat {chat_id} not found")
 
 
@@ -57,6 +59,7 @@ class ChatResource(Resource):
         # Создаём сессию и получаем чат
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
+        logging.getLogger("NeoBrain").debug(f"Chat {chat_id} returned")
         return jsonify({'chat': chat.to_dict(
             only=('name', 'type_of_chat', 'status', 'last_time_message',
                   'last_message', 'count_new_messages', 'count_messages',
@@ -68,6 +71,7 @@ class ChatResource(Resource):
         args = self.parser.parse_args()
         # Если нет аргументов, отправляем ошибку 400 с текстом 'Empty request'
         if not args:
+            logging.getLogger("NeoBrain").debug("Empty PUT chat request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Создаём сессию в БД и получаем чат
@@ -105,6 +109,7 @@ class ChatResource(Resource):
             chat.photo_id = args['photo_id']
         chat.modified_date = get_current_time()
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Chat {chat_id} edited!")
         return jsonify({'status': 200,
                         'text': 'edited'})
 
@@ -115,6 +120,7 @@ class ChatResource(Resource):
         chat = session.query(Chat).get(chat_id)
         session.delete(chat)
         session.commit()
+        logging.getLogger("NeoBrain").info(f"Chat {chat_id} deleted")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
@@ -129,6 +135,7 @@ class ChatsListResource(Resource):
         session = db_session.create_session()
         user = session.query(User).get(user_id)
         chats = user.chats
+        logging.getLogger("NeoBrain").debug(f"Chats for user {user_id} returned")
         return jsonify({'chats': [chat.to_dict(
             only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
                   'last_message', 'count_new_messages', 'count_messages',
@@ -152,6 +159,7 @@ class ChatUsersResource(Resource):
             for cur_user in cur_users:
                 if cur_user.id != user.id:
                     users.append(cur_user)
+        logging.getLogger("NeoBrain").debug(f"Interlocutors of user {user_id} returned")
         return jsonify({'users': [user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
                   'created_date', 'modified_date', 'is_closed', 'email', 'about',
@@ -177,11 +185,15 @@ class ChatTwoUsersResource(Resource):
             cur_users = cur_chat.users
             for cur_user in cur_users:
                 if cur_user.id == user_id2:
+                    logging.getLogger("NeoBrain")\
+                        .debug(f"Chat for users {user_id1} and {user_id2} returned")
                     return jsonify({'chat': cur_chat.to_dict(
                         only=('id', 'name', 'type_of_chat', 'status', 'last_time_message',
                               'last_message', 'count_new_messages', 'count_messages',
                               'created_date', 'photo_id'))})
         else:
+            logging.getLogger("NeoBrain")\
+                .debug(f"Chat for users {user_id1} and {user_id2} not found")
             return jsonify({'status': 404,
                             'text': 'Not found'})
 
@@ -193,6 +205,7 @@ class ChatFindUsersResource(Resource):
         session = db_session.create_session()
         chat = session.query(Chat).get(chat_id)
         users = chat.users
+        logging.getLogger("NeoBrain").debug(f"Users of chat {chat_id} returned")
         return jsonify({'users': [user.id for user in users]})
 
 
@@ -259,5 +272,6 @@ class ChatCreateResource(Resource):
         user.chats.append(chat)
         user2.chats.append(chat)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Chat {chat.id} created!")
         return jsonify({'status': 201,
                         'text': f'{chat.id} created'})

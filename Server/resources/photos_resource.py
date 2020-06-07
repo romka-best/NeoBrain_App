@@ -1,4 +1,5 @@
 # Импортируем нужные библиотеки
+import logging
 from base64 import encodebytes
 
 from flask import jsonify
@@ -18,6 +19,7 @@ def abort_if_photo_not_found(photo_id):
     session = db_session.create_session()
     photo = session.query(Photo).get(photo_id)
     if not photo:
+        logging.getLogger("NeoBrain").warning(f"Photo {photo_id} not found")
         abort(404, message=f"Photo {photo_id} not found")
 
 
@@ -31,6 +33,7 @@ class PhotoResource(Resource):
         # Создаём сессию и получаем фото закодированую в Base64
         session = db_session.create_session()
         photo = encodebytes(session.query(Photo).get(photo_id).data).decode()
+        logging.getLogger("NeoBrain").debug(f"Photo {photo_id} returned")
         return jsonify({'photo': photo})
 
     def delete(self, photo_id):
@@ -65,6 +68,7 @@ class PhotoResource(Resource):
         session.commit()
         session.delete(photo)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Photo {photo_id} deleted")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
@@ -91,5 +95,6 @@ class PhotoCreateResource(Resource):
         )
         session.add(photo)
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Photo {photo.id} created!")
         return jsonify({'status': 201,
                         'text': f'{photo.id} created'})

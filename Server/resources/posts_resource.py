@@ -1,4 +1,5 @@
 # Импортируем нужные библиотеки
+import logging
 
 from flask import jsonify
 from flask_restful import reqparse, Resource, abort
@@ -15,10 +16,12 @@ def abort_if_post_not_found(post_id):
     session = db_session.create_session()
     post = session.query(Post).get(post_id)
     if not post:
+        logging.getLogger("NeoBrain").warning(f"Post with id {post_id} not found")
         abort(404, message=f"Post {post_id} not found")
 
 
 def get_post(cur_post, post):
+    logging.getLogger("NeoBrain").debug("Post info returned")
     return {"id": cur_post.id,
             "title": cur_post.title,
             "text": cur_post.text,
@@ -83,6 +86,7 @@ class PostResource(Resource):
         for post1 in post_association:
             cur_post = session.query(Post).get(post1.post_id)
             users.append({"post": get_post(cur_post, post1)})
+        logging.getLogger("NeoBrain").debug(f"Post info {post_id} returned")
         return jsonify({'post': post.to_dict(
             only=('id', 'title', 'text', 'created_date', 'photo_id',
                   'like_emoji_count', 'laughter_emoji_count', 'heart_emoji_count',
@@ -161,6 +165,7 @@ class PostResource(Resource):
                 post.screaming_emoji_count += 1
             post_association.screaming_emoji = args['screaming_emoji']
         session.commit()
+        logging.getLogger("NeoBrain").debug(f"Post {post_id} edited")
         return jsonify({'status': 200,
                         'text': 'edited'})
 
@@ -175,6 +180,7 @@ class PostResource(Resource):
         for post in post_association:
             session.delete(post)
         session.commit()
+        logging.getLogger("NeoBrain").info(f"Post {post_id} deleted")
         return jsonify({'status': 200,
                         'text': 'deleted'})
 
@@ -206,6 +212,7 @@ class PostsListResource(Resource):
                     session.add(post)
                     session.commit()
             posts['posts'].append(get_post(cur_post, post))
+        logging.getLogger("NeoBrain").debug(f"Posts of user {user_id} returned")
         return jsonify(posts)
 
 
@@ -240,6 +247,7 @@ class PostCreateResource(Resource):
         args = self.parser.parse_args()
         # Если нет аргументов, отправляем ошибку 400 с текстом 'Empty request'
         if not args:
+            logging.getLogger("NeoBrain").debug(f"Empty post create POST request")
             return jsonify({'status': 400,
                             'text': "Empty request"})
         # Проверяем наличие пользователя
@@ -283,6 +291,7 @@ class PostCreateResource(Resource):
         )
         session.add(association)
         session.commit()
+        logging.getLogger("NeoBrain").info(f"Post {post.id} created!")
         return jsonify({'status': 201,
                         'text': f'{post.id} created'})
 
