@@ -89,7 +89,7 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public int getItemViewType(int position) {
         if (mUser != null && !isEdit && isNormalInfo()) {
             return VIEW_TYPE_DETAILED_INFO;
-        } else if (mUser != null && isEdit && isNormalInfo()) {
+        } else if (mUser != null && isEdit) {
             return VIEW_TYPE_EDIT_INFO;
         } else if (titles != null) {
             return VIEW_TYPE_HELPER_TEXT;

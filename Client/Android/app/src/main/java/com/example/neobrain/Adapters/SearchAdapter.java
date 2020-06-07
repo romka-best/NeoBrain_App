@@ -309,9 +309,14 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             }
             textTextView.setText(sb);
 
+            sp = Objects.requireNonNull(mRouter.getActivity()).getSharedPreferences(MY_SETTINGS,
+                    Context.MODE_PRIVATE);
+
+            if (mPerson.getId() == sp.getInt("userId", -1)) {
+                doButton.setVisibility(View.GONE);
+            }
+
             doButton.setOnClickListener(v -> {
-                sp = Objects.requireNonNull(mRouter.getActivity()).getSharedPreferences(MY_SETTINGS,
-                        Context.MODE_PRIVATE);
                 Call<ChatModel> chatModelCall = DataManager.getInstance().getUsersChat(sp.getInt("userId", -1), mPerson.getId());
                 chatModelCall.enqueue(new Callback<ChatModel>() {
                     @Override

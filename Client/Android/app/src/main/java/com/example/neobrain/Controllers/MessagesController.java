@@ -385,9 +385,10 @@ public class MessagesController extends Controller {
     }
 
     private void handleError(Throwable t) {
-        assert getView() != null;
         if (t instanceof SocketTimeoutException) {
-            Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.errors_with_connection), Snackbar.LENGTH_LONG).show();
+            if (getView() != null) {
+                Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.errors_with_connection), Snackbar.LENGTH_LONG).show();
+            }
         } else if (t instanceof HttpException) {
             progressBar.setVisibility(View.GONE);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
