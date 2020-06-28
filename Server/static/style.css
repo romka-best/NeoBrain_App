@@ -46,14 +46,14 @@ header {
 }
 
 .header-text span {
-    font-size: 64px;
+    font-size: 48px;
     font-weight: 700;
 }
 
 .header-text h1 {
     text-align: center;
     font-weight: 400;
-    font-size: 64px;
+    font-size: 48px;
     color: #fff;
 }
 
@@ -61,7 +61,7 @@ header {
     text-align: center;
     color: #fff;
     font-weight: 400;
-    font-size: 32px;
+    font-size: 24px;
 }
 
 .header-container a {
@@ -97,6 +97,7 @@ header {
     justify-content: center;
     align-items: center;
     margin-top: 50px;
+    background: url('img/VideoBackground.svg') no-repeat center center;
 }
 
 .header-video img:first-child {
@@ -116,13 +117,13 @@ header {
 
 .apps-text h1 {
     text-transform: uppercase;
-    font-size: 64px;
+    font-size: 48px;
     font-weight: 500;
     margin-bottom: 50px;
 }
 
 .apps-text h2 {
-    font-size: 55px;
+    font-size: 36px;
     font-weight: 300;
     margin-bottom: 55px;
 }
@@ -141,7 +142,7 @@ header {
     color: #363a43;
     text-transform: uppercase;
     font-weight: 500;
-    font-size: 64px;
+    font-size: 44px;
 }
 
 .more-container {
@@ -162,8 +163,8 @@ header {
     justify-content: center;
     align-items: center;
     background: #fff;
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     border-radius: 15px;
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
     transition: 0.2s ease;
@@ -221,7 +222,7 @@ header {
 }
 
 .connect-info-container h2 {
-    font-size: 52px;
+    font-size: 40px;
     font-weight: 400;
     text-align: center;
     color: #363a43;

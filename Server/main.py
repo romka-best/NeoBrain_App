@@ -3,13 +3,13 @@ import logging
 import os
 import random
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, redirect, render_template, request, jsonify
 from flask_login import LoginManager, logout_user, login_required
 from flask_mail import Mail, Message
-from apscheduler.schedulers.background import BackgroundScheduler
 
-from conf.routes import generate_routes
 from conf.config import generate_config
+from conf.routes import generate_routes
 from data import db_session
 from data.users import User
 from resources.corona_scrapper import scrap_countries
@@ -49,7 +49,7 @@ scheduler.start()
 def main():
     logger.debug("START")
     # Инициализируем базу данных
-    db_session.global_init("db/neobrain.db")
+    db_session.global_init("C:/NeoBrain/Server/db/neobrain.db")
     # Если не найден PORT среди файлов, поставь порт 5000
     port = int(os.environ.get("PORT", 5000))
     # Запускаем приложение
@@ -76,7 +76,7 @@ def logout():
 # Регистрация
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    pass
+    return render_template('reg.html')
 
 
 # Авторизация

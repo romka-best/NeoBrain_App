@@ -1,4 +1,5 @@
 # Импортируем нужные библиотеки
+import logging
 
 from flask_restful import Api
 
@@ -16,12 +17,8 @@ from resources.posts_resource import PostResource, PostCreateResource, PostsList
 from resources.users_resource import UserResource, UsersListResource, UserLoginResource, UsersSearchResource
 
 
-# logger = logging.getLogger("routes")
-# logger.setLevel(logging.DEBUG)
-
-
 def generate_routes(app):
-    # logger.debug("Add API resources")
+    logging.getLogger("NeoBrain").debug("Add API resources")
 
     # Инициализируем объект Api
     api = Api(app)
@@ -83,4 +80,4 @@ def generate_routes(app):
     api.add_resource(CountryResource, '/api/countries/<int:country_id>')
     api.add_resource(CountryListResource, '/api/countries')
 
-    # logger.debug("Added API resources")
+    logging.getLogger("NeoBrain").debug("Added API resources")
