@@ -151,4 +151,9 @@
     <string name="full_gender_not_defined">Not defined</string>
     <string name="full_gender_m">Male</string>
     <string name="full_gender_w">Female</string>
+    <string name="incorrectName">Name entered incorrectly!</string>
+    <string name="incorrectSurname">Surname entered incorrectly!</string>
+    <string name="incorrectNicknameError">The nickname must be from 6 to 15 characters long and
+        consist only of Latin characters, and must not contain whitespace character</string>
+    <string name="incorrectNickname">Nickname entered incorrectly!</string>
 </resources>
