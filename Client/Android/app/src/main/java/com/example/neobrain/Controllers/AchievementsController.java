@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bluelinelabs.conductor.Controller;
 import com.example.neobrain.API.model.Achievement;
 import com.example.neobrain.API.model.Achievements;
+import com.example.neobrain.API.model.PhotoModel;
 import com.example.neobrain.API.model.Status;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.AchievementAdapter;
@@ -98,22 +99,26 @@ public class AchievementsController extends Controller {
                         public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                             if (response.isSuccessful()) {
                                 assert response.body() != null;
-                                if (!achievementList.get(0).getGot() && response.body().getUser().getPhotoId() != 2) {
-                                    Achievement achivNew = achievementList.get(0);
-                                    achivNew.setGot(true);
-                                    Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
-                                    putAchivCall.enqueue(new Callback<Status>() {
-                                        @Override
-                                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                                            if (response.isSuccessful()) {
-                                                achievementAdapter.notifyItemChanged(0);
-                                            }
-                                        }
+                                for (PhotoModel photoModel : response.body().getPhotos()) {
+                                    if (photoModel.getPhoto().getAvatar()) {
+                                        if (!achievementList.get(0).getGot() && photoModel.getPhoto().getId() != 2) {
+                                            Achievement achivNew = achievementList.get(0);
+                                            achivNew.setGot(true);
+                                            Call<Status> putAchivCall = DataManager.getInstance().editAchievements(userId, achivNew);
+                                            putAchivCall.enqueue(new Callback<Status>() {
+                                                @Override
+                                                public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                                    if (response.isSuccessful()) {
+                                                        achievementAdapter.notifyItemChanged(0);
+                                                    }
+                                                }
 
-                                        @Override
-                                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                @Override
+                                                public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                                                }
+                                            });
                                         }
-                                    });
+                                    }
                                 }
                                 if (!achievementList.get(1).getGot() && response.body().getUser().getCount_outgoing_messages() >= 50) {
                                     Achievement achivNew = achievementList.get(1);

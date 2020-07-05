@@ -1,5 +1,9 @@
 package com.example.neobrain.Adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,24 +13,40 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.Status;
+import com.example.neobrain.Controllers.DetailedPhotoController;
+import com.example.neobrain.DataManager;
 import com.example.neobrain.R;
 import com.example.neobrain.utils.BaseViewHolder;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PhotosAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PhotosAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
-    private List<Photo> mPhotoList;
 
-    public PhotosAdapter(ArrayList<Photo> photoList) {
+    private List<Photo> mPhotoList;
+    private Router childRouter;
+
+    public PhotosAdapter(ArrayList<Photo> photoList, Router childRouter) {
         this.mPhotoList = photoList;
+        this.childRouter = childRouter;
     }
 
     @NonNull
@@ -73,6 +93,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public class ViewHolder extends BaseViewHolder {
+        @BindView(R.id.photo)
+        ImageView photoImageView;
+        String photoString;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +108,61 @@ public class PhotosAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         public void onBind(int position) {
             super.onBind(position);
+
+            final Photo mPhoto = mPhotoList.get(position);
+            Call<Photo> call = DataManager.getInstance().getPhoto(mPhoto.getId());
+            call.enqueue(new retrofit2.Callback<Photo>() {
+                @Override
+                public void onResponse(@NotNull Call<Photo> call, @NotNull Response<Photo> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        String photo = response.body().getPhoto();
+                        photoString = photo;
+                        byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
+                        Bitmap original = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                        Bitmap decoded = Bitmap.createScaledBitmap(original, original.getWidth() / 2, original.getHeight() / 2, false);
+                        photoImageView.setImageBitmap(decoded);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
+                    Log.e(TAG, t.toString() + "");
+                }
+            });
+
+            photoImageView.setOnClickListener(v -> {
+                if (photoString != null) {
+                    childRouter.pushController(RouterTransaction.with(new DetailedPhotoController(true, photoString))
+                            .popChangeHandler(new VerticalChangeHandler())
+                            .pushChangeHandler(new VerticalChangeHandler()));
+                }
+            });
+
+            photoImageView.setOnLongClickListener(v -> {
+                new MaterialAlertDialogBuilder(Objects.requireNonNull(childRouter.getActivity()), R.style.AlertDialogCustom)
+                        .setMessage(R.string.delete_question)
+                        .setPositiveButton(R.string.delete, (dialog1, which1) -> {
+                            Call<Status> call1 = DataManager.getInstance().deletePhoto(mPhoto.getId());
+                            call1.enqueue(new Callback<Status>() {
+                                @Override
+                                public void onResponse(@NotNull Call<Status> call1, @NotNull Response<Status> response) {
+                                    if (response.isSuccessful()) {
+                                        mPhotoList.remove(mPhoto);
+                                        // TODO Добавить CallBack (Если фотка последняя, изменить на LinearLayoutManager)
+                                        notifyItemRemoved(position);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(@NotNull Call<Status> call1, @NotNull Throwable t) {
+                                }
+                            });
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+                return true;
+            });
         }
     }
 

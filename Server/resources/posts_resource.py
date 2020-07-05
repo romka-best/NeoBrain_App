@@ -5,6 +5,7 @@ from flask import jsonify
 from flask_restful import reqparse, Resource, abort
 
 from data import db_session
+from data.photo_association import PhotoAssociation
 from data.post_association import PostAssociation
 from data.posts import Post, get_current_time
 from data.users import User
@@ -262,7 +263,9 @@ class PostCreateResource(Resource):
         if args.get('photo_id', None):
             post.photo_id = args['photo_id']
         else:
-            post.photo_id = user.photo_id
+            photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user.id,
+                                                                       PhotoAssociation.is_avatar == True).first()
+            post.photo_id = photo_association.photo_id
         if args.get('title', None):
             post.title = args['title']
         else:

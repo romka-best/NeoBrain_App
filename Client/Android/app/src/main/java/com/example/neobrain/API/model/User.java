@@ -1,14 +1,9 @@
 package com.example.neobrain.API.model;
 
-import android.annotation.SuppressLint;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 
 public class User {
 
@@ -90,6 +85,9 @@ public class User {
     @SerializedName("photo")
     @Expose
     private String photo;
+    @SerializedName("is_avatar")
+    @Expose
+    private Boolean isAvatar;
     @SerializedName("republic")
     @Expose
     private String republic;
@@ -373,6 +371,14 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public Boolean getAvatar() {
+        return isAvatar;
+    }
+
+    public void setAvatar(Boolean avatar) {
+        isAvatar = avatar;
     }
 
     public Integer getGender() {

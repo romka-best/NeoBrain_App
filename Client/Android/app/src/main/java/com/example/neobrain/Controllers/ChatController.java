@@ -21,6 +21,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.example.neobrain.API.model.Chat;
 import com.example.neobrain.API.model.ChatUsers;
 import com.example.neobrain.API.model.Chats;
+import com.example.neobrain.API.model.PhotoModel;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.ChatAdapter;
@@ -152,8 +153,14 @@ public class ChatController extends Controller {
                                                     if (response.isSuccessful()) {
                                                         assert response.body() != null;
                                                         User user = response.body().getUser();
+                                                        ArrayList<PhotoModel> photos = (ArrayList<PhotoModel>) response.body().getPhotos();
                                                         curNameChat = user.getName() + " " + user.getSurname();
-                                                        curPhotoId = user.getPhotoId();
+                                                        for (PhotoModel photo : photos) {
+                                                            if (photo.getPhoto().getAvatar()) {
+                                                                curPhotoId = photo.getPhoto().getId();
+                                                                break;
+                                                            }
+                                                        }
                                                         for (Chat queueChat : mChats) {
                                                             if (queueChat.getId().equals(chat.getId())) {
                                                                 return;

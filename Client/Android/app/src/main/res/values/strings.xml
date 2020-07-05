@@ -39,6 +39,7 @@
     <string name="empty_nickname">Никнейм не введен!</string>
     <string name="undo">Убрать</string>
     <string name="errors_with_connection">Проблемы с интернет соединением</string>
+    <string name="errors_with_size" translatable="false">Слишком большой размер файла</string>
     <string name="loading">Идёт загрузка</string>
     <string name="new_post">Новый пост</string>
     <string name="empty_chat">На данный момент у вас нет чатов. Напишите кому-нибудь</string>

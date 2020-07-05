@@ -7,9 +7,16 @@ from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
 
+def get_current_time() -> datetime:
+    delta = datetime.timedelta(hours=3, minutes=0)
+    return datetime.datetime.now(datetime.timezone.utc) + delta
+
+
 class Photo(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'photos'
 
+    # Формат даты
+    datetime_format = '%Y-%m-%d %H:%M:%S'
     # id фото
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     # описание фото
@@ -17,10 +24,5 @@ class Photo(SqlAlchemyBase, SerializerMixin):
     # данные фото типа BLOB
     data = sqlalchemy.Column(sqlalchemy.BLOB, nullable=False)
 
-    # Отношения фогографии с другими таблицами
-    users = orm.relation("User", back_populates='photo')
-    chats = orm.relation("Chat", back_populates='photo')
-    posts = orm.relation("Post", back_populates='photo')
-    apps = orm.relation("App", back_populates='photo')
-    music = orm.relation("Music", back_populates='photo')
-    achievements = orm.relation("Achievement", back_populates='photo')
+    # Связь с Photo
+    association = orm.relation("PhotoAssociation")

@@ -9,6 +9,7 @@ from data import db_session
 from data.apps import App
 from data.chats import Chat
 from data.music import Music
+from data.photo_association import PhotoAssociation
 from data.photos import Photo
 from data.posts import Post
 from data.users import User
@@ -37,15 +38,14 @@ class PhotoResource(Resource):
         return jsonify({'photo': photo})
 
     def delete(self, photo_id):
-        if str(photo_id).find("?") != -1:
-            photo_id = int(photo_id[:photo_id.find("?")].strip())
         # Проверяем, есть ли фото
         abort_if_photo_not_found(photo_id)
         # Создаём сессию и получаем фото
         session = db_session.create_session()
         photo = session.query(Photo).get(photo_id)
         # Изменяем картинки на стандартные, когда удаляем
-        users = session.query(User).filter(User.photo_id == photo_id).all()
+        users = session.query(PhotoAssociation).filter(PhotoAssociation.photo_id == photo_id,
+                                                       PhotoAssociation.is_avatar == True).all()
         if users:
             for user in users:
                 user.photo_id = 2

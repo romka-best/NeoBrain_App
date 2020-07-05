@@ -152,15 +152,19 @@ public class AuthController extends Controller {
                         });
                     } else {
                         assert getView() != null;
-                        switch (post.getStatus()) {
-                            case 404:
-                                Snackbar.make(getView(), R.string.invalid_password_or_username, Snackbar.LENGTH_LONG).show();
-                                break;
-                            case 449:
-                                textPassword.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.invalid_password));
-                                break;
-                            default:
-                                Snackbar.make(getView(), R.string.error, Snackbar.LENGTH_LONG).show();
+                        try {
+                            switch (post.getStatus()) {
+                                case 404:
+                                    Snackbar.make(getView(), R.string.invalid_password_or_username, Snackbar.LENGTH_LONG).show();
+                                    break;
+                                case 449:
+                                    textPassword.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.invalid_password));
+                                    break;
+                                default:
+                                    Snackbar.make(getView(), R.string.error, Snackbar.LENGTH_LONG).show();
+                            }
+                        } catch (NullPointerException npe) {
+                            Snackbar.make(getView(), R.string.error, Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }

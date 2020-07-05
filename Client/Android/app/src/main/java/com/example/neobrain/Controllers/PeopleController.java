@@ -21,6 +21,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.Person;
+import com.example.neobrain.API.model.PhotoModel;
 import com.example.neobrain.API.model.User;
 import com.example.neobrain.API.model.UserModel;
 import com.example.neobrain.Adapters.PeopleAdapter;
@@ -123,12 +124,20 @@ public class PeopleController extends Controller {
                             public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                                 assert response.body() != null;
                                 User user = response.body().getUser();
+                                ArrayList<PhotoModel> photos = (ArrayList<PhotoModel>) response.body().getPhotos();
+                                Integer curPhotoId = -1;
+                                for (PhotoModel photo : photos) {
+                                    if (photo.getPhoto().getAvatar()) {
+                                        curPhotoId = photo.getPhoto().getId();
+                                        break;
+                                    }
+                                }
                                 for (User queueUser : mUsers) {
                                     if (queueUser.getId().equals(user.getId())) {
                                         return;
                                     }
                                 }
-                                mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                                mUsers.add(new User(user.getId(), curPhotoId, user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
                                 if (mUsers.size() == personList.size()) {
                                     allPeopleSearched();
                                 }

@@ -152,9 +152,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     # Связь с Message
     messages_from = orm.relation("Message", back_populates='author')
     # Связь с Photo
-    photo = orm.relation("Photo")
-    photo_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                 sqlalchemy.ForeignKey("photos.id"), default=2)
+    photos = orm.relation("PhotoAssociation")
 
     # Для установки пароля
     def set_password(self, password):

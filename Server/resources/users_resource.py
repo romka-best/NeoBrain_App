@@ -8,6 +8,7 @@ from flask_restful import reqparse, abort, Resource
 
 from data import db_session
 from data.chats import Chat
+from data.photo_association import PhotoAssociation
 from data.photos import Photo
 from data.posts import Post
 from data.users import User, correct_password
@@ -20,6 +21,13 @@ def abort_if_user_not_found(user_id):
     if not user:
         logging.getLogger("NeoBrain").warning(f"User {user_id} not found")
         abort(404, message=f"User {user_id} not found")
+
+
+def get_photo(cur_photo, photo):
+    logging.getLogger("NeoBrain").debug("Photo info returned")
+    return {"id": cur_photo.id,
+            "is_avatar": photo.is_avatar
+            }
 
 
 def get_current_time() -> datetime:
@@ -63,6 +71,8 @@ class UserResource(Resource):
         self.parser.add_argument('birthday', required=False)
         # Возраст пользователя
         self.parser.add_argument('age', required=False, type=int)
+        # Пол пользователя
+        self.parser.add_argument('gender', required=False, type=int)
         # Могут ли смотреть его аудио
         self.parser.add_argument('can_see_audio', required=False, type=bool)
         # Могут ли смотреть его группы
@@ -100,6 +110,8 @@ class UserResource(Resource):
         self.parser.add_argument('photo', required=False, type=str)
         # id Фото пользователя
         self.parser.add_argument('photo_id', required=False, type=int)
+        # Фото на аватарку или нет
+        self.parser.add_argument('is_avatar', required=False, type=bool)
 
     # Получаем пользователя по егу id
     def get(self, user_id):
@@ -112,6 +124,12 @@ class UserResource(Resource):
             age = calculate_age(user.birthday)
             user.age = age
             session.commit()
+        photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user_id).all()
+        photos = []
+        for photo in photo_association:
+            cur_photo = session.query(Photo).get(photo.photo_id)
+            if cur_photo:
+                photos.append({"photo": get_photo(cur_photo, photo)})
         logging.getLogger("NeoBrain").debug("User with id " + str(user_id) + " information was get")
         return jsonify({'user': user.to_dict(
             only=('id', 'name', 'surname', 'nickname', 'number',
@@ -121,8 +139,7 @@ class UserResource(Resource):
                   'country', 'education', 'status', 'last_seen',
                   'followers_count', 'subscriptions_count', 'count_incoming_messages',
                   'count_outgoing_messages', 'count_music', 'count_apps',
-                  'count_chats', 'count_groups', 'count_posts', 'count_upload_photos',
-                  'photo_id'))})
+                  'count_chats', 'count_groups', 'count_posts', 'count_upload_photos')), 'photos': photos})
 
     # Изменяем пользователя по его id
     def put(self, user_id):
@@ -176,6 +193,8 @@ class UserResource(Resource):
             user.country = args['country']
         if args.get('education', None):
             user.education = args['education']
+        if args.get('gender', None) is not None:
+            user.gender = args['gender']
         if args.get('followers_count', None) is not None:
             user.followers_count = args['followers_count']
         if args.get('subscriptions_count', None) is not None:
@@ -202,7 +221,9 @@ class UserResource(Resource):
         if args.get('last_seen', None):
             user.last_seen = args['last_seen']
         if args.get('photo', None):
-            if user.photo_id != 2:
+            old_photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user_id,
+                                                                           PhotoAssociation.is_avatar == True).first()
+            if old_photo_association.photo_id != 2:
                 # Изменяем фото
                 photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
                 photo.data = decodebytes(args['photo'].encode())
@@ -211,7 +232,7 @@ class UserResource(Resource):
                 photo = Photo(
                     data=decodebytes(args['photo'].encode())
                 )
-                cur_photo_id = user.photo_id
+                cur_photo_id = old_photo_association.photo_id
                 session.add(photo)
                 session.commit()
                 posts = session.query(Post).filter(Post.photo_id == cur_photo_id).all()
@@ -222,16 +243,31 @@ class UserResource(Resource):
                 if chats:
                     for chat in chats:
                         chat.photo_id = photo.id
-                user.photo_id = photo.id
-        if args.get('photo_id', None):
-            user.photo_id = args['photo_id']
+                if args.get('is_avatar', True):
+                    association = PhotoAssociation(
+                        user_id=user.id,
+                        photo_id=photo.id,
+                        is_avatar=True
+                    )
+                    session.add(association)
+                    session.delete(old_photo_association)
+                else:
+                    association = PhotoAssociation(
+                        user_id=user.id,
+                        photo_id=photo.id,
+                        is_avatar=False
+                    )
+                    session.add(association)
+                session.commit()
         # Обновляем дату модификации пользователя
         user.modified_date = get_current_time()
+        photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user_id,
+                                                                   PhotoAssociation.is_avatar == True).first()
         session.commit()
         logging.getLogger("NeoBrain").debug(f"User {user_id} profile was edited")
         return jsonify({'status': 200,
                         'text': 'edited',
-                        'message': str(user.photo_id)})
+                        'message': str(photo_association.photo_id)})
 
     # Удаляем пользователя по егу id
     def delete(self, user_id):
@@ -269,13 +305,31 @@ class UsersSearchResource(Resource):
                                            (User.surname.like(f"%{param1}%")) |
                                            (User.surname.like(f"%{param2}%"))).all()
         logging.getLogger("NeoBrain").debug("Successful GET users search request")
-        return jsonify({'users': [user.to_dict(
-            only=('id', 'name', 'surname', 'nickname', 'number',
-                  'created_date', 'modified_date', 'is_closed', 'email', 'about',
-                  'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
-                  'can_write_message', 'city', 'republic', 'country', 'education', 'status',
-                  'last_seen', 'followers_count', 'subscriptions_count', 'photo_id'))
-            for user in users]})
+        find_users = {'users': []}
+        for user in users:
+            photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user.id,
+                                                                       PhotoAssociation.is_avatar == True).first()
+            find_users['users'].append({'id': user.id,
+                                        'name': user.name,
+                                        'surname': user.surname,
+                                        'nickname': user.nickname,
+                                        'age': user.age,
+                                        'gender': user.gender,
+                                        'city': user.city,
+                                        'republic': user.republic,
+                                        'country': user.country,
+                                        'status': user.status,
+                                        'followers_count': user.followers_count,
+                                        'subscriptions_count': user.subscriptions_count,
+                                        'photo_id': photo_association.photo_id})
+        return find_users
+        # return jsonify({'users': [user.to_dict(
+        #     only=('id', 'name', 'surname', 'nickname', 'number',
+        #           'created_date', 'modified_date', 'is_closed', 'email', 'about',
+        #           'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
+        #           'can_write_message', 'city', 'republic', 'country', 'education', 'status',
+        #           'last_seen', 'followers_count', 'subscriptions_count'))
+        #     for user in users]})
 
 
 # Ресурс входа пользователя
@@ -399,8 +453,7 @@ class UsersListResource(Resource):
                   'country', 'education', 'status', 'last_seen',
                   'followers_count', 'subscriptions_count', 'count_incoming_messages',
                   'count_outgoing_messages', 'count_music', 'count_apps',
-                  'count_chats', 'count_groups', 'count_posts', 'count_upload_photos',
-                  'photo_id'))
+                  'count_chats', 'count_groups', 'count_posts', 'count_upload_photos'))
             for user in users]})
 
     # Создаём пользователя
@@ -414,14 +467,14 @@ class UsersListResource(Resource):
                             'text': "Empty request"})
         # Обязательно либо номер, либо почта
         if not args['number'] and not args['email']:
-            logging.getLogger("NeoBrain")\
+            logging.getLogger("NeoBrain") \
                 .debug("Wrong POST user's list request (missing number and email)")
             return jsonify({'status': 400,
                             'text': "Bad request"})
         # Проверяем занят ли никнейм
         elif session.query(User).filter(
                 User.nickname == args['nickname']).first():
-            logging.getLogger("NeoBrain")\
+            logging.getLogger("NeoBrain") \
                 .debug("Wrong POST user's list request (Nickname already exists)")
             return jsonify({'status': 449,
                             'text': 'Nickname already exists'})
@@ -449,8 +502,7 @@ class UsersListResource(Resource):
         user = User(
             name=args['name'].title(),
             surname=args['surname'].title(),
-            nickname=args['nickname'],
-            photo_id=2
+            nickname=args['nickname']
         )
         user.set_password(args['hashed_password'])
         if args.get('number', None):
@@ -459,6 +511,13 @@ class UsersListResource(Resource):
             user.email = args['email'].lower()
         # Добавляем пользователя
         session.add(user)
+        session.commit()
+        association = PhotoAssociation(
+            user_id=user.id,
+            photo_id=2,
+            is_avatar=True
+        )
+        session.add(association)
         session.commit()
         logging.getLogger("NeoBrain").info("User created")
         return jsonify({'status': 201,

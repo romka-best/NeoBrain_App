@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -133,11 +134,11 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void onBind(int position) {
             super.onBind(position);
-            if (mUser.getNumber() != null) {
+            if (mUser.getNumber() != null && !mUser.getNumber().equals("null")) {
                 title.setText(mUser.getNumber());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_phone);
-                mUser.setNumber(null);
-            } else if (mUser.getBirthday() != null) {
+                mUser.setNumber("null");
+            } else if (mUser.getBirthday() != null && !mUser.getBirthday().equals("null")) {
                 String userBirthday = mUser.getBirthday();
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat clientDateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -149,23 +150,23 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     e.printStackTrace();
                 }
                 textInputLayout.setStartIconDrawable(R.drawable.ic_cake);
-                mUser.setBirthday(null);
-            } else if (mUser.getCountry() != null) {
+                mUser.setBirthday("null");
+            } else if (mUser.getCountry() != null && !mUser.getCountry().equals("null")) {
                 title.setText(mUser.getCountry());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_flag);
-                mUser.setCountry(null);
-            } else if (mUser.getRepublic() != null) {
+                mUser.setCountry("null");
+            } else if (mUser.getRepublic() != null && !mUser.getRepublic().equals("null")) {
                 title.setText(mUser.getRepublic());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_republic);
-                mUser.setRepublic(null);
-            } else if (mUser.getCity() != null) {
+                mUser.setRepublic("null");
+            } else if (mUser.getCity() != null && !mUser.getCity().equals("null")) {
                 title.setText(mUser.getCity());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_location_city);
-                mUser.setCity(null);
-            } else if (mUser.getEducation() != null) {
+                mUser.setCity("null");
+            } else if (mUser.getEducation() != null && !mUser.getEducation().equals("null")) {
                 title.setText(mUser.getEducation());
                 textInputLayout.setStartIconDrawable(R.drawable.ic_school);
-                mUser.setEducation(null);
+                mUser.setEducation("null");
             } else if (mUser.getGender() != null && mUser.getGender() != -1) {
                 if (mUser.getGender() == 0) {
                     title.setText(R.string.full_gender_w);
@@ -207,6 +208,25 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void onBind(int position) {
             super.onBind(position);
+            filledExposedDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    switch (position) {
+                        case 0:
+                            infoUser.setGender(0);
+                            break;
+                        case 1:
+                            infoUser.setGender(1);
+                            break;
+                        case 2:
+                            infoUser.setGender(2);
+                            break;
+                        default:
+                            infoUser.setGender(-2);
+                            break;
+                    }
+                }
+            });
             title.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -233,16 +253,6 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                             infoUser.setCity(s.toString());
                         } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.education))) {
                             infoUser.setEducation(s.toString());
-                        } else if (textInputLayout.getStartIconContentDescription().equals(mRouter.getActivity().getString(R.string.gender))) {
-                            if (s.toString().equals(mRouter.getActivity().getString(R.string.full_gender_w))) {
-                                infoUser.setGender(0);
-                            } else if (s.toString().equals(mRouter.getActivity().getString(R.string.full_gender_m))) {
-                                infoUser.setGender(1);
-                            } else if (s.toString().equals(mRouter.getActivity().getString(R.string.full_gender_not_defined))) {
-                                infoUser.setGender(2);
-                            } else {
-                                infoUser.setGender(-2);
-                            }
                         }
                     }
                 }
@@ -331,25 +341,21 @@ public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 textInputLayout.setStartIconContentDescription(R.string.education);
                 mUser.setEducation("null");
             } else if (mUser.getGender() != null && mUser.getGender() != -1) {
+                filledExposedDropdown.setHint(R.string.gender);
                 textInputLayout.setVisibility(View.GONE);
                 textInputLayout2.setVisibility(View.VISIBLE);
+                filledExposedDropdown.setInputType(InputType.TYPE_NULL);
                 String[] items = new String[]{Objects.requireNonNull(mRouter.getActivity()).getString(R.string.full_gender_w),
                         Objects.requireNonNull(mRouter.getActivity()).getString(R.string.full_gender_m),
                         Objects.requireNonNull(mRouter.getActivity()).getString(R.string.full_gender_not_defined)};
 
                 ArrayAdapter adapter = new ArrayAdapter<>(Objects.requireNonNull(mRouter.getActivity()), android.R.layout.simple_spinner_dropdown_item, items);
                 filledExposedDropdown.setAdapter(adapter);
-                if (mUser.getGender() == 0) {
-                    filledExposedDropdown.setText(R.string.full_gender_w);
-                } else if (mUser.getGender() == 1) {
-                    filledExposedDropdown.setText(R.string.full_gender_m);
-                } else {
-                    filledExposedDropdown.setText(R.string.full_gender_not_defined);
-                }
                 textInputLayout2.setStartIconDrawable(R.drawable.ic_gender);
                 textInputLayout.setStartIconContentDescription(R.string.gender);
                 mUser.setGender(-1);
             } else if (mUser.getGender() == null) {
+                filledExposedDropdown.setHint(R.string.gender);
                 textInputLayout.setVisibility(View.GONE);
                 textInputLayout2.setVisibility(View.VISIBLE);
                 filledExposedDropdown.setInputType(InputType.TYPE_NULL);

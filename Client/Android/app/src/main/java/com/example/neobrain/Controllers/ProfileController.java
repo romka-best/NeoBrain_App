@@ -46,6 +46,7 @@ import com.example.neobrain.API.model.People;
 import com.example.neobrain.API.model.PeopleModel;
 import com.example.neobrain.API.model.Person;
 import com.example.neobrain.API.model.Photo;
+import com.example.neobrain.API.model.PhotoModel;
 import com.example.neobrain.API.model.Post;
 import com.example.neobrain.API.model.PostList;
 import com.example.neobrain.API.model.Status;
@@ -59,6 +60,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -180,7 +182,7 @@ public class ProfileController extends Controller {
                 Context.MODE_PRIVATE);
 
         View imagesButton = view.findViewById(R.id.button_first);
-        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PhotosController(bottomIsGone))
+        imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PhotosController((userId == 0) ? userIdSP : userId, bottomIsGone))
                 .popChangeHandler(new VerticalChangeHandler())
                 .pushChangeHandler(new VerticalChangeHandler())));
 
@@ -336,6 +338,7 @@ public class ProfileController extends Controller {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     User user = response.body().getUser();
+                    ArrayList<PhotoModel> photos = (ArrayList<PhotoModel>) response.body().getPhotos();
                     assert user != null;
                     nameAndSurname.setText(user.getName() + " " + user.getSurname());
                     nickname.setText(user.getNickname());
@@ -364,8 +367,9 @@ public class ProfileController extends Controller {
                     if (user.getGender() != null) {
                         if (user.getGender() == 0) {
                             cityAgeGender.add(Objects.requireNonNull(getResources()).getString(R.string.gender_w));
-                        } else
+                        } else if (user.getGender() == 1) {
                             cityAgeGender.add(Objects.requireNonNull(getResources()).getString(R.string.gender_m));
+                        }
                     }
                     StringBuffer sb = new StringBuffer();
                     boolean flag = false;
@@ -381,7 +385,12 @@ public class ProfileController extends Controller {
                         }
                     }
                     cityAgeGenderText.setText(sb);
-                    setPhotoId(user.getPhotoId());
+                    for (PhotoModel photo : photos) {
+                        if (photo.getPhoto().getAvatar()) {
+                            setPhotoId(photo.getPhoto().getId());
+                            break;
+                        }
+                    }
                     Call<Photo> photoCall = DataManager.getInstance().getPhoto(getPhotoId());
                     photoCall.enqueue(new Callback<Photo>() {
                         @Override
@@ -530,35 +539,40 @@ public class ProfileController extends Controller {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case CAMERA_REQUEST:
-                if (resultCode == RESULT_OK) {
-                    Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-                    assert thumbnailBitmap != null;
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    thumbnailBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
+                try {
+                    if (resultCode == RESULT_OK) {
+                        Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+                        assert thumbnailBitmap != null;
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        thumbnailBitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
 
-                    avatar.setImageBitmap(thumbnailBitmap);
+                        avatar.setImageBitmap(thumbnailBitmap);
 
-                    Integer userIdSP = sp.getInt("userId", -1);
-                    User user = new User();
-                    user.setPhoto(new String(encoded));
-                    Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
-                    call.enqueue(new Callback<Status>() {
-                        @Override
-                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
-                            if (response.isSuccessful()) {
-                                Status post = response.body();
-                                assert post != null;
-                                setPhotoId(Integer.parseInt(post.getMessage()));
-                                getProfile();
+                        Integer userIdSP = sp.getInt("userId", -1);
+                        User user = new User();
+                        user.setPhoto(new String(encoded));
+                        user.setAvatar(true);
+                        Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
+                        call.enqueue(new Callback<Status>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                                if (response.isSuccessful()) {
+                                    Status post = response.body();
+                                    assert post != null;
+                                    setPhotoId(Integer.parseInt(post.getMessage()));
+                                    getProfile();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
-                        }
-                    });
+                            @Override
+                            public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+                            }
+                        });
+                    }
+                } catch (RuntimeException e) {
+                    Snackbar.make(getView(), R.string.errors_with_size, Snackbar.LENGTH_LONG).show();
                 }
                 break;
             case PICK_IMAGE:
@@ -575,13 +589,14 @@ public class ProfileController extends Controller {
                         avatar.setImageBitmap(newSelectedImage);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        newSelectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        newSelectedImage.compress(Bitmap.CompressFormat.JPEG, 90, stream);
                         byte[] byteArray = stream.toByteArray();
                         byte[] encoded = Base64.encode(byteArray, Base64.DEFAULT);
 
                         Integer userIdSP = sp.getInt("userId", -1);
                         User user = new User();
                         user.setPhoto(new String(encoded));
+                        user.setAvatar(true);
                         Call<Status> call = DataManager.getInstance().editUser(userIdSP, user);
                         call.enqueue(new Callback<Status>() {
                             @Override
@@ -599,6 +614,8 @@ public class ProfileController extends Controller {
                         });
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
+                    } catch (RuntimeException e) {
+                        Snackbar.make(getView(), R.string.errors_with_size, Snackbar.LENGTH_LONG).show();
                     }
                 }
         }

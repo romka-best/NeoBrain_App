@@ -49,7 +49,7 @@ scheduler.start()
 def main():
     logger.debug("START")
     # Инициализируем базу данных
-    db_session.global_init("C:/NeoBrain/Server/db/neobrain.db")
+    db_session.global_init("db/neobrain.db")
     # Если не найден PORT среди файлов, поставь порт 5000
     port = int(os.environ.get("PORT", 5000))
     # Запускаем приложение
