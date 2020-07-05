@@ -153,4 +153,10 @@
     <string name="recoveredPerOneMillion">Излеченных на миллион</string>
     <string name="updated">Обновлено: </string>
     <string name="county_name">Страна/регион</string>
+    <string name="incorrectName" translatable="false">Имя введено некорректно!</string>
+    <string name="incorrectSurname" translatable="false">Фамилия введена некорректно!</string>
+    <string name="incorrectNicknameError" translatable="false">Никнейм должен быть от 6 до 15
+        символов длинной и состоять только из латинских символов, а также не должен содержать
+        пробельных символов </string>
+    <string name="incorrectNickname" translatable="false">Никнейм введён некорректно!</string>
 </resources>

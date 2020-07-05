@@ -127,7 +127,8 @@ public class RegController extends Controller {
         email = textEmail.getText().toString();
         if (!(!isPasswordSame(password, passwordRepeat) | !passwordValidate(password)
                 | !isEmailValid(email) | name.equals("") | surname.equals("") | nickname.equals("")
-                | name.equals("") | nickname.equals("") | surname.equals(""))) {
+                | name.equals("") | nickname.equals("") | surname.equals("")
+                | !isNicknameValid(nickname) | !isNameSurnameValid(name) | !isNameSurnameValid(surname))) {
             emailEdit.setError(null);
             assert getView() != null;
             getView().findViewById(R.id.email_text).getBackground().clearColorFilter();
@@ -228,6 +229,11 @@ public class RegController extends Controller {
                 nameEdit.setError(getResources().getString(R.string.empty_name));
                 getView().findViewById(R.id.name_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
+            } else if (!isNameSurnameValid(name)) {
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.incorrectName));
+                nameEdit.setError(getResources().getString(R.string.incorrectName));
+                getView().findViewById(R.id.name_text).getBackground().
+                        setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
             } else {
                 nameEdit.setError(null);
                 getView().findViewById(R.id.name_text).getBackground().clearColorFilter();
@@ -237,6 +243,11 @@ public class RegController extends Controller {
                 surnameEdit.setError(getResources().getString(R.string.empty_surname));
                 getView().findViewById(R.id.surname_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
+            } else if (!isNameSurnameValid(surname)) {
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.incorrectSurname));
+                surnameEdit.setError(getResources().getString(R.string.incorrectSurname));
+                getView().findViewById(R.id.surname_text).getBackground().
+                        setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
             } else {
                 surnameEdit.setError(null);
                 getView().findViewById(R.id.surname_text).getBackground().clearColorFilter();
@@ -244,6 +255,11 @@ public class RegController extends Controller {
             if (nickname.equals("")) {
                 errors.add(Objects.requireNonNull(getResources()).getString(R.string.empty_nickname));
                 nicknameEdit.setError(getResources().getString(R.string.empty_nickname));
+                getView().findViewById(R.id.nickname_text).getBackground().
+                        setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
+            } else if (!isNicknameValid(nickname)) {
+                errors.add(Objects.requireNonNull(getResources()).getString(R.string.incorrectNicknameError));
+                nicknameEdit.setError(getResources().getString(R.string.incorrectNickname));
                 getView().findViewById(R.id.nickname_text).getBackground().
                         setColorFilter(R.color.colorError, PorterDuff.Mode.SRC_OUT);
             } else {
@@ -335,6 +351,21 @@ public class RegController extends Controller {
         textEmail.setText(savedInstanceState.getString("email"));
     }
 
+    private boolean isNameSurnameValid(String nameOrSurname) {
+        final String regex1 = "(.*)(\\d{1,})(.*)";
+        final String regex2 = "(.*)(\\s{1,})(.*)";
+        final String regex3 = ".{2,}";
+        return !Pattern.matches(regex1, nameOrSurname) &&
+                !Pattern.matches(regex2, nameOrSurname) &&
+                Pattern.matches(regex3, nameOrSurname);
+    }
+
+    private boolean isNicknameValid(String nickname) {
+        final String regex1 = "[a-zA-Z]{6,15}";
+        final String regex2 = "(.*)(\\s)(.*)";
+        return Pattern.matches(regex1, nickname) &
+                !Pattern.matches(regex2, nickname);
+    }
 
     private boolean isEmailValid(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
