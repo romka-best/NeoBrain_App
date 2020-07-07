@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Контроллер для поиска по чатам */
 public class SearchChatsController extends Controller {
     @BindView(R.id.chatRecycler)
     public RecyclerView chatRecycler;
@@ -38,6 +39,7 @@ public class SearchChatsController extends Controller {
     private boolean found;
     private String mChatString;
 
+    // Несколько конструкторов для первого создания и последующего обновления контроллера
     public SearchChatsController() {
         found = true;
         mChatString = "";
@@ -58,11 +60,12 @@ public class SearchChatsController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-
+        // Получаем чаты для поиска и выводим на экран
         getChats();
         return view;
     }
 
+    /* Метод для получения и отображения чатов при поиске*/
     private void getChats() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -71,6 +74,8 @@ public class SearchChatsController extends Controller {
         if (!mChatString.equals("")) {
             found = false;
         }
+
+        // Присваиваем нужный адаптер
         chatAdapter = new SearchAdapter(mainRouter, found);
         chatAdapter.setChatList(mChats);
         chatAdapter.getFilter().filter(mChatString);

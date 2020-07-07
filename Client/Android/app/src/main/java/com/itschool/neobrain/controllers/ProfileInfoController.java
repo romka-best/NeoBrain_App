@@ -30,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/* Контроллер для информации профиля */
 public class ProfileInfoController extends Controller {
     @BindView(R.id.infoRecycler)
     public RecyclerView profileInfoRecycler;
@@ -38,8 +39,9 @@ public class ProfileInfoController extends Controller {
     private boolean bottomIsGone = false;
     private int userId;
 
-    public ProfileInfoController() {
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
 
+    public ProfileInfoController() {
     }
 
     public ProfileInfoController(int userId, boolean bottomIsGone) {
@@ -61,16 +63,18 @@ public class ProfileInfoController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.profile_info_controller, container, false);
         ButterKnife.bind(this, view);
-
+        // Получаем информацию о профиле
         getProfileInfo();
         return view;
     }
 
+    /* Метод, получающий информацию о профиле */
     private void getProfileInfo() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         profileInfoRecycler.setLayoutManager(mLayoutManager);
         profileInfoRecycler.setItemAnimator(new DefaultItemAnimator());
+        // Запрос на наш сервер для получения нужной информации
         Call<UserModel> userModelCall = DataManager.getInstance().getUser(userId);
         userModelCall.enqueue(new Callback<UserModel>() {
             @Override
@@ -91,16 +95,20 @@ public class ProfileInfoController extends Controller {
         });
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

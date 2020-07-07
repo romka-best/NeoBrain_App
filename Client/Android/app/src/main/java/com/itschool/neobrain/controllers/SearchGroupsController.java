@@ -11,6 +11,7 @@ import com.itschool.neobrain.R;
 
 import butterknife.ButterKnife;
 
+/* Контроллер для поиска по группам */
 public class SearchGroupsController extends Controller {
     @NonNull
     @Override

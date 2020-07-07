@@ -47,11 +47,12 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер регистрации
+/* Контроллер регистрации */
 public class RegController extends Controller {
     private String authlog;
     private String authpass;
 
+    // Много полей для ввода и их инициализация
     @BindView(R.id.name_text)
     public TextView textName;
     @BindView(R.id.surname_text)
@@ -64,15 +65,6 @@ public class RegController extends Controller {
     public TextView textPasswordRepeat;
     @BindView(R.id.email_text)
     public TextView textEmail;
-
-    private String name;
-    private String surname;
-    private String nickname;
-    private String password;
-    private String passwordRepeat;
-    private String email;
-    private List<String> errors = new ArrayList<>();
-
     @BindView(R.id.passwordRepeat)
     public TextInputLayout passRepEdit;
     @BindView(R.id.password)
@@ -85,13 +77,21 @@ public class RegController extends Controller {
     public TextInputLayout surnameEdit;
     @BindView(R.id.nickname)
     public TextInputLayout nicknameEdit;
-
     @BindView(R.id.regButton)
     public MaterialButton regButton;
 
+    // Заранее инициализируем нужные переменные
+    private String name;
+    private String surname;
+    private String nickname;
+    private String password;
+    private String passwordRepeat;
+    private String email;
+    private List<String> errors = new ArrayList<>();
 
     private SharedPreferences sp;
 
+    // Несколько конструкторов, для передачи при необходимости введнного ранее логина и пароля
     public RegController() {
     }
 
@@ -111,19 +111,25 @@ public class RegController extends Controller {
         return view;
     }
 
+    /* Метод срабатывает при нажатии на кнопку регистрации. Проверяет корректность данных, а затем
+       регистрирует нового пользователя и входит под новым именем в само приложение */
     @SuppressLint("ResourceAsColor")
     @OnClick({R.id.regButton})
     void launchReg() {
-        // TODO Обработать корректно поля
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
         assert imm != null;
         imm.hideSoftInputFromWindow(regButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        // Берём данные из полей ввода
         name = textName.getText().toString().trim();
         surname = textSurname.getText().toString().trim();
         nickname = textNickname.getText().toString().trim();
         password = textPassword.getText().toString().trim();
         passwordRepeat = textPasswordRepeat.getText().toString().trim();
-        email = textEmail.getText().toString();
+        email = textEmail.getText().toString().trim();
+
+        // Если не обнаружена некорректность, приводим к стандартному виду поля воода и отправляем
+        // письмо для подтверждения почты, в ином случае уведомляем о том, где именно была
+        // совершенна ошибка ввода
         if (!(!isPasswordSame(password, passwordRepeat) | !passwordValidate(password)
                 | !isEmailValid(email) | name.equals("") | surname.equals("") | nickname.equals("")
                 | name.equals("") | nickname.equals("") | surname.equals("")
@@ -144,6 +150,7 @@ public class RegController extends Controller {
 
             User userEmail = new User();
             userEmail.setEmail(email);
+            // Отправляем письмо, выводим диалоговое окно для подтверждения
             Call<Status> acceptCall = DataManager.getInstance().sendEmail(userEmail);
             acceptCall.enqueue(new Callback<Status>() {
                 @Override
@@ -157,6 +164,7 @@ public class RegController extends Controller {
                                 .setMessage(R.string.check_code)
                                 .setView(view)
                                 .setPositiveButton(R.string.accept, (dialog, which) -> {
+                                    // Если всё в порядке, создаём пользователя, если нет - сообщаем об этом
                                     if (Objects.requireNonNull(valueKey.getText()).toString().equals(post.getText())) {
                                         User user = new User();
                                         user.setName(name);
@@ -164,6 +172,7 @@ public class RegController extends Controller {
                                         user.setNickname(nickname);
                                         user.setEmail(email);
                                         user.setHashedPassword(password);
+                                        // Входим в приложение только что созданным пользователем
                                         Call<Status> call1 = DataManager.getInstance().createUser(user);
                                         call1.enqueue(new Callback<Status>() {
                                             @Override
@@ -310,7 +319,8 @@ public class RegController extends Controller {
                     message.append(er);
                 }
             }
-            // Вывод Snackbar-а
+
+            // Вывод сообщения об ошибках
             Snackbar snackbar = Snackbar.make(getView(), message.toString(), Snackbar.LENGTH_INDEFINITE);
             Button button = snackbar.getView().findViewById(R.id.snackbar_action);
             button.setTextColor(Color.GREEN);
@@ -321,13 +331,17 @@ public class RegController extends Controller {
         }
     }
 
+    /* Срабатывает при нажатии на кнопку перехода на авторизацию
+     или по нажатию на экран авторизации слева */
     @OnClick({R.id.authButton, R.id.square_s})
     void launchAuth() {
+        // Переходим на авторизацию, передаём значения ранее введённые пользователем в авторизации
         getRouter().pushController(RouterTransaction.with(new AuthController(authlog, authpass))
                 .popChangeHandler(new FadeChangeHandler())
                 .pushChangeHandler(new FadeChangeHandler()));
     }
 
+    /* Сохранение данных при повороте экрана */
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -339,6 +353,7 @@ public class RegController extends Controller {
         outState.putString("email", email);
     }
 
+    /* Восстановление данных */
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -350,6 +365,7 @@ public class RegController extends Controller {
         textEmail.setText(savedInstanceState.getString("email"));
     }
 
+    /* Метод, проверяющий фамилию и имя на валидность */
     private boolean isNameSurnameValid(String nameOrSurname) {
         final String regex1 = "(.*)(\\d{1,})(.*)";
         final String regex2 = "(.*)(\\s{1,})(.*)";
@@ -359,6 +375,7 @@ public class RegController extends Controller {
                 Pattern.matches(regex3, nameOrSurname);
     }
 
+    /* Метод, проверяющий никнейм на валидность */
     private boolean isNicknameValid(String nickname) {
         final String regex1 = "[a-zA-Z]{6,15}";
         final String regex2 = "(.*)(\\s)(.*)";
@@ -366,10 +383,12 @@ public class RegController extends Controller {
                 !Pattern.matches(regex2, nickname);
     }
 
+    /* Метод, проверяющий почту на валидность */
     private boolean isEmailValid(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    /* Метод, проверяющий пароль на валидность */
     private boolean passwordValidate(String password) {
         // Пароль должен содержать латинксие буквы (оба регистра),
         // цифры, и содержать в себе как минимум 8 символов
@@ -384,10 +403,12 @@ public class RegController extends Controller {
                 Pattern.matches(regex4, password);
     }
 
+    /* Метод, проверяющий пароли на совпадение */
     private boolean isPasswordSame(String password1, String password2) {
         return password1.equals(password2);
     }
 
+    /* Метод, проверяющий номер телефона на валидность */
     private boolean isPhoneNumberValid(String phone) {
         if (phone == null) return false;
         if (phone.isEmpty()) return false;

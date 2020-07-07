@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+/* Класс, для добавления отступов между элементами RecyclerView */
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
 

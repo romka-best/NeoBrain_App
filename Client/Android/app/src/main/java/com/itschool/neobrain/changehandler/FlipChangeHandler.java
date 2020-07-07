@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 
-// Клас для анимации переворачивания контроллера
+/* Клас для анимации переворачивания контроллера */
 public class FlipChangeHandler extends AnimatorChangeHandler {
 
     private static final long DEFAULT_ANIMATION_DURATION = 300;

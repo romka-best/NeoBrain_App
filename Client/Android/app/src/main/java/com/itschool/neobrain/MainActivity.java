@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -30,9 +29,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// Создаём единственную активность на всё приложение
+/* Создаём единственную активность на всё приложение */
 public class MainActivity extends AppCompatActivity {
-
+    /* Создаём необходимые поля */
     @BindView(R.id.controller_container)
     ViewGroup container;
 
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int PERMISSION_REQUEST_CODE = 1001;
 
-
+    /* Метод, вызываемый при первом создании активности */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Перед запуском приложения мы загружаем SplashTheme, для красивой загрузки.
@@ -72,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /* Обработчик нажатия кнопки назад на устройстве, непозволяющий выйти из приложения */
     @Override
     public void onBackPressed() {
         if (!router.handleBack()) {
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /* Запрашиваем доступ к необходим ресурсам устройства */
     public void requestMultiplePermissions() {
         ActivityCompat.requestPermissions(this,
                 new String[]{
@@ -92,20 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 PERMISSION_REQUEST_CODE);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 6) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//            }
-//            if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-//
-//            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
+    /* Метод, ставящий на активном пользователе метку "в сети" */
     private void setOnline() {
         userIdSP = sp.getInt("userId", -1);
         User user = new User();
@@ -122,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* Метод, ставящий на пользователе метку "не в сети", если пользователь вышёл из приложения */
     private void setOffline() {
         userIdSP = sp.getInt("userId", -1);
         User user = new User();
@@ -138,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* Вызывается перед тем, как пользователю станет видна активность */
     @Override
     protected void onStart() {
         super.onStart();
@@ -147,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /* Вызывается когда Activity становится не видно пользователю */
     @Override
     protected void onStop() {
         super.onStop();

@@ -54,6 +54,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Основной и определяющий контроллер для поиска */
 @SuppressLint("ValidController")
 public class SearchController extends Controller {
     private String TAG = "SearchController";
@@ -71,8 +72,10 @@ public class SearchController extends Controller {
 
     private ArrayList<Chat> mChats;
 
+    /* Конструктор создания раздела поиска */
     public SearchController() {
         currentItem = 0;
+        // Обрабатываем нужный раздел поиска
         pagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
@@ -105,6 +108,7 @@ public class SearchController extends Controller {
                 return 6;
             }
 
+            /* Метод, определяющий названия под контроллеров поиска у пользователя */
             @Override
             public CharSequence getPageTitle(int position) {
                 switch (position) {
@@ -127,6 +131,7 @@ public class SearchController extends Controller {
         };
     }
 
+    /* Конструктор, переключающий на нужный контроллер поиска, в зависимости от переданного значения */
     public SearchController(short currentItem) {
         this.currentItem = currentItem;
         pagerAdapter = new RouterPagerAdapter(this) {
@@ -183,6 +188,7 @@ public class SearchController extends Controller {
         };
     }
 
+    /* Метод, отвечающий за выведение результатов поиска */
     @SuppressLint("CheckResult")
     @NonNull
     @Override
@@ -192,11 +198,15 @@ public class SearchController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
+        // Подключаем адаптер
         viewPager.setAdapter(pagerAdapter);
+        // Устанавливаем в нём нужное значение
         viewPager.setCurrentItem(currentItem);
+
         tabLayout.setupWithViewPager(viewPager);
         searchView.setIconified(false);
 
+        // Создаём объект реактивного програмирования и "подписываем" его на изменения в поиске
         Observable.create((ObservableOnSubscribe<String>) emitter -> searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -228,6 +238,7 @@ public class SearchController extends Controller {
         return view;
     }
 
+    /* Метод для поиска по всем имеющимся данным */
     private ObservableSource<String> dataFromNetwork(String query) {
         return new Observable<String>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -268,11 +279,6 @@ public class SearchController extends Controller {
                     case 2:
                         break;
                     case 3:
-//                        if (mChats != null) {
-//                            String chatString = String.join(" ", s);
-//                            Objects.requireNonNull(pagerAdapter.getRouter(3)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
-//                            break;
-//                        }
                         Integer userIdSP = sp.getInt("userId", -1);
                         mChats = new ArrayList<>();
                         Call<Chats> chatsCall = DataManager.getInstance().getChats(userIdSP);
@@ -377,16 +383,20 @@ public class SearchController extends Controller {
         };
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);

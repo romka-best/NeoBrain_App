@@ -34,7 +34,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-// Интерфейс для работы с API NeoBrain
+/* Интерфейс для работы с API NeoBrain */
 public interface APIService {
 
     @GET("users/{userId}")

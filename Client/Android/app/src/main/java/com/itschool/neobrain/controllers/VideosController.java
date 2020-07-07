@@ -26,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.Nullable;
 
-// Контроллер видео
+/* Контроллер видео */
 public class VideosController extends Controller {
     @BindView(R.id.videosRecycler)
     public RecyclerView videosRecycler;
@@ -34,6 +34,8 @@ public class VideosController extends Controller {
 
     private SharedPreferences sp;
     private boolean bottomIsGone = false;
+
+    // Несколько конструкторов для корректной работы с нижней навигацией
 
     public VideosController() {
 
@@ -61,18 +63,22 @@ public class VideosController extends Controller {
         return view;
     }
 
+    /* Метод для получения нужного видео */
     private void getVideo() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         videosRecycler.setLayoutManager(mLayoutManager);
         videosRecycler.setItemAnimator(new DefaultItemAnimator());
+        // Присваиваем адаптер для RecyclerView
         videosAdapter = new VideosAdapter(new ArrayList<>());
         videosRecycler.setAdapter(videosAdapter);
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

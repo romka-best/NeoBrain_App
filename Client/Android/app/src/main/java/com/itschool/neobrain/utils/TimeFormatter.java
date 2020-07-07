@@ -12,13 +12,17 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/* Класс, осуществляющий работу со временем */
 public class TimeFormatter {
     private final String date;
 
+    // Указываем дату при создании экземпляра класса
     public TimeFormatter(String date) {
         this.date = date;
     }
 
+    /* Метод, возвращающий информацию в нужном виде (допустимом строковом представлении) о том,
+     сколько времени прошло от указанной при создании экземпляра даты, до настоящего момента.*/
     public String timeForChat(Context context) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatMins = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         FormatMins.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -85,6 +89,7 @@ public class TimeFormatter {
         return context.getResources().getString(R.string.error_in_date);
     }
 
+    /* Метод, выводящий время написания первого сообщения за день, в красивом представлении */
     public String timeForMessageSeparator(Context context) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date now = new Date();
@@ -110,6 +115,7 @@ public class TimeFormatter {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "";
     }
 
+    /* Метод, говорящий о том, когда было написано последнее сообщение в чате в необходимом виде */
     public String timeForMessageHolder() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date parsedDate = null;
@@ -128,22 +134,8 @@ public class TimeFormatter {
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE);
     }
 
-    public Boolean compareWithNowDay() {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date parsedDate = null;
-        Date now = new Date();
-        try {
-            parsedDate = FormatHours.parse(date);
-            assert parsedDate != null;
-            Calendar calendarThen = Calendar.getInstance();
-            calendarThen.setTime(new Date(parsedDate.getTime()));
-            return Calendar.getInstance().get(Calendar.DATE) == calendarThen.get(Calendar.DATE);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
+    /* Метод, возвращающий "true", если время и дата 2-х
+     моментов времени одинаковы, и "false" в противном */
     public Boolean compareDates(String date2) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date parsedDate;
@@ -174,6 +166,7 @@ public class TimeFormatter {
         return false;
     }
 
+    /* Метод, сравнивающий дни между 2-му датами ("true", если одинаковы, иначе "false") */
     public Boolean compareDatesDays(String date2) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date parsedDate;
@@ -204,6 +197,8 @@ public class TimeFormatter {
         return false;
     }
 
+    /* Метод, генерирующий дату и время, на 1 секунду отстающих от
+    даты и времени, указанных при создании экземпляра */
     public String onFewEarlier() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parsedDate;
@@ -221,16 +216,4 @@ public class TimeFormatter {
         return "";
     }
 
-    public String getCurrentDate() {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat FormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar calendar = Calendar.getInstance();
-        try {
-            calendar.setTime(new Date(FormatHours.parse(date).getTime()));
-            calendar.add(Calendar.HOUR, 3);
-            return FormatHours.format(FormatHours.format(calendar.getTime()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return FormatHours.format(new Date());
-    }
 }

@@ -30,8 +30,9 @@ import com.itschool.neobrain.API.models.Users;
 import io.reactivex.Observable;
 import retrofit2.Call;
 
-// Класс для работы с API NeoBrain сервера
+/* Класс для работы с API NeoBrain сервера */
 public class DataManager {
+    /* Создаём необходимые поля и методы, позволяющие запрашивать необходимые данные с сервера */
     private static DataManager instance;
     private APIService mAPIService;
 

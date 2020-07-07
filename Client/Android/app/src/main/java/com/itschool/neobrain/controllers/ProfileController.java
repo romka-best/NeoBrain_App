@@ -81,17 +81,15 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер для работы с Профилем
+/* Контроллер для работы с Профилем */
 @SuppressLint("ValidController")
 public class ProfileController extends Controller {
 
     @BindView(R.id.postRecycler)
     public RecyclerView postRecycler;
     private PostAdapter postAdapter;
-
     @BindView(R.id.coordinatorLayout)
     public CoordinatorLayout coordinatorLayout;
-
     @BindView(R.id.avatar)
     public ImageView avatar;
     @BindView(R.id.swipeContainer)
@@ -137,14 +135,7 @@ public class ProfileController extends Controller {
     private boolean isLoaded = false;
     private Integer userIdSP;
 
-    public int getPhotoId() {
-        return photoId;
-    }
-
-    private void setPhotoId(int photoId) {
-        this.photoId = photoId;
-    }
-
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public ProfileController() {
 
     }
@@ -169,6 +160,15 @@ public class ProfileController extends Controller {
         this.bottomIsGone = args.getBoolean("bottomIsGone");
     }
 
+    /* Геттер и сеттер для PhotoId*/
+    public int getPhotoId() {
+        return photoId;
+    }
+
+    private void setPhotoId(int photoId) {
+        this.photoId = photoId;
+    }
+
     @SuppressLint({"SetTextI18n", "ResourceType"})
     @NonNull
     @Override
@@ -180,6 +180,9 @@ public class ProfileController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+
+
+        // Присваиваем переменным значения, ставим обработчики нажатий и анимации перехода
 
         View imagesButton = view.findViewById(R.id.button_first);
         imagesButton.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new PhotosController((userId == 0) ? userIdSP : userId, bottomIsGone))
@@ -210,6 +213,7 @@ public class ProfileController extends Controller {
         avatarCard.setPreventCornerOverlap(false);
         avatarCard.setOnClickListener(v -> launchPhoto());
 
+        // Проверяем не принадлежит ли профиль текцщему пользователю
         userIdSP = sp.getInt("userId", -1);
         if (userId == userIdSP) {
             userId = 0;
@@ -217,11 +221,16 @@ public class ProfileController extends Controller {
 
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
+            // Если это профиль текущего пользователя,
+            // убираем bottomNavigationView и создаём новый контроллер постов
                     if (userId == 0) {
                         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
                         bottomNavigationView.setVisibility(View.GONE);
                         getRouter().pushController(RouterTransaction.with(new PostController()));
-                    } else {
+                    }
+                    // Иначе, проверяем подписан ли текущий пользователь на данного,
+                    // в зависимости от этого вырисовываем нужную картинку
+                    else {
                         if (inSubscribe) {
                             Call<Status> deleteCall = DataManager.getInstance().deletePeople(userIdSP, userId);
                             deleteCall.enqueue(new Callback<Status>() {
@@ -260,9 +269,13 @@ public class ProfileController extends Controller {
                 }
         );
 
+        // Устанавливаем слушатель на кнопку редактирования
         buttonEdit.setOnClickListener(v -> {
+            // Скрываем BottomNavigationView
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
+            // Если это текущий пользователь, то открываем соответствующий контроллер,
+            // иначе перебрасываем текущего пользователя в чат с данным
             if (userId == 0) {
                 getRouter().pushController(RouterTransaction.with(new ProfileEditController(true)));
             } else {
@@ -290,12 +303,14 @@ public class ProfileController extends Controller {
             }
         });
 
+        // Устанавливаем слушатель на кнопку с информацией
         buttonInfo.setOnClickListener(v -> {
             getRouter().pushController(RouterTransaction.with(new ProfileInfoController((userId == 0) ? userIdSP : userId, true))
                     .popChangeHandler(new VerticalChangeHandler())
                     .pushChangeHandler(new VerticalChangeHandler()));
         });
 
+        // Устанавливаем слушатель на кнопку дополнительной информации
         moreButton.setOnClickListener(v -> {
             if (userId == 0) {
                 getRouter().pushController(RouterTransaction.with(new SettingsController())
@@ -306,8 +321,10 @@ public class ProfileController extends Controller {
             }
         });
 
+        // Устанавливаем слушатель для обновления страницы профиля при свайпе вверх
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
+            // Обновляем информацию
             getProfile();
             swipeContainer.setRefreshing(false);
         });
@@ -315,7 +332,7 @@ public class ProfileController extends Controller {
         swipeContainer.setColorSchemeResources(
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
-
+        // Получаем данные о пользователе
         getProfile();
         swipeContainer.setVisibility(View.INVISIBLE);
         fabAdd.setVisibility(View.INVISIBLE);
@@ -324,6 +341,8 @@ public class ProfileController extends Controller {
         return view;
     }
 
+    /* Метод, получающий нужные данные о пользователе,
+     посредством запроса к серверу и воводящий их */
     private void getProfile() {
         Call<UserModel> call;
         if (userId == 0) {
@@ -331,6 +350,7 @@ public class ProfileController extends Controller {
         } else {
             call = DataManager.getInstance().getUser(userId);
         }
+        // Парсим ответ сервера, получаем данные
         call.enqueue(new Callback<UserModel>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -387,6 +407,7 @@ public class ProfileController extends Controller {
                     cityAgeGenderText.setText(sb);
                     for (PhotoModel photo : photos) {
                         if (photo.getPhoto().getAvatar()) {
+                            // Загружаем фото пользователя
                             setPhotoId(photo.getPhoto().getId());
                             break;
                         }
@@ -406,9 +427,11 @@ public class ProfileController extends Controller {
                             swipeContainer.setVisibility(View.VISIBLE);
                             fabAdd.setVisibility(View.VISIBLE);
                             buttonEdit.setVisibility(View.VISIBLE);
+                            // Если это не текущий пользователь, показываем кнопку "Написать сообщение"
                             if (userId != 0) {
                                 buttonEdit.setText(Objects.requireNonNull(getResources()).getString(R.string.write_message));
                                 moreButton.setImageDrawable(Objects.requireNonNull(getResources()).getDrawable(R.drawable.ic_more_vert, Objects.requireNonNull(getActivity()).getTheme()));
+                                // Получаем друзей пользователя, парсим ответ
                                 Call<People> peopleCall = DataManager.getInstance().getPeople(userIdSP);
                                 peopleCall.enqueue(new Callback<People>() {
                                     @Override
@@ -449,6 +472,7 @@ public class ProfileController extends Controller {
                 }
             }
 
+            // Если что-то пошло не так и запрос к серверу не удался, сообщаем об этом
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                 if (!isLoaded) {
@@ -465,9 +489,11 @@ public class ProfileController extends Controller {
                 }
             }
         });
+        // Получаем посты пользователя
         getPosts();
     }
 
+    /* Метод, получающий и выводящий посты пользователя */
     private void getPosts() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -479,6 +505,7 @@ public class ProfileController extends Controller {
         } else {
             call = DataManager.getInstance().getPosts(userId, userIdSP);
         }
+        // Парсим ответ сервера
         call.enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(@NotNull Call<PostList> call, @NotNull Response<PostList> response) {
@@ -521,7 +548,10 @@ public class ProfileController extends Controller {
                             mPosts.get(mPosts.size() - 1).setScreamingEmoji(post.getScreamingEmoji());
                         }
                     }
+
+                    // Сортируем посты по времени
                     Collections.sort(mPosts, Post.COMPARE_BY_TIME);
+                    // Подключаем нужный адаптер
                     postAdapter = new PostAdapter(mPosts, getRouter(), false);
                     postRecycler.setNestedScrollingEnabled(false);
                     postRecycler.setAdapter(postAdapter);
@@ -534,10 +564,12 @@ public class ProfileController extends Controller {
         });
     }
 
+    /* Метод, получающий результат от Activity */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            // Запрос к камере и обновлении аватара
             case CAMERA_REQUEST:
                 try {
                     if (resultCode == RESULT_OK) {
@@ -575,6 +607,7 @@ public class ProfileController extends Controller {
                     Snackbar.make(getView(), R.string.errors_with_size, Snackbar.LENGTH_LONG).show();
                 }
                 break;
+            // Запрос к выборе фото для аватара из уже существующих
             case PICK_IMAGE:
                 if (resultCode == RESULT_OK) {
                     try {
@@ -627,9 +660,11 @@ public class ProfileController extends Controller {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /* Обработчик нажатия на аватар пользователя */
     @OnClick(R.id.avatar_card)
     void launchPhoto() {
         if (userId == 0) {
+            // Если это текущий пользователь, предлагаем ему определённые возможности с помощью диалогового окна
             String[] testArray = new String[]{Objects.requireNonNull(getResources()).getString(R.string.load_device), Objects.requireNonNull(getResources()).getString(R.string.do_photo), Objects.requireNonNull(getResources()).getString(R.string.open), Objects.requireNonNull(getResources()).getString(R.string.delete)};
             new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
                     .setTitle(Objects.requireNonNull(getResources()).getString(R.string.photo))
@@ -678,12 +713,14 @@ public class ProfileController extends Controller {
                     })
                     .show();
         } else {
+            // Если это не текущий пользователь, открываем фото в большом формате
             getRouter().pushController(RouterTransaction.with(new PhotoController(photoId))
                     .popChangeHandler(new VerticalChangeHandler(false))
                     .pushChangeHandler(new VerticalChangeHandler()));
         }
     }
 
+    /* Метод, для получения битового представление пути */
     private static int getBitmapOrientation(String path) {
         ExifInterface exif;
         int orientation = 0;
@@ -697,6 +734,7 @@ public class ProfileController extends Controller {
         return orientation;
     }
 
+    /* Метод, для переворота картинки */
     private static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -738,6 +776,7 @@ public class ProfileController extends Controller {
         }
     }
 
+    /* Метод, для получения строкового пути из URI объекта */
     private String getRealPathFromURI(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         @SuppressWarnings("deprecation")
@@ -748,9 +787,11 @@ public class ProfileController extends Controller {
         return cursor.getString(column_index);
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

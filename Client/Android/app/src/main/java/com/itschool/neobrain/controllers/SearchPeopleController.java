@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/* Контроллер поиска по людям */
 public class SearchPeopleController extends Controller {
     @BindView(R.id.peopleRecycler)
     public RecyclerView peopleRecycler;
@@ -29,6 +30,7 @@ public class SearchPeopleController extends Controller {
     private Router mainRouter;
     private boolean found;
 
+    // Несколько конструкторов для первого создания и последующего обновления контроллера
     public SearchPeopleController() {
         found = true;
     }
@@ -44,11 +46,12 @@ public class SearchPeopleController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.search_people_controller, container, false);
         ButterKnife.bind(this, view);
-
+        // Получаем людей для отображения
         getPeople();
         return view;
     }
 
+    /* Метод, получающий нужных людей для поисковой системы */
     private void getPeople() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -56,7 +59,9 @@ public class SearchPeopleController extends Controller {
         peopleRecycler.setItemAnimator(new DefaultItemAnimator());
         peopleAdapter = new SearchAdapter(mainRouter, found);
         peopleAdapter.setPersonList(mUsers);
+        // Уведомляем адаптер об изменениях
         peopleAdapter.notifyDataSetChanged();
+        // Присваиваем нужный адаптер RecyclerView
         peopleRecycler.setAdapter(peopleAdapter);
     }
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/* Контроллер для поиска по приложениям */
 public class SearchAppsController extends Controller {
     @BindView(R.id.appsRecycler)
     public RecyclerView appsRecycler;
@@ -29,6 +30,7 @@ public class SearchAppsController extends Controller {
     private Router mainRouter;
     private boolean found;
 
+    // Несколько конструкторов для первого создания и последующего обновления контроллера
     public SearchAppsController() {
         found = true;
     }
@@ -45,15 +47,19 @@ public class SearchAppsController extends Controller {
         View view = inflater.inflate(R.layout.search_apps_controller, container, false);
         ButterKnife.bind(this, view);
 
+        // Получаем приложения и выводим на экран
         getApps();
         return view;
     }
 
+    /* Метод для получения и отображения приложений при поиске */
     private void getApps() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         appsRecycler.setLayoutManager(mLayoutManager);
         appsRecycler.setItemAnimator(new DefaultItemAnimator());
+
+        // Присваиваем нужный адаптер
         appsAdapter = new SearchAdapter(mainRouter, found);
         appsAdapter.setAppsList(mApps);
         appsAdapter.notifyDataSetChanged();

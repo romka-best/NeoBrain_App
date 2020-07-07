@@ -31,6 +31,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Контроллер с настройками */
 public class SettingsController extends Controller {
     @BindView(R.id.exitButton)
     public MaterialButton exitButton;
@@ -50,8 +51,10 @@ public class SettingsController extends Controller {
         return view;
     }
 
+    /* Срабатывает при клике на кнопку выхода */
     @OnClick({R.id.exitButton})
     void exit() {
+        // Устанавливаем выход пользователя, отправляем данные на сервер
         Integer userIdSP = sp.getInt("userId", -1);
         User user = new User();
         user.setStatus(0);
@@ -79,16 +82,20 @@ public class SettingsController extends Controller {
         });
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);

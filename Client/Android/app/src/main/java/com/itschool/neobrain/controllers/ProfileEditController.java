@@ -38,6 +38,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Контроллер для работы с изменениями в профиле */
 public class ProfileEditController extends Controller {
     @BindView(R.id.infoRecycler)
     public RecyclerView profileInfoRecycler;
@@ -47,6 +48,8 @@ public class ProfileEditController extends Controller {
 
     private boolean bottomIsGone = false;
     private SharedPreferences sp;
+
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
 
     public ProfileEditController() {
 
@@ -73,16 +76,18 @@ public class ProfileEditController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-
+        // Получаем текущую информацию о профиле пользователя
         getProfileInfo();
         return view;
     }
 
+    /* Метод, получающий информацию о профиле */
     private void getProfileInfo() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         profileInfoRecycler.setLayoutManager(mLayoutManager);
         profileInfoRecycler.setItemAnimator(new DefaultItemAnimator());
+        // Запрос на наш сервер для получения нужной информации
         Call<UserModel> userModelCall = DataManager.getInstance().getUser(sp.getInt("userId", -1));
         userModelCall.enqueue(new Callback<UserModel>() {
             @Override
@@ -103,13 +108,16 @@ public class ProfileEditController extends Controller {
         });
     }
 
+    /* Обработчик клика на кнопку сохранить */
     @OnClick(R.id.saveButton)
     void save() {
         User user = profileInfoAdapter.getInfo();
+        // Если есть некоректность введения пола
         if (user.getGender() != null && user.getGender() == -2) {
             Snackbar.make(getView(), R.string.not_correct_gender, Snackbar.LENGTH_LONG).show();
             return;
         }
+        // Сохраняем новые данные, уведомляем сервер
         Call<Status> call = DataManager.getInstance().editUser(sp.getInt("userId", -1), user);
         call.enqueue(new Callback<Status>() {
             @Override
@@ -129,16 +137,20 @@ public class ProfileEditController extends Controller {
         });
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

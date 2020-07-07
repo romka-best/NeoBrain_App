@@ -24,8 +24,10 @@ import java.net.URL;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/* Контроллер работы с разделом о COVID-19 в России */
 public class RussiaCoronaController extends Controller {
 
+    // Ссылка на источник новостей о коронавирусе
     private final String url = "https://corona.lmao.ninja/v2/countries/russia?yesterday=false&strict=true&query";
     private HttpURLConnection con;
     private StringBuilder sb;
@@ -57,18 +59,20 @@ public class RussiaCoronaController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.russia_corona, container, false);
         ButterKnife.bind(this, view);
-
+        // Отправляем запрос на данные и парсим ответ
         new AsyncRequest().execute();
 
         return view;
     }
 
+    /* Асинхронный запрос к чужому API */
     @SuppressLint("StaticFieldLeak")
     class AsyncRequest extends AsyncTask<String, Integer, JSONObject> {
-
+        /* Выполняется фоном */
         @Override
         protected JSONObject doInBackground(String... arg) {
             try {
+                // Устанавливаем нужные параметры
                 con = (HttpURLConnection) new URL(url).openConnection();
                 con.setRequestMethod("GET");
                 con.setConnectTimeout(10000);
@@ -76,6 +80,7 @@ public class RussiaCoronaController extends Controller {
                 con.setRequestProperty("Content-Type", "application/json");
                 con.connect();
 
+                // Если всё хорошо, возвращаем JSON объект с информацией, если нет, логирим ошибку
                 if (HttpURLConnection.HTTP_OK == con.getResponseCode()) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     sb = new StringBuilder();
@@ -93,10 +98,12 @@ public class RussiaCoronaController extends Controller {
             return null;
         }
 
+        /* Выполняется по завершению запроса */
         @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(JSONObject s) {
             super.onPostExecute(s);
+            // Если всё хорошо, выводим данные пользователю, если нет, сообщаем об ошибке
             if (s != null) {
                 try {
                     String new_add = s.get("todayCases").toString();

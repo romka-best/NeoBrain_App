@@ -11,6 +11,7 @@ import com.itschool.neobrain.R;
 
 import butterknife.ButterKnife;
 
+/* Контроллер для поиска по музыке */
 public class SearchMusicController extends Controller {
     @NonNull
     @Override

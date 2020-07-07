@@ -29,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/* Контроллер работы с разделом о COVID-19 во всём мире */
 public class WorldCoronaController extends Controller {
 
     @BindView(R.id.corona_recycler)
@@ -41,17 +42,19 @@ public class WorldCoronaController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.world_corona, container, false);
         ButterKnife.bind(this, view);
-
+        // Получаем информацию и выводим данные
         getCoronaCountries();
 
         return view;
     }
 
+    /* Метод, получающий информацию по коронавирусу на данный момент */
     private void getCoronaCountries() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         corona_recycler.setLayoutManager(mLayoutManager);
         corona_recycler.setItemAnimator(new DefaultItemAnimator());
         List<Corona> mCorona = new ArrayList<>();
+        // Запрос на сервер, вытаскиваем информацию, заполняем адаптер
         Call<Coronas> all_corona = DataManager.getInstance().getAllCoronaCountry();
         all_corona.enqueue(new Callback<Coronas>() {
             @Override
@@ -85,6 +88,7 @@ public class WorldCoronaController extends Controller {
 
             }
         });
+        // Присваиваем адаптер для RecyclerView
         coronaAdapter = new CoronaAdapter(new ArrayList<>());
         corona_recycler.setAdapter(coronaAdapter);
     }

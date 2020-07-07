@@ -11,6 +11,7 @@ import com.itschool.neobrain.R;
 
 import butterknife.ButterKnife;
 
+/* Контроллер для мульти-поиска по всем данным */
 public class SearchAllController extends Controller {
     @NonNull
     @Override

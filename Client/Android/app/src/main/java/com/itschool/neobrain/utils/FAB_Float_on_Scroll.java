@@ -11,6 +11,8 @@ import androidx.core.view.ViewCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/* Класс, определяющий поведение FloatingActionButton
+(пропадать при скролле вниз, появляться при скролле вверх)*/
 public class FAB_Float_on_Scroll extends FloatingActionButton.Behavior {
 
     public FAB_Float_on_Scroll(Context context, AttributeSet attrs) {

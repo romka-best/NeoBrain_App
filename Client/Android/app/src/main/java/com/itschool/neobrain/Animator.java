@@ -12,7 +12,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 
+/* Класс, реализующий анимацию перехода между экранами
+ регистрации/авторизации и самим приложением */
 public class Animator extends AnimatorChangeHandler {
+    /* Метод возвращает прописанную, красивую анимацию перехода */
     @NonNull
     @Override
     protected android.animation.Animator getAnimator(@NonNull ViewGroup container,
