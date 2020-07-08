@@ -6,6 +6,7 @@ from base64 import decodebytes
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
 
+from auth import token_auth
 from data import db_session
 from data.chats import Chat
 from data.photo_association import PhotoAssociation
@@ -113,6 +114,7 @@ class UserResource(Resource):
         # Фото на аватарку или нет
         self.parser.add_argument('is_avatar', required=False, type=bool)
 
+    @token_auth.login_required
     # Получаем пользователя по егу id
     def get(self, user_id):
         # Проверяем, есть ли пользователь
@@ -141,6 +143,7 @@ class UserResource(Resource):
                   'count_outgoing_messages', 'count_music', 'count_apps',
                   'count_chats', 'count_groups', 'count_posts', 'count_upload_photos')), 'photos': photos})
 
+    @token_auth.login_required
     # Изменяем пользователя по его id
     def put(self, user_id):
         # Проверяем, есть ли пользователь
@@ -221,29 +224,25 @@ class UserResource(Resource):
         if args.get('last_seen', None):
             user.last_seen = args['last_seen']
         if args.get('photo', None):
-            old_photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user_id,
-                                                                           PhotoAssociation.is_avatar == True).first()
-            if old_photo_association.photo_id != 2:
-                # Изменяем фото
-                photo = session.query(Photo).filter(Photo.id == user.photo_id).first()
-                photo.data = decodebytes(args['photo'].encode())
-            else:
-                # Создаём фото
-                photo = Photo(
-                    data=decodebytes(args['photo'].encode())
-                )
-                cur_photo_id = old_photo_association.photo_id
-                session.add(photo)
-                session.commit()
-                posts = session.query(Post).filter(Post.photo_id == cur_photo_id).all()
-                if posts:
-                    for post in posts:
-                        post.photo_id = photo.id
-                chats = session.query(Chat).filter(Chat.photo_id == cur_photo_id).all()
-                if chats:
-                    for chat in chats:
-                        chat.photo_id = photo.id
-                if args.get('is_avatar', True):
+            if args.get('is_avatar', True):
+                old_photo_association = session.query(PhotoAssociation).filter(PhotoAssociation.user_id == user_id,
+                                                                               PhotoAssociation.is_avatar == True).first()
+                if old_photo_association.photo_id == 2:
+                    # Создаём фото
+                    photo = Photo(
+                        data=decodebytes(args['photo'].encode())
+                    )
+                    cur_photo_id = old_photo_association.photo_id
+                    session.add(photo)
+                    session.commit()
+                    posts = session.query(Post).filter(Post.photo_id == cur_photo_id).all()
+                    if posts:
+                        for post in posts:
+                            post.photo_id = photo.id
+                    chats = session.query(Chat).filter(Chat.photo_id == cur_photo_id).all()
+                    if chats:
+                        for chat in chats:
+                            chat.photo_id = photo.id
                     association = PhotoAssociation(
                         user_id=user.id,
                         photo_id=photo.id,
@@ -252,12 +251,22 @@ class UserResource(Resource):
                     session.add(association)
                     session.delete(old_photo_association)
                 else:
-                    association = PhotoAssociation(
-                        user_id=user.id,
-                        photo_id=photo.id,
-                        is_avatar=False
-                    )
-                    session.add(association)
+                    photo = session.query(Photo).get(old_photo_association).first()
+                    photo.data = decodebytes(args['photo'].encode())
+                    session.commit()
+            else:
+                # Создаём фото
+                photo = Photo(
+                    data=decodebytes(args['photo'].encode())
+                )
+                session.add(photo)
+                session.commit()
+                association = PhotoAssociation(
+                    user_id=user.id,
+                    photo_id=photo.id,
+                    is_avatar=False
+                )
+                session.add(association)
                 session.commit()
         # Обновляем дату модификации пользователя
         user.modified_date = get_current_time()
@@ -269,6 +278,7 @@ class UserResource(Resource):
                         'text': 'edited',
                         'message': str(photo_association.photo_id)})
 
+    @token_auth.login_required
     # Удаляем пользователя по егу id
     def delete(self, user_id):
         # Ищем пользователя
@@ -285,6 +295,7 @@ class UserResource(Resource):
 
 
 class UsersSearchResource(Resource):
+    @token_auth.login_required
     # Получаем пользователей по имени и фамилии
     def get(self, user_name_surname):
         if user_name_surname.find("?") != -1:
@@ -304,6 +315,8 @@ class UsersSearchResource(Resource):
                                            (User.name.like(f"%{param2}%")) |
                                            (User.surname.like(f"%{param1}%")) |
                                            (User.surname.like(f"%{param2}%"))).all()
+        users_among_nicknames = session.query(User).filter((User.nickname.like(f"%{param1}%"))).all()
+        users.extend(users_among_nicknames)
         logging.getLogger("NeoBrain").debug("Successful GET users search request")
         find_users = {'users': []}
         for user in users:
@@ -323,13 +336,6 @@ class UsersSearchResource(Resource):
                                         'subscriptions_count': user.subscriptions_count,
                                         'photo_id': photo_association.photo_id})
         return find_users
-        # return jsonify({'users': [user.to_dict(
-        #     only=('id', 'name', 'surname', 'nickname', 'number',
-        #           'created_date', 'modified_date', 'is_closed', 'email', 'about',
-        #           'birthday', 'age', 'gender', 'can_see_audio', 'can_see_groups', 'can_see_videos',
-        #           'can_write_message', 'city', 'republic', 'country', 'education', 'status',
-        #           'last_seen', 'followers_count', 'subscriptions_count'))
-        #     for user in users]})
 
 
 # Ресурс входа пользователя
@@ -441,6 +447,7 @@ class UsersListResource(Resource):
         self.parser.add_argument('last_seen', required=False, type=str)
 
     # Получаем всех пользователей
+    @token_auth.login_required
     def get(self):
         session = db_session.create_session()
         users = session.query(User).all()

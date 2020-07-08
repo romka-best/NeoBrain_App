@@ -4,6 +4,7 @@ import logging
 from flask import jsonify
 from flask_restful import Resource, reqparse
 
+from auth import token_auth
 from data import db_session
 from data.people import People
 from data.users import User
@@ -65,6 +66,7 @@ class PeopleCreateResource(Resource):
         self.parser.add_argument('user_subscribe_id', required=True, type=int)
 
     # Подписываемся на другого пользователя
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()

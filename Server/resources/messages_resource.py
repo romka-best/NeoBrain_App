@@ -4,6 +4,7 @@ import logging
 from flask import jsonify
 from flask_restful import abort, Resource, reqparse
 
+from auth import token_auth
 from data import db_session
 from data.messages import Message
 from resources.chats_resource import abort_if_chat_not_found
@@ -39,6 +40,7 @@ class MessageResource(Resource):
         self.parser.add_argument('author_id', required=False, type=int)
 
     # Получаем сообщение по его id
+    @token_auth.login_required
     def get(self, message_id):
         # Создаём сессию и получаем сообщение
         session = db_session.create_session()
@@ -49,6 +51,7 @@ class MessageResource(Resource):
                   'modified_date', 'author_id', 'chat_id'))})
 
     # Изменяем сообщение по его id
+    @token_auth.login_required
     def put(self, message_id):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -75,6 +78,7 @@ class MessageResource(Resource):
 #  Ресурс для получение сообщений по его чату
 class MessageListResource(Resource):
     # Получаем сообщения чата по его id
+    @token_auth.login_required
     def get(self, chat_id):
         # Проверяем, есть ли чат
         abort_if_chat_not_found(chat_id)
@@ -103,6 +107,7 @@ class MessageCreateResource(Resource):
         self.parser.add_argument('chat_id', required=True, type=int)
 
     # Создаём сообщение
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()

@@ -19,7 +19,7 @@
         android:visibility="visible"
         app:backgroundTint="@color/colorText"
         app:borderWidth="0dp"
-        app:layout_behavior=".utils.FAB_Float_on_Scroll"
+        app:layout_behavior=".utils.FloatingActionButtonAnimation"
         app:srcCompat="@drawable/ic_add_a_photo" />
 
     <com.google.android.material.appbar.AppBarLayout

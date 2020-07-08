@@ -276,12 +276,12 @@ public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
 
                     @Override
                     public void onFailure(@NotNull Call<Photo> call, @NotNull Throwable t) {
-                        Log.e(TAG, "Чёрт...");
+                        Log.e(TAG, "Не удалось загрузить фотографию");
                     }
                 });
             }
             if (mPerson.getName() != null && mPerson.getSurname() != null) {
-                titleTextView.setText(mPerson.getName() + " " + mPerson.getSurname());
+                titleTextView.setText(mPerson.getName() + " " + mPerson.getSurname() + " (" + mPerson.getNickname() + ")");
             }
             List<String> cityAgeGender = new ArrayList<>();
             if (mPerson.getRepublic() != null) {

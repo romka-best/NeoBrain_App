@@ -29,9 +29,9 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="64dp"
         android:fontFamily="@font/roboto_medium"
         android:textColor="@android:color/black"
         android:textSize="20sp"
@@ -45,6 +45,7 @@
         android:id="@+id/city_age_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="@+id/imageAvatar"
         app:layout_constraintStart_toStartOf="@+id/title"
         tools:text="@tools:sample/cities" />

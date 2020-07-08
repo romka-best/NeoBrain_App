@@ -5,6 +5,7 @@ from base64 import encodebytes
 from flask import jsonify
 from flask_restful import Resource, abort
 
+from auth import token_auth
 from data import db_session
 from data.music import Music
 from data.users import User
@@ -21,6 +22,7 @@ def abort_if_music_not_found(music_id):
 
 # Основной ресурс для работы с Music
 class MusicResource(Resource):
+    @token_auth.login_required
     def get(self, music_id):
         # Проверяем, есть ли песня
         abort_if_music_not_found(music_id)
@@ -36,6 +38,7 @@ class MusicResource(Resource):
                                   "created_date": music.created_date,
                                   "photo_id": music.photo_id}})
 
+    @token_auth.login_required
     def delete(self, music_id):
         # Проверяем, есть ли песня
         abort_if_music_not_found(music_id)
@@ -50,6 +53,7 @@ class MusicResource(Resource):
 
 
 class MusicListResource(Resource):
+    @token_auth.login_required
     def get(self, user_id):
         # Проверяем, есть ли user
         abort_if_user_not_found(user_id)

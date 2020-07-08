@@ -4,6 +4,7 @@ import logging
 from flask import jsonify
 from flask_restful import Resource
 
+from auth import token_auth
 from data import db_session
 from data.post_association import PostAssociation
 from data.posts import Post
@@ -13,6 +14,7 @@ from resources.users_resource import abort_if_user_not_found
 
 
 class LentaResource(Resource):
+    @token_auth.login_required
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)

@@ -4,6 +4,7 @@ package com.itschool.neobrain;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Router router;
 
     public static final String MY_SETTINGS = "my_settings";
+    public static Context contextOfApplication;
     SharedPreferences sp;
     Integer userIdSP;
 
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+        contextOfApplication = getApplicationContext();
+
+//        Intent intent = new Intent(MainActivity.getContextOfApplication(), NeoIntro.class);
+//        startActivity(intent);
 
         requestMultiplePermissions();
 
@@ -84,9 +90,6 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{
                         Manifest.permission.INTERNET,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA,
                         Manifest.permission.VIBRATE,
                         Manifest.permission.ACCESS_NETWORK_STATE
                 },
@@ -145,5 +148,9 @@ public class MainActivity extends AppCompatActivity {
         if (hasVisited) {
             setOffline();
         }
+    }
+
+    public static Context getContextOfApplication(){
+        return contextOfApplication;
     }
 }

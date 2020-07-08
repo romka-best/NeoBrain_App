@@ -183,6 +183,8 @@ public class RegController extends Controller {
                                                     SharedPreferences.Editor e = sp.edit();
                                                     e.putBoolean("hasAuthed", true);
                                                     e.putInt("userId", Integer.parseInt(post1.getText().substring(5, post1.getText().length() - 8)));
+                                                    e.putString("login", email);
+                                                    e.putString("password", password);
                                                     e.apply();
                                                     for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
                                                         routerTransaction.controller().getRouter().popCurrentController();

@@ -6,6 +6,7 @@ flask
 flask-login
 flask-mail
 flask-restful
+Flask-HTTPAuth
 sqlalchemy_serializer
 alembic
 flask_wtf

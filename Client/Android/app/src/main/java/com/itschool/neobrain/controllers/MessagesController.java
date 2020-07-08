@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -175,6 +177,20 @@ public class MessagesController extends Controller {
             }
         });
 
+        attachButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+
+        callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+
         getUserId();
         disposable = Observable.interval(1, 5,
                 TimeUnit.SECONDS)
@@ -217,6 +233,7 @@ public class MessagesController extends Controller {
     private void getProfile() {
         Call<UserModel> call = DataManager.getInstance().getUser(userId);
         call.enqueue(new Callback<UserModel>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {

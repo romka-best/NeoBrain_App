@@ -2,9 +2,11 @@ package com.itschool.neobrain.controllers;
 
 // Импортируем нужные библиотеки
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -36,6 +40,7 @@ import com.itschool.neobrain.API.models.Status;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.DataManager;
+import com.itschool.neobrain.MainActivity;
 import com.itschool.neobrain.R;
 import com.itschool.neobrain.adapters.PhotosAdapter;
 import com.itschool.neobrain.utils.BundleBuilder;
@@ -101,12 +106,18 @@ public class PhotosController extends Controller {
 
         if (userId == sp.getInt("userId", 0)) {
             fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
-            fabAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            fabAdd.setOnClickListener(v -> {
+                // Запрашиваем доступ к чтению и записи файлов
+                int permissionStatusRead = ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.READ_EXTERNAL_STORAGE);
+                int permissionStatusWrite = ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                if (permissionStatusRead == PackageManager.PERMISSION_GRANTED && permissionStatusWrite == PackageManager.PERMISSION_GRANTED) {
                     Intent i = new Intent(Intent.ACTION_PICK);
                     i.setType("image/*");
                     startActivityForResult(i, PICK_IMAGE);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MainActivity.PERMISSION_REQUEST_CODE);
                 }
             });
         } else {
@@ -148,6 +159,10 @@ public class PhotosController extends Controller {
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
             }
         });
+
+    }
+
+    public void requestStoragePermissions() {
 
     }
 

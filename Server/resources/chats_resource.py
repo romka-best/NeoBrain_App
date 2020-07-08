@@ -6,6 +6,7 @@ import datetime
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
 
+from auth import token_auth
 from data import db_session
 from data.chats import Chat
 from data.photos import Photo
@@ -55,6 +56,7 @@ class ChatResource(Resource):
         self.parser.add_argument('photo_id', required=False, type=int)
 
     # Получаем чат по его id
+    @token_auth.login_required
     def get(self, chat_id):
         # Создаём сессию и получаем чат
         session = db_session.create_session()
@@ -66,6 +68,7 @@ class ChatResource(Resource):
                   'created_date', 'photo_id'))})
 
     # Изменяем чат по его id
+    @token_auth.login_required
     def put(self, chat_id):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -114,6 +117,7 @@ class ChatResource(Resource):
                         'text': 'edited'})
 
     # Удаляем чат по его id
+    @token_auth.login_required
     def delete(self, chat_id):
         # Создаём сессию в БД и получаем чат, а затем его удаляем
         session = db_session.create_session()
@@ -128,6 +132,7 @@ class ChatResource(Resource):
 # Ресурс для получения чатов
 class ChatsListResource(Resource):
     # Получаем чаты user-a по его id
+    @token_auth.login_required
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
@@ -144,6 +149,7 @@ class ChatsListResource(Resource):
 
 class ChatUsersResource(Resource):
     # Получаем пользователей с которым переписывался user_id
+    @token_auth.login_required
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
@@ -172,6 +178,7 @@ class ChatUsersResource(Resource):
 
 class ChatTwoUsersResource(Resource):
     # Возвращаем chat_id двух пользователей
+    @token_auth.login_required
     def get(self, user_id1, user_id2):
         # Проверяем, есть ли пользователм
         abort_if_user_not_found(user_id1)
@@ -200,6 +207,7 @@ class ChatTwoUsersResource(Resource):
 
 class ChatFindUsersResource(Resource):
     # Получаем юзеров по id чата
+    @token_auth.login_required
     def get(self, chat_id):
         # Создаём сессию и получаем чат
         session = db_session.create_session()
@@ -240,6 +248,7 @@ class ChatCreateResource(Resource):
         self.parser.add_argument('photo_id', required=False, type=int)
 
     # Создаём чат
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()

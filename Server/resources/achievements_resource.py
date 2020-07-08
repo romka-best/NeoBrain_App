@@ -4,6 +4,7 @@ import logging
 from flask import jsonify
 from flask_restful import Resource, reqparse
 
+from auth import token_auth
 from data import db_session
 from data.achievement_association import AchievementAssociation
 from data.achievements import Achievement
@@ -21,6 +22,7 @@ class AchievementUserResource(Resource):
         self.parser.add_argument('id', required=True, type=int)
         self.parser.add_argument('is_got', required=True, type=bool)
 
+    @token_auth.login_required
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
@@ -47,6 +49,7 @@ class AchievementUserResource(Resource):
         logging.getLogger("NeoBrain").debug(f"User's {user_id} achievements returned")
         return jsonify(achievements)
 
+    @token_auth.login_required
     def put(self, user_id):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -65,6 +68,7 @@ class AchievementUserResource(Resource):
 
 
 class AchievementResource(Resource):
+    @token_auth.login_required
     def get(self, achievement_id):
         # Создаём сессию в БД и получаем достижение
         session = db_session.create_session()
@@ -84,6 +88,7 @@ class AchievementCreateResource(Resource):
         self.parser.add_argument('achievement_id', required=True, type=int)
 
     # Получаем достижение
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -102,6 +107,7 @@ class AchievementCreateResource(Resource):
         return jsonify({'status': 201,
                         'text': f'successful'})
 
+    @token_auth.login_required
     def get(self):
         session = db_session.create_session()
         achievements = session.query(Achievement).all()

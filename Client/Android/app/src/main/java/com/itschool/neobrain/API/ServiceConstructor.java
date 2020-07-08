@@ -28,6 +28,7 @@ public class ServiceConstructor {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(logging)
+                .authenticator(new TokenAuthenticator())
                 .build();
 
         // Объект класса Gson, осуществляющий работу с файлами этого формата

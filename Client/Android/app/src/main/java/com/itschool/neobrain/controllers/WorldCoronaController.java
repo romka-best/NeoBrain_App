@@ -33,7 +33,7 @@ import retrofit2.Response;
 public class WorldCoronaController extends Controller {
 
     @BindView(R.id.corona_recycler)
-    public RecyclerView corona_recycler;
+    public RecyclerView coronaRecycler;
     private CoronaAdapter coronaAdapter;
     private Boolean space = false;
 
@@ -51,8 +51,8 @@ public class WorldCoronaController extends Controller {
     /* Метод, получающий информацию по коронавирусу на данный момент */
     private void getCoronaCountries() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        corona_recycler.setLayoutManager(mLayoutManager);
-        corona_recycler.setItemAnimator(new DefaultItemAnimator());
+        coronaRecycler.setLayoutManager(mLayoutManager);
+        coronaRecycler.setItemAnimator(new DefaultItemAnimator());
         List<Corona> mCorona = new ArrayList<>();
         // Запрос на сервер, вытаскиваем информацию, заполняем адаптер
         Call<Coronas> all_corona = DataManager.getInstance().getAllCoronaCountry();
@@ -69,13 +69,13 @@ public class WorldCoronaController extends Controller {
                         Log.e("Error", "fail_request");
                     } else {
                         coronaAdapter = new CoronaAdapter(mCorona);
-                        corona_recycler.setAdapter(coronaAdapter);
+                        coronaRecycler.setAdapter(coronaAdapter);
                         if (!space) {
-                            corona_recycler.addItemDecoration(new SpacesItemDecoration(20));
+                            coronaRecycler.addItemDecoration(new SpacesItemDecoration(20));
                             space = true;
                         }
                         if (mCorona.size() > 0) {
-                            corona_recycler.scrollToPosition(0);
+                            coronaRecycler.scrollToPosition(0);
                         }
                     }
                 } else {
@@ -90,6 +90,6 @@ public class WorldCoronaController extends Controller {
         });
         // Присваиваем адаптер для RecyclerView
         coronaAdapter = new CoronaAdapter(new ArrayList<>());
-        corona_recycler.setAdapter(coronaAdapter);
+        coronaRecycler.setAdapter(coronaAdapter);
     }
 }

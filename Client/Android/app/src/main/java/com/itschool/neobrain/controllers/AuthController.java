@@ -5,6 +5,8 @@ package com.itschool.neobrain.controllers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,8 @@ import com.itschool.neobrain.changehandler.FlipChangeHandler;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -42,13 +46,16 @@ import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 // Контроллер авторизации
 public class AuthController extends Controller {
     @BindView(R.id.login_text)
-    public TextInputEditText textLogin;
+    TextInputEditText textLogin;
     @BindView(R.id.password_text)
-    public TextInputEditText textPassword;
+    TextInputEditText textPassword;
     @BindView(R.id.authButton)
-    public MaterialButton authButton;
+    MaterialButton authButton;
     @BindView(R.id.regButton)
-    public MaterialButton regButton;
+    MaterialButton regButton;
+    @BindView(R.id.forgot_button)
+    MaterialButton forgotButton;
+
     private String login = "";
     private String pass = "";
 
@@ -129,6 +136,8 @@ public class AuthController extends Controller {
                         SharedPreferences.Editor e = sp.edit();
                         e.putBoolean("hasAuthed", true);
                         e.putInt("userId", Integer.parseInt(post.getText().substring(6, post.getText().length() - 8)));
+                        e.putString("login", login);
+                        e.putString("password", password);
                         e.apply();
                         for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
                             routerTransaction.controller().getRouter().popCurrentController();
@@ -178,6 +187,11 @@ public class AuthController extends Controller {
         } else {
             textPassword.setError(Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_with_password));
         }
+    }
+
+    @OnClick(R.id.forgot_button)
+    void launchForgot() {
+        // TODO
     }
 
 

@@ -14,6 +14,15 @@ public class Status {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("token")
+    @Expose
+    private String token;
+    @SerializedName("expires")
+    @Expose
+    private String expires;
+    @SerializedName("success")
+    @Expose
+    private Boolean success;
 
     public Integer getStatus() {
         return status;
@@ -39,4 +48,27 @@ public class Status {
         this.message = message;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getExpires() {
+        return expires;
+    }
+
+    public void setExpires(String expires) {
+        this.expires = expires;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 }

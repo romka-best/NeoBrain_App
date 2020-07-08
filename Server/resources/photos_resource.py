@@ -5,6 +5,7 @@ from base64 import encodebytes
 from flask import jsonify
 from flask_restful import reqparse, Resource, abort
 
+from auth import token_auth
 from data import db_session
 from data.apps import App
 from data.chats import Chat
@@ -26,6 +27,7 @@ def abort_if_photo_not_found(photo_id):
 
 # Основной ресурс для работы с Photo
 class PhotoResource(Resource):
+    @token_auth.login_required
     def get(self, photo_id):
         if str(photo_id).find("?") != -1:
             photo_id = int(photo_id[:photo_id.find("?")].strip())
@@ -37,6 +39,7 @@ class PhotoResource(Resource):
         logging.getLogger("NeoBrain").debug(f"Photo {photo_id} returned")
         return jsonify({'photo': photo})
 
+    @token_auth.login_required
     def delete(self, photo_id):
         # Проверяем, есть ли фото
         abort_if_photo_not_found(photo_id)
@@ -85,6 +88,7 @@ class PhotoCreateResource(Resource):
         self.parser.add_argument('about', required=False)
 
     # Создаём фото
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы и создаём сессию в БД
         args = self.parser.parse_args()

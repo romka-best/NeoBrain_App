@@ -33,17 +33,17 @@ public class RussiaCoronaController extends Controller {
     private StringBuilder sb;
 
     @BindView(R.id.new_admitted)
-    public TextView new_admitted;
+    public TextView newAdmitted;
     @BindView(R.id.all)
     public TextView all;
     @BindView(R.id.new_deaths)
-    public TextView new_deaths;
+    public TextView newDeaths;
     @BindView(R.id.all_deaths)
-    public TextView all_deaths;
+    public TextView allDeaths;
     @BindView(R.id.tests)
     public TextView tests;
     @BindView(R.id.all_recovered)
-    public TextView all_recovered;
+    public TextView allRecovered;
     @BindView(R.id.casesPerOneMillion)
     public TextView casesPerOneMillion;
     @BindView(R.id.deathsPerOneMillion)
@@ -107,15 +107,15 @@ public class RussiaCoronaController extends Controller {
             if (s != null) {
                 try {
                     String new_add = s.get("todayCases").toString();
-                    new_admitted.setText("+" + new_add);
+                    newAdmitted.setText("+" + new_add);
                     String cases = s.get("cases").toString();
                     all.setText(cases);
                     String deaths = s.get("deaths").toString();
-                    all_deaths.setText(deaths);
+                    allDeaths.setText(deaths);
                     String todayDeaths = s.get("todayDeaths").toString();
-                    new_deaths.setText("+" + todayDeaths);
+                    newDeaths.setText("+" + todayDeaths);
                     String recovered = s.get("recovered").toString();
-                    all_recovered.setText(recovered);
+                    allRecovered.setText(recovered);
                     String test = s.get("tests").toString();
                     tests.setText(test);
                     String cas_per_mil = s.get("casesPerOneMillion").toString();

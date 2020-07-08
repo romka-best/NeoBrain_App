@@ -122,7 +122,7 @@ public class User {
 
     }
 
-    public User(Integer id, Integer photoId, String name, String surname, String republic, String city, Integer age, Integer gender) {
+    public User(Integer id, Integer photoId, String name, String surname, String republic, String city, Integer age, Integer gender, String nickname) {
         this.id = id;
         this.photoId = photoId;
         this.name = name;
@@ -131,6 +131,7 @@ public class User {
         this.city = city;
         this.age = age;
         this.gender = gender;
+        this.nickname = nickname;
     }
 
     public Integer getId() {

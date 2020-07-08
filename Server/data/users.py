@@ -1,6 +1,8 @@
 # Импортируем нужные библиотеки
 import datetime
 import re
+import base64
+import os
 
 import sqlalchemy
 from flask_login import UserMixin
@@ -153,6 +155,23 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     messages_from = orm.relation("Message", back_populates='author')
     # Связь с Photo
     photos = orm.relation("PhotoAssociation")
+
+    token = sqlalchemy.Column(sqlalchemy.String, unique=True, index=True)
+    token_expiration = sqlalchemy.Column(sqlalchemy.DateTime)
+
+    def get_token(self, expires_in=3600 * 24 * 30):
+        now = datetime.datetime.now()
+        if self.token and self.token_expiration > now + datetime.timedelta(seconds=60):
+            # Если токен действительный, возвращаем его
+            return self.token
+        # Иначе, генерируем новый и устанавливаем срок истечения через 3 часа
+        self.token = base64.b64encode(os.urandom(24)).decode("utf-8")
+        self.token_expiration = now + datetime.timedelta(seconds=expires_in)
+        return self.token
+
+    def revoke_token(self):
+        # Отзыв токена (Время истечения изменяется на текущее - 1 секунда)
+        self.token_expiration = datetime.datetime.now() - datetime.timedelta(seconds=1)
 
     # Для установки пароля
     def set_password(self, password):

@@ -221,14 +221,11 @@ public class SearchController extends Controller {
             }
         })).map(String::trim)
                 .debounce(300, TimeUnit.MILLISECONDS)
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String text) throws Exception {
-                        if (text.isEmpty()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
+                .filter(text -> {
+                    if (text.isEmpty()) {
+                        return false;
+                    } else {
+                        return true;
                     }
                 })
                 .distinctUntilChanged()
@@ -265,7 +262,7 @@ public class SearchController extends Controller {
                                 assert response.body() != null;
                                 List<User> users = response.body().getUsers();
                                 for (User user : users) {
-                                    mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                                    mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender(), user.getNickname()));
                                 }
                                 Objects.requireNonNull(pagerAdapter.getRouter(1)).setRoot(RouterTransaction.with(new SearchPeopleController(mUsers, getRouter(), users.size() != 0)));
                             }

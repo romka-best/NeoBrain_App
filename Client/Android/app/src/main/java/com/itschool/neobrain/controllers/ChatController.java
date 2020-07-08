@@ -2,6 +2,7 @@ package com.itschool.neobrain.controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import com.itschool.neobrain.API.models.PhotoModel;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.DataManager;
+import com.itschool.neobrain.MainActivity;
+import com.itschool.neobrain.NeoIntro;
 import com.itschool.neobrain.R;
 import com.itschool.neobrain.adapters.ChatAdapter;
 import com.itschool.neobrain.changehandler.ScaleFadeChangeHandler;
@@ -54,12 +57,19 @@ public class ChatController extends Controller {
     @BindView(R.id.ChatsRecycler)
     public RecyclerView chatRecycler;
     private ChatAdapter chatAdapter;
-    private FloatingActionButton floatingActionButton;
-    private ShimmerFrameLayout shimmerViewContainer;
-    private SwipeRefreshLayout swipeContainer;
-    private ImageButton searchChatsButton;
+    @BindView(R.id.fab)
+    FloatingActionButton floatingActionButton;
+    @BindView(R.id.shimmer_view_container)
+    ShimmerFrameLayout shimmerViewContainer;
+    @BindView(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.filter_chats_button)
+    ImageButton filterButton;
+    @BindView(R.id.search_chats_button)
+    ImageButton searchChatsButton;
+
     private SharedPreferences sp;
-    private LayoutInflater inflater;
+
     private ArrayList<Chat> mChats = new ArrayList<>();
     private String curNameChat;
     private Integer curPhotoId;
@@ -72,16 +82,10 @@ public class ChatController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
-        this.inflater = inflater;
-
-        floatingActionButton = view.findViewById(R.id.fab);
         floatingActionButton.setColorFilter(Color.argb(255, 255, 255, 255));
-        searchChatsButton = view.findViewById(R.id.search_chats_button);
 
-        shimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
         shimmerViewContainer.startShimmer();
 
-        swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
             getChats();
@@ -99,6 +103,13 @@ public class ChatController extends Controller {
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
 
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +120,8 @@ public class ChatController extends Controller {
                         .pushChangeHandler(new ScaleFadeChangeHandler()));
             }
         });
+
+
 
         getChats();
         return view;

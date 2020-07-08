@@ -137,7 +137,7 @@ public class PeopleController extends Controller {
                                         return;
                                     }
                                 }
-                                mUsers.add(new User(user.getId(), curPhotoId, user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender()));
+                                mUsers.add(new User(user.getId(), curPhotoId, user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender(), user.getNickname()));
                                 if (mUsers.size() == personList.size()) {
                                     allPeopleSearched();
                                 }

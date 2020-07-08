@@ -2,10 +2,12 @@ package com.itschool.neobrain.controllers;
 
 // Импортируем нужные библиотеки
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,6 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,6 +62,7 @@ import com.itschool.neobrain.API.models.Status;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.DataManager;
+import com.itschool.neobrain.MainActivity;
 import com.itschool.neobrain.R;
 import com.itschool.neobrain.adapters.PostAdapter;
 import com.itschool.neobrain.utils.BundleBuilder;
@@ -221,8 +226,8 @@ public class ProfileController extends Controller {
 
         fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
         fabAdd.setOnClickListener(v -> {
-            // Если это профиль текущего пользователя,
-            // убираем bottomNavigationView и создаём новый контроллер постов
+                    // Если это профиль текущего пользователя,
+                    // убираем bottomNavigationView и создаём новый контроллер постов
                     if (userId == 0) {
                         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
                         bottomNavigationView.setVisibility(View.GONE);
@@ -671,13 +676,29 @@ public class ProfileController extends Controller {
                     .setItems(testArray, (dialog, which) -> {
                         switch (which) {
                             case 0:
-                                Intent i = new Intent(Intent.ACTION_PICK);
-                                i.setType("image/*");
-                                startActivityForResult(i, PICK_IMAGE);
+                                // Запрашиваем доступ к чтению и записи файлов
+                                int permissionStatusRead = ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.READ_EXTERNAL_STORAGE);
+                                int permissionStatusWrite = ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                                if (permissionStatusRead == PackageManager.PERMISSION_GRANTED && permissionStatusWrite == PackageManager.PERMISSION_GRANTED) {
+                                    Intent i = new Intent(Intent.ACTION_PICK);
+                                    i.setType("image/*");
+                                    startActivityForResult(i, PICK_IMAGE);
+                                } else {
+                                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            MainActivity.PERMISSION_REQUEST_CODE);
+                                }
                                 break;
                             case 1:
-                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(intent, CAMERA_REQUEST);
+                                // Запрашиваем доступ к камере
+                                int permissionStatusCamera = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
+                                if (permissionStatusCamera == PackageManager.PERMISSION_GRANTED) {
+                                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    startActivityForResult(intent, CAMERA_REQUEST);
+                                } else {
+                                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
+                                            MainActivity.PERMISSION_REQUEST_CODE);
+                                }
                                 break;
                             case 2:
                                 getRouter().pushController(RouterTransaction.with(new PhotoController(photoId))

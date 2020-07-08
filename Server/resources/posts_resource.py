@@ -4,6 +4,7 @@ import logging
 from flask import jsonify
 from flask_restful import reqparse, Resource, abort
 
+from auth import token_auth
 from data import db_session
 from data.photo_association import PhotoAssociation
 from data.post_association import PostAssociation
@@ -77,6 +78,7 @@ class PostResource(Resource):
         self.parser.add_argument('photo_id', required=False, type=int)
 
     # Получаем пост по его id
+    @token_auth.login_required
     def get(self, post_id):
         abort_if_post_not_found(post_id)
         # Создаём сессию и получаем пост
@@ -94,6 +96,7 @@ class PostResource(Resource):
                   'disappointed_emoji_count', 'smile_emoji_count', 'angry_emoji_count',
                   'smile_with_heart_eyes_count', 'screaming_emoji_count')), 'users': users})
 
+    @token_auth.login_required
     def put(self, post_id):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -170,6 +173,7 @@ class PostResource(Resource):
         return jsonify({'status': 200,
                         'text': 'edited'})
 
+    @token_auth.login_required
     def delete(self, post_id):
         abort_if_post_not_found(post_id)
         # Создаём сессию и получаем пост
@@ -189,6 +193,7 @@ class PostResource(Resource):
 # Ресурс для получения постов
 class PostsListResource(Resource):
     # Получаем посты user-a по его id
+    @token_auth.login_required
     def get(self, author_id, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(author_id)
@@ -243,6 +248,7 @@ class PostCreateResource(Resource):
         self.parser.add_argument('photo_id', required=False, type=int)
 
     # Создаём пост
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()

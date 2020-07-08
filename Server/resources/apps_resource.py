@@ -5,6 +5,7 @@ from flask import jsonify
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
 
+from auth import token_auth
 from data import db_session
 from data.app_association import AppAssociation
 from data.apps import App
@@ -13,6 +14,8 @@ from .users_resource import abort_if_user_not_found
 
 # Основной ресурс для работы с App
 class AppResource(Resource):
+
+    @token_auth.login_required
     def get(self, user_id):
         # Проверяем, есть ли пользователь
         abort_if_user_not_found(user_id)
@@ -35,6 +38,7 @@ class AppResource(Resource):
 
 class AppDeleteResource(Resource):
     # Удаляем приложение. user_id - кто удаляет, app_id - какое приложение удаляем
+    @token_auth.login_required
     def delete(self, user_id, app_id):
         # Проверяем, есть ли пользователи
         abort_if_user_not_found(user_id)
@@ -61,6 +65,7 @@ class AppCreateResource(Resource):
         self.parser.add_argument('app_id', required=True, type=int)
 
     # Подписываемся на приложение
+    @token_auth.login_required
     def post(self):
         # Получаем аргументы
         args = self.parser.parse_args()
@@ -95,6 +100,7 @@ class AppCreateResource(Resource):
 
 
 class AppSearchResource(Resource):
+    @token_auth.login_required
     def get(self, app_name):
         if app_name.find("?") != -1:
             app_name = app_name[:app_name.find("?")].lower().strip()
