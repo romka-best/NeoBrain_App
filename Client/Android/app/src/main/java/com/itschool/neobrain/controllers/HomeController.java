@@ -19,7 +19,7 @@ import com.itschool.neobrain.R;
 
 import butterknife.ButterKnife;
 
-// Стартовый класс с BottomNavigation и ControllersContainer
+/* Стартовый контроллер с BottomNavigation и ControllersContainer */
 @SuppressLint("ValidController")
 public class HomeController extends Controller {
     private SparseArray<Bundle> routerStates;
@@ -35,14 +35,13 @@ public class HomeController extends Controller {
         View view = inflater.inflate(R.layout.home_controller, container, false);
         ButterKnife.bind(this, view);
         ViewGroup childContainer = view.findViewById(R.id.container);
+
+        // Устанавливаем начальный экран ленты, если нет информации о состояниях других контроллеров
         if (routerStates == null) {
             routerStates = new SparseArray<>();
         }
-
         childRouter = getChildRouter(childContainer);
-
         if (routerStates.size() == 0) {
-
             currentSelectedItemId = R.id.action_lenta;
             childRouter.setRoot(RouterTransaction.with(new LentaController()));
         } else {
@@ -54,6 +53,7 @@ public class HomeController extends Controller {
         return view;
     }
 
+    /* Вызывается при выборе предмета на навигации, открывает нужный контроллер */
     private boolean onNavigationItemSelected(MenuItem menuItem) {
         if (currentSelectedItemId == menuItem.getItemId()) {
             return true;
@@ -87,10 +87,12 @@ public class HomeController extends Controller {
         return false;
     }
 
+    /* Метод, восстанавливающий состояния других контроллеров */
     private Bundle tryToRestoreStateFromNewTab(int itemId) {
         return routerStates.get(itemId);
     }
 
+    /* Метод, удаляющий состояния всех дочерних контроллеров */
     private void clearStateFromChildRouter() {
         childRouter.setPopsLastView(true);
         childRouter.popToRoot();
@@ -98,12 +100,14 @@ public class HomeController extends Controller {
         childRouter.setPopsLastView(false);
     }
 
+    /* Метод, сохраняющий состояние дочернего контроллера */
     private void saveStateFromCurrentTab(int itemId) {
         Bundle routerBundle = new Bundle();
         childRouter.saveInstanceState(routerBundle);
         routerStates.put(itemId, routerBundle);
     }
 
+    /* Сохранение состояния View */
     @Override
     protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
         super.onSaveViewState(view, outState);
@@ -111,6 +115,7 @@ public class HomeController extends Controller {
         outState.putSparseParcelableArray("STATE", routerStates);
     }
 
+    /* Восстановление состояния View */
     @Override
     protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
         super.onRestoreViewState(view, savedViewState);

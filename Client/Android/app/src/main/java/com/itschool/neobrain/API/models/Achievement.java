@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Comparator;
 
+/* Ресурс для работы с конкретным достижением */
 public class Achievement {
     @SerializedName("is_got")
     @Expose

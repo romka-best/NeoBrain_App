@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Адаптер для информации о профиле */
 public class ProfileInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "ProfileInfoAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

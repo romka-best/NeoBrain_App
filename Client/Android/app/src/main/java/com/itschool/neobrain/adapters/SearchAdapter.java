@@ -56,6 +56,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Адаптер для поиска */
 public class SearchAdapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
     private static final String TAG = "SearchAdapter";
     private static final short VIEW_TYPE_EMPTY = 0;

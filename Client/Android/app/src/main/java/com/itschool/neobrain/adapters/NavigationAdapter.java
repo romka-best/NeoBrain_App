@@ -19,6 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/* Адаптер для навигации */
 public class NavigationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "NavigationAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

@@ -44,6 +44,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Адаптер для людей (друзей/подписчиков) */
 public class PeopleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PeopleAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

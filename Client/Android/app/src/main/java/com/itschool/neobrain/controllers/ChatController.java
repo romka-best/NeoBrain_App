@@ -2,7 +2,6 @@ package com.itschool.neobrain.controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -30,8 +29,6 @@ import com.itschool.neobrain.API.models.PhotoModel;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.DataManager;
-import com.itschool.neobrain.MainActivity;
-import com.itschool.neobrain.NeoIntro;
 import com.itschool.neobrain.R;
 import com.itschool.neobrain.adapters.ChatAdapter;
 import com.itschool.neobrain.changehandler.ScaleFadeChangeHandler;
@@ -51,7 +48,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер чатов
+/* Контроллер чатов */
 @SuppressLint("ValidController")
 public class ChatController extends Controller {
     @BindView(R.id.ChatsRecycler)
@@ -69,6 +66,7 @@ public class ChatController extends Controller {
     ImageButton searchChatsButton;
 
     private SharedPreferences sp;
+    private LayoutInflater inflater;
 
     private ArrayList<Chat> mChats = new ArrayList<>();
     private String curNameChat;
@@ -82,12 +80,16 @@ public class ChatController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
+        this.inflater = inflater;
+
         floatingActionButton.setColorFilter(Color.argb(255, 255, 255, 255));
 
         shimmerViewContainer.startShimmer();
 
+        // Ставим слушатель - при свайпе вверх обновляем
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
+            // Получаем и выводим чаты
             getChats();
             swipeContainer.setRefreshing(false);
         });
@@ -95,6 +97,7 @@ public class ChatController extends Controller {
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
+        // Слушатель на кнопку поиска по чатам
         searchChatsButton.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
@@ -103,12 +106,7 @@ public class ChatController extends Controller {
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
 
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
+        // Слушатель на кнопку создания нового чата
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,12 +119,18 @@ public class ChatController extends Controller {
             }
         });
 
-
-
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+        // Получаем и выводим чаты
         getChats();
         return view;
     }
 
+    /* Метод, получающий и выводящий чаты пользователя с помощью запросов на сервер */
     private void getChats() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         chatRecycler.setLayoutManager(mLayoutManager);
@@ -222,10 +226,13 @@ public class ChatController extends Controller {
         });
     }
 
+    /* Метод, вызываемый при окончании запроса к серверу (когда все чаты нашлись)*/
     private void allChatsSearched() {
         if (mChats.size() >= 2) {
+            // Сортируем чаты по времени
             Collections.sort(mChats, Chat.COMPARE_BY_TIME);
         }
+        // Устанавливаем нужный адаптер
         chatAdapter = new ChatAdapter(mChats, getRouter());
         chatRecycler.setAdapter(chatAdapter);
         shimmerViewContainer.stopShimmer();

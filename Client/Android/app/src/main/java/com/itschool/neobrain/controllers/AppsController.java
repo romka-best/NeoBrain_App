@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер приложений
+/* Контроллер приложений */
 public class AppsController extends Controller implements AppsAdapter.CallbackInterface {
     @BindView(R.id.appsRecycler)
     public RecyclerView myAppsRecycler;
@@ -54,11 +54,14 @@ public class AppsController extends Controller implements AppsAdapter.CallbackIn
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
+        // Получаем приложения пользователя
         getMyApps();
+        // Получаем все приложения
         getOtherApps();
         return view;
     }
 
+    /* Метод для получения всех приложений пользователя, путём запроса к серверу */
     private void getMyApps() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
@@ -90,6 +93,7 @@ public class AppsController extends Controller implements AppsAdapter.CallbackIn
         });
     }
 
+    /* Метод для получения всех приложений, путём запроса к серверу */
     private void getOtherApps() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
@@ -119,8 +123,10 @@ public class AppsController extends Controller implements AppsAdapter.CallbackIn
         });
     }
 
+    /* Метод, вызываемый при нажатии на пустое View */
     @Override
     public void onEmptyViewRetryClick() {
+        // Получаем приложения пользователя
         getMyApps();
     }
 }

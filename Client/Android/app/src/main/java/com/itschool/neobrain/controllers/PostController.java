@@ -34,13 +34,12 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер для выкладывания/редактирования поста
+/* Контроллер для выкладывания/редактирования поста */
 public class PostController extends Controller {
     @BindView(R.id.acceptButton)
     public ImageButton acceptButton;
     @BindView(R.id.cancelButton)
     public ImageButton cancelButton;
-
     @BindView(R.id.chip_group)
     public ChipGroup chipGroup;
     @BindView(R.id.chip1)
@@ -59,7 +58,6 @@ public class PostController extends Controller {
     public Chip chip7;
     @BindView(R.id.chip8)
     public Chip chip8;
-
     @BindView(R.id.postText)
     public MultiAutoCompleteTextView postText;
 
@@ -74,7 +72,7 @@ public class PostController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-
+        // Ставим слушатель на кнопку "назад", показываем BottomNavigationView и убираем текущий контроллер
         cancelButton.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.VISIBLE);
@@ -84,6 +82,7 @@ public class PostController extends Controller {
         return view;
     }
 
+    /* Слушатели для нажатия по стикерам оценки */
     @OnClick({R.id.chip1, R.id.chip2, R.id.chip3, R.id.chip4,
             R.id.chip5, R.id.chip6, R.id.chip7, R.id.chip8})
     void checkChip() {
@@ -94,6 +93,7 @@ public class PostController extends Controller {
         }
     }
 
+    /* Метод, вызываемый после нажатия кнопки создания поста */
     @OnClick({R.id.acceptButton})
     void setPost() {
         assert getView() != null;
@@ -105,8 +105,12 @@ public class PostController extends Controller {
         assert imm != null;
         imm.hideSoftInputFromWindow(acceptButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         Integer userIdSP = sp.getInt("userId", -1);
+
+        //Создаём сам пост
         Post post = new Post();
         post.setText(postText.getText().toString().trim());
+
+        // Устанавливаем нужные стикеры оценки
         if (chip1.isChecked()) {
             post.setLikeEmojiCount(0);
         }
@@ -149,16 +153,20 @@ public class PostController extends Controller {
 
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);

@@ -27,6 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/* Адаптер для стран по коронавирусу */
 public class CoronaAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<Corona> mCoronaList;

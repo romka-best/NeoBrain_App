@@ -3,6 +3,8 @@ package com.itschool.neobrain.API.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/* Ресурс для работы с чатами */
+// Необходимо для Retrofit
 public class ChatModel {
     @SerializedName("chat")
     @Expose

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы с приложениями (геттер и сеттер) */
 public class Apps {
 
     @SerializedName("apps")

@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы с пользователями */
+// Необходимо для Retrofit
 public class UserModel {
 
     @SerializedName("user")

@@ -61,15 +61,16 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер с Фотографиями
+/* Контроллер для работы с фотографиями */
 public class PhotosController extends Controller {
-    @BindView(R.id.photoRecycler)
-    public RecyclerView photoRecycler;
+
     private PhotosAdapter photosAdapter;
     private BottomNavigationView bottomNavigationView;
     private boolean bottomIsGone = false;
     private int userId;
 
+    @BindView(R.id.photoRecycler)
+    public RecyclerView photoRecycler;
     @BindView(R.id.fabAdd)
     public FloatingActionButton fabAdd;
 
@@ -78,6 +79,7 @@ public class PhotosController extends Controller {
 
     private SharedPreferences sp;
 
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public PhotosController() {
 
     }
@@ -104,6 +106,8 @@ public class PhotosController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
+        // Если это текущий пользователь, при нажатии на кнопку добавления фото предоставляем
+        // ему эту возможность, открываем галерею, иначе, скрываем эту кнопку
         if (userId == sp.getInt("userId", 0)) {
             fabAdd.setColorFilter(Color.argb(255, 255, 255, 255));
             fabAdd.setOnClickListener(v -> {
@@ -124,16 +128,20 @@ public class PhotosController extends Controller {
             fabAdd.setVisibility(View.GONE);
         }
 
+        // Получаем и выводим фотографии
         getPhotos();
         return view;
     }
 
+    /* Метод для получения и выведения фотографий */
     private void getPhotos() {
+        // Настраиваем RecyclerView
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         photoRecycler.setLayoutManager(mLayoutManager);
         photoRecycler.setItemAnimator(new DefaultItemAnimator());
 
+        // Обращаемся к серверу, вытаскиваем нужные данные
         Call<UserModel> userCall = DataManager.getInstance().getUser(userId);
         userCall.enqueue(new Callback<UserModel>() {
             @Override
@@ -150,6 +158,7 @@ public class PhotosController extends Controller {
                         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                         photoRecycler.setLayoutManager(mLayoutManager);
                     }
+                    // Устанавливаем нужный адаптер
                     photosAdapter = new PhotosAdapter(mPhotos, getRouter());
                     photoRecycler.setAdapter(photosAdapter);
                 }
@@ -162,10 +171,7 @@ public class PhotosController extends Controller {
 
     }
 
-    public void requestStoragePermissions() {
-
-    }
-
+    /* Метод успешного выбора пользователем фото из галереи (загружает фото на сервер) */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -215,6 +221,7 @@ public class PhotosController extends Controller {
         }
     }
 
+    /* Вспомогательный метод для работы с картинками */
     private static int getBitmapOrientation(String path) {
         ExifInterface exif;
         int orientation = 0;
@@ -228,6 +235,7 @@ public class PhotosController extends Controller {
         return orientation;
     }
 
+    /* Метод, для переворачивания фото */
     private static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -269,6 +277,7 @@ public class PhotosController extends Controller {
         }
     }
 
+    /* Метод, для получения строкового пути из URI объекта */
     private String getRealPathFromURI(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         @SuppressWarnings("deprecation")
@@ -279,9 +288,11 @@ public class PhotosController extends Controller {
         return cursor.getString(column_index);
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

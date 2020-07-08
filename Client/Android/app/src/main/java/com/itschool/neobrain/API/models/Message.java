@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
+/* Ресурс для работы с людьми (поля) */
 public class Message {
     @SerializedName("text")
     @Expose

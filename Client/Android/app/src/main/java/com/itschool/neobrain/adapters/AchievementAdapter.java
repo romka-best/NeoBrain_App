@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/* Адаптер для достижений */
 public class AchievementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "AchievementAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

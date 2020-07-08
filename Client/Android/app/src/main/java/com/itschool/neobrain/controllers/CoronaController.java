@@ -22,7 +22,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-// Контроллер с навигацией
+/* Контроллер с навигацией по разделу о короновирусе (настройки дизайна, переключение ViewPager-а) */
 @SuppressLint("ValidController")
 public class CoronaController extends Controller {
 

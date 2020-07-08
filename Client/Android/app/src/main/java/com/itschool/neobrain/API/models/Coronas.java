@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы со списком информации о COVID-19 в странах */
 public class Coronas {
     @SerializedName("countries")
     @Expose

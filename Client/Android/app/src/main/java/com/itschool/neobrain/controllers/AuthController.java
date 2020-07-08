@@ -5,8 +5,6 @@ package com.itschool.neobrain.controllers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +26,6 @@ import com.itschool.neobrain.changehandler.FlipChangeHandler;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -43,7 +39,7 @@ import retrofit2.Response;
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
 
-// Контроллер авторизации
+/* Контроллер авторизации */
 public class AuthController extends Controller {
     @BindView(R.id.login_text)
     TextInputEditText textLogin;
@@ -61,9 +57,9 @@ public class AuthController extends Controller {
 
     private SharedPreferences sp;
 
+    // Несколько конструкторов, для передачи при необходимости введнного ранее логина и пароля
     public AuthController() {
     }
-
     public AuthController(String log, String pass) {
         this.login = log;
         this.pass = pass;
@@ -75,6 +71,7 @@ public class AuthController extends Controller {
         View view = inflater.inflate(R.layout.auth_controller, container, false);
         ButterKnife.bind(this, view);
 
+        // Восстанавливаем значения в полях, если они были введены ранее
         if (!this.login.equals("")) textLogin.setText(this.login);
         if (!this.pass.equals("")) textPassword.setText(this.login);
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
@@ -82,7 +79,7 @@ public class AuthController extends Controller {
         return view;
     }
 
-    // Запускаем контроллер регистрации
+    /* Запускаем контроллер регистрации при нажатии на кнопку или фон */
     @OnClick({R.id.regButton, R.id.square_s})
     void launchReg() {
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -98,7 +95,7 @@ public class AuthController extends Controller {
         }
     }
 
-    // Пользователь заходит
+    /* Вызывается при нажатии пользователем на кнопку авторизации */
     @OnClick(R.id.authButton)
     void launchAuth() {
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -126,6 +123,7 @@ public class AuthController extends Controller {
                 user.setNickname(login);
             }
             user.setHashedPassword(password);
+            // Отправляем запрос на авторизацию пользователя на сервер и парсим ответ
             Call<Status> call = DataManager.getInstance().login(user);
             call.enqueue(new Callback<Status>() {
                 @Override
@@ -195,9 +193,10 @@ public class AuthController extends Controller {
     }
 
 
+    /* Проверка валидности пароля */
     private boolean isPasswordValid(String text) {
         // Пароль должен содержать латинксие буквы (оба регистра),
-        // знаки {}@#$%^&+=*()!?,.~_, цифры, и быть от 8
+        // цифры, и быть от 8 символов
         final String regex1 = "(.*)(\\d{1,})(.*)";
         final String regex2 = "(.*)([a-z]{1,})(.*)";
         final String regex3 = "(.*)([A-Z]{1,})(.*)";
@@ -209,6 +208,12 @@ public class AuthController extends Controller {
                 Pattern.matches(regex4, text);
     }
 
+    /* Проверка валидности почты */
+    private boolean isEmailValid(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    /* Сохранение состояния контрллера */
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -216,6 +221,7 @@ public class AuthController extends Controller {
         outState.putString("password", Objects.requireNonNull(textPassword.getText()).toString());
     }
 
+    /* Восстановление состояния контрллера */
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -223,7 +229,4 @@ public class AuthController extends Controller {
         textPassword.setText(savedInstanceState.getString("password"));
     }
 
-    private boolean isEmailValid(String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 }

@@ -36,6 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/* Адаптер для фото */
 public class PhotosAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PhotosAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

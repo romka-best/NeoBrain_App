@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы с постами */
+// Необходимо для Retrofit
 public class PostModel {
     @SerializedName("post")
     @Expose

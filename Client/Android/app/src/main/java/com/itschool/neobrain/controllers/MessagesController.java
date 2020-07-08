@@ -69,7 +69,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер с сообщениями(Именно сам чат)
+/* Контроллер с сообщениями(Именно сам чат) */
 public class MessagesController extends Controller {
 
     private MessageAdapter messageAdapter;
@@ -96,24 +96,22 @@ public class MessagesController extends Controller {
     View header;
     @BindView(R.id.progress_circular)
     public ProgressBar progressBar;
-
     private BottomNavigationView bottomNavigationView;
 
     private int userId = 0;
-    private SharedPreferences sp;
-
     private boolean space = false;
     private boolean isLoaded = false;
     private int curPosition = 0;
     private Disposable disposable;
 
+    private SharedPreferences sp;
+
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public MessagesController() {
     }
-
     public MessagesController(Chat chat) {
         this.chat = chat;
     }
-
     public MessagesController(Chat chat, int userId) {
         this.chat = chat;
         this.userId = userId;
@@ -124,7 +122,7 @@ public class MessagesController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.messages_controller, container, false);
         ButterKnife.bind(this, view);
-
+        // Устанавливаем слушатель на кнопку "назад"
         backButton.setColorFilter(Color.argb(255, 255, 255, 255));
         backButton.setOnClickListener(v -> {
                     InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -144,6 +142,7 @@ public class MessagesController extends Controller {
                     getRouter().popCurrentController();
                 }
         );
+        // Устанавливаем фото чата, если оно имеется
         if (chat.getPhotoId() != null) {
             Call<Photo> call = DataManager.getInstance().getPhoto(chat.getPhotoId());
             call.enqueue(new retrofit2.Callback<Photo>() {
@@ -169,6 +168,7 @@ public class MessagesController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
+        // По нажатию на фото открываем профиль
         coverImageView.setOnClickListener(v -> {
             if (userId != 0) {
                 getRouter().pushController(RouterTransaction.with(new ProfileController(userId, true))
@@ -191,7 +191,10 @@ public class MessagesController extends Controller {
             }
         });
 
+        // Получаем и выводим информацию о людях в чате
         getUserId();
+
+        // Обновляем каждые 5 секунд
         disposable = Observable.interval(1, 5,
                 TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -201,12 +204,14 @@ public class MessagesController extends Controller {
         return view;
     }
 
+    /* Получаем профиль нужного человека */
     private void getUserId() {
         Integer userIdSP = sp.getInt("userId", -1);
         if (userId != 0) {
             getProfile();
             return;
         }
+        // Получаем список пользователей в чате
         Call<ChatUsers> chatUsersCall = DataManager.getInstance().searchUsersInChat(chat.getId());
         chatUsersCall.enqueue(new Callback<ChatUsers>() {
             @Override
@@ -230,7 +235,9 @@ public class MessagesController extends Controller {
         });
     }
 
+    /* Метод, уведомляющий о статусе пользователя (оффлайн или онлайн) */
     private void getProfile() {
+        // Делаем запрос к серверу по нужному человеку, выводим информацию о статусе
         Call<UserModel> call = DataManager.getInstance().getUser(userId);
         call.enqueue(new Callback<UserModel>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -259,6 +266,7 @@ public class MessagesController extends Controller {
         });
     }
 
+    /* Обработчик кнопки отправить */
     @OnClick(R.id.send)
     void sendMessage() {
         if (!footerChatEditText.getText().toString().equals("")) {
@@ -267,6 +275,7 @@ public class MessagesController extends Controller {
             if (txt.equals("")) {
                 return;
             }
+            // Если это первое сообщение - создаём новый чат
             if (chat.getId() == -1) {
                 Chat newChat = new Chat();
                 newChat.setLastMessage(txt);
@@ -292,6 +301,7 @@ public class MessagesController extends Controller {
                 });
                 return;
             }
+            // Создаём само сообщение, уведомляем сервер
             Message message = new Message(txt, userIdSP, chat.getId());
             Call<Status> call = DataManager.getInstance().createMessage(message);
             call.enqueue(new Callback<Status>() {
@@ -334,15 +344,18 @@ public class MessagesController extends Controller {
 
                 }
             });
+            // Делаем поле ввода пустым
             footerChatEditText.setText("");
         }
     }
 
+    /* При нажатии на поле ввода мотает чат к последнему сообщению */
     @OnClick(R.id.footer_chat_edit_text)
     void typeText() {
         messagesRecycler.smoothScrollToPosition(Objects.requireNonNull(messagesRecycler.getAdapter()).getItemCount() - 1);
     }
 
+    /* Метод, подписывающийся на обновления потока сообщений */
     @SuppressLint("CheckResult")
     private void callMessagesEndpoint(Long aLong) {
         Observable<Messages> observable = DataManager.getInstance().getMessages(chat.getId());
@@ -352,13 +365,17 @@ public class MessagesController extends Controller {
                 .subscribe(this::handleResults, this::handleError);
     }
 
+    /* Метод, вызываемый после получения информации о всех сообщениях */
     private void handleResults(List<Message> messages) {
         progressBar.setVisibility(View.GONE);
+        // Настраиваем RecyclerView
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setStackFromEnd(true);
         messagesRecycler.setLayoutManager(mLayoutManager);
         messagesRecycler.setItemAnimator(new DefaultItemAnimator());
         ArrayList<Message> mMessages = new ArrayList<>();
+        // По-своему выводим время (если сообщения отправлены в 1 минуту - только у последнего,
+        // если это первое сообщение за день, выводим вспомогательное сообщение по центру)
         for (int i = 0; i < messages.size(); i++) {
             Message message = messages.get(i);
             TimeFormatter timeFormatter = new TimeFormatter(message.getCreatedDate());
@@ -380,7 +397,9 @@ public class MessagesController extends Controller {
             }
             mMessages.add(new Message(message.getText(), message.getCreatedDate(), message.getAuthorId()));
         }
+        // Сортируем по времени
         Collections.sort(mMessages, Message.COMPARE_BY_TIME);
+        // Устанавливаем адаптер
         messageAdapter = new MessageAdapter(mMessages, getApplicationContext());
         messagesRecycler.setAdapter(messageAdapter);
         if (!space) {
@@ -395,12 +414,13 @@ public class MessagesController extends Controller {
         }
     }
 
-
+    /* Метод, уведомляющий о произошедшей ошибке */
     private void onError(Throwable throwable) {
         assert getView() != null;
         Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.error), Snackbar.LENGTH_LONG).show();
     }
 
+    /* Метод, уведомляющий о произошедшей ошибке с интернетом */
     private void handleError(Throwable t) {
         if (t instanceof SocketTimeoutException) {
             if (getView() != null) {
@@ -423,15 +443,18 @@ public class MessagesController extends Controller {
         space = false;
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Подписываемся на обновления каждые 5 секунд
         if (disposable.isDisposed()) {
             disposable = Observable.interval(1, 5,
                     TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::callMessagesEndpoint, this::onError);
         }
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
@@ -440,12 +463,14 @@ public class MessagesController extends Controller {
         }
     }
 
+    /* Вызывается, когда контроллер перестаетёт быть связанным с активностью */
     @Override
     protected void onDetach(@NonNull View view) {
         super.onDetach(view);
         disposable.dispose();
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
