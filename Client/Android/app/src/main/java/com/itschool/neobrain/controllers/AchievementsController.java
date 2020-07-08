@@ -40,27 +40,26 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// Контроллер достижений
+/* Контроллер для достижений */
 public class AchievementsController extends Controller {
     @BindView(R.id.achievementRecycler)
     public RecyclerView achievementRecycler;
     private AchievementAdapter achievementAdapter;
-
-    private SharedPreferences sp;
-    private boolean bottomIsGone = false;
     private int userId;
 
+    private boolean bottomIsGone = false;
+    private SharedPreferences sp;
+
+    // Несколько конструкторов, для передачи при необходимости введнного ранее логина и пароля
     public AchievementsController() {
 
     }
-
     public AchievementsController(int userId, boolean bottomIsGone) {
         this(new BundleBuilder(new Bundle())
                 .putBoolean("bottomIsGone", bottomIsGone)
                 .putInt("userId", userId)
                 .build());
     }
-
     public AchievementsController(@Nullable Bundle args) {
         super(args);
         assert args != null;
@@ -73,17 +72,21 @@ public class AchievementsController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.achievements_controller, container, false);
         ButterKnife.bind(this, view);
-
+		// Получаем информацию о достижениях
         getAchievements();
         return view;
     }
-
+	
+	/* Метод, получающий и выводящий  информацию по достижениям */
     private void getAchievements() {
+		// Настраиваем RecyclerView
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         achievementRecycler.setLayoutManager(mLayoutManager);
         achievementRecycler.setItemAnimator(new DefaultItemAnimator());
+		
         List<Achievement> achievementList = new ArrayList<>();
+		// Делаем запрос серверу на получение нужных данных
         Call<Achievements> call = DataManager.getInstance().getAchievements(userId);
         call.enqueue(new Callback<Achievements>() {
             @Override
@@ -120,6 +123,7 @@ public class AchievementsController extends Controller {
                                         }
                                     }
                                 }
+								// Проверяем условия выполнения того или иного достижения, в зависимости от этого выводим их по-своему
                                 if (!achievementList.get(1).getGot() && response.body().getUser().getCount_outgoing_messages() >= 50) {
                                     Achievement achivNew = achievementList.get(1);
                                     achivNew.setGot(true);
@@ -351,6 +355,7 @@ public class AchievementsController extends Controller {
                         public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                         }
                     });
+					// Устанавливаем нужный адаптер
                     achievementAdapter = new AchievementAdapter(achievementList);
                     achievementRecycler.setAdapter(achievementAdapter);
                 }
@@ -362,14 +367,16 @@ public class AchievementsController extends Controller {
                 Snackbar.make(getView(), Objects.requireNonNull(getResources()).getString(R.string.errors_with_connection), Snackbar.LENGTH_LONG).show();
             }
         });
-
+		// Устанавливаем первоначальный адаптер
         achievementAdapter = new AchievementAdapter(achievementList);
         achievementRecycler.setAdapter(achievementAdapter);
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+		// Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

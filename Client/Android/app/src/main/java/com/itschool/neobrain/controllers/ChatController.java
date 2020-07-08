@@ -48,7 +48,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер чатов
+/* Контроллер чатов */
 @SuppressLint("ValidController")
 public class ChatController extends Controller {
     @BindView(R.id.ChatsRecycler)
@@ -81,9 +81,11 @@ public class ChatController extends Controller {
         shimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
         shimmerViewContainer.startShimmer();
 
+        // Ставим слушатель - при свайпе вверх обновляем
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
+            // Получаем и выводим чаты
             getChats();
             swipeContainer.setRefreshing(false);
         });
@@ -91,6 +93,7 @@ public class ChatController extends Controller {
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
+        // Слушатель на кнопку поиска по чатам
         searchChatsButton.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
@@ -99,6 +102,7 @@ public class ChatController extends Controller {
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
 
+        // Слушатель на кнопку создания нового чата
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,10 +114,12 @@ public class ChatController extends Controller {
             }
         });
 
+        // Получаем и выводим чаты
         getChats();
         return view;
     }
 
+    /* Метод, получающий и выводящий чаты пользователя с помощью запросов на сервер */
     private void getChats() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         chatRecycler.setLayoutManager(mLayoutManager);
@@ -209,10 +215,13 @@ public class ChatController extends Controller {
         });
     }
 
+    /* Метод, вызываемый при окончании запроса к серверу (когда все чаты нашлись)*/
     private void allChatsSearched() {
         if (mChats.size() >= 2) {
+            // Сортируем чаты по времени
             Collections.sort(mChats, Chat.COMPARE_BY_TIME);
         }
+        // Устанавливаем нужный адаптер
         chatAdapter = new ChatAdapter(mChats, getRouter());
         chatRecycler.setAdapter(chatAdapter);
         shimmerViewContainer.stopShimmer();

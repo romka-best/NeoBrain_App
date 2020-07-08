@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы с постами */
 public class PostList {
     @SerializedName("posts")
     @Expose

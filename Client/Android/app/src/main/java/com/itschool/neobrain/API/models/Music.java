@@ -3,6 +3,7 @@ package com.itschool.neobrain.API.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/* Ресурс для работы с музыкой (геттер и сеттер, поля) */
 public class Music {
 
     @SerializedName("music")

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы с пользователями чата */
 public class ChatUsers {
 
     @SerializedName("users")

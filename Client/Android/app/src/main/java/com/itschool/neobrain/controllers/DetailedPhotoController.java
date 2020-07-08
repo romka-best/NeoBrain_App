@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+/* Контроллер для работы с фото, которое не является аватаром */
 public class DetailedPhotoController extends Controller {
     private BottomNavigationView bottomNavigationView;
     private boolean bottomIsGone = true;
@@ -29,17 +29,15 @@ public class DetailedPhotoController extends Controller {
     @BindView(R.id.photo)
     ImageView photoImageView;
 
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public DetailedPhotoController() {
-
     }
-
     public DetailedPhotoController(boolean bottomIsGone, String photo) {
         this(new BundleBuilder(new Bundle())
                 .putBoolean("bottomIsGone", bottomIsGone)
                 .putString("mPhoto", photo)
                 .build());
     }
-
     public DetailedPhotoController(@Nullable Bundle args) {
         super(args);
         assert args != null;
@@ -52,12 +50,13 @@ public class DetailedPhotoController extends Controller {
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.detailed_photo_controller, container, false);
         ButterKnife.bind(this, view);
-
+        // Загружаем фото
         loadPhoto();
 
         return view;
     }
 
+    /* Метод загрузки фото */
     private void loadPhoto() {
         byte[] decodedString = Base64.decode(photo.getBytes(), Base64.DEFAULT);
         Bitmap original = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -65,10 +64,11 @@ public class DetailedPhotoController extends Controller {
         photoImageView.setImageBitmap(decoded);
     }
 
-
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
@@ -78,18 +78,11 @@ public class DetailedPhotoController extends Controller {
         }
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
-//        for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
-//            try {
-//                if (routerTransaction.controller() == getRouter().getBackstack().get(3).controller()) {
-//                    bottomNavigationView.setVisibility(View.GONE);
-//                    return super.handleBack();
-//                }
-//            } catch (IndexOutOfBoundsException ignored) {
-//            }
-//        }
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }

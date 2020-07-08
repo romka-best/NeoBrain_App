@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
+/* Ресурс для работы с конкретным чатом */
 public class Chat {
 
     @SerializedName("count_messages")

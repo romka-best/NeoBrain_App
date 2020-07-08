@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/* Ресурс для работы со списком приложений */
 public class Achievements {
     @SerializedName("achievements")
     @Expose

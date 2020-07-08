@@ -3,6 +3,7 @@ package com.itschool.neobrain.API.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/* Ресурс для работы с приложениями пользователя */
 public class UserApp {
 
     @SerializedName("user_id")

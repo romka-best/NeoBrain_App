@@ -46,12 +46,11 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер ленты
+/* Контроллер ленты */
 public class LentaController extends Controller {
     @BindView(R.id.lentaRecycler)
     public RecyclerView lentaRecycler;
     private PostAdapter lentaAdapter;
-
     @BindView(R.id.swipeContainer)
     public SwipeRefreshLayout swipeContainer;
     @BindView(R.id.progress_circular)
@@ -61,8 +60,8 @@ public class LentaController extends Controller {
     @BindView(R.id.titleError)
     public TextView textError;
 
-    private SharedPreferences sp;
     private boolean isLoaded = false;
+    private SharedPreferences sp;
 
 
     @NonNull
@@ -73,6 +72,7 @@ public class LentaController extends Controller {
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
 
+        // Ставим слушатель для обновления при свайпе вверх
         swipeContainer.setOnRefreshListener(() -> {
             swipeContainer.setRefreshing(true);
             getPosts();
@@ -83,12 +83,15 @@ public class LentaController extends Controller {
                 R.color.colorPrimary,
                 R.color.colorPrimaryDark);
 
+        // Получаем посты пользователя
         getPosts();
+        // Получаем совет на день
         getAdvice();
         progressBar.setVisibility(View.VISIBLE);
         return view;
     }
 
+    /* Метод для получения постов с сервера */
     private void getPosts() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -165,6 +168,7 @@ public class LentaController extends Controller {
         });
     }
 
+    /* Метод для получения совета на день */
     private void getAdvice() {
         Date nowDate = new Date();
         Calendar calendarNow = Calendar.getInstance();
@@ -202,7 +206,6 @@ public class LentaController extends Controller {
             }
         }
     }
-
     private static int rnd(int max) {
         return (int) (Math.random() * ++max);
     }

@@ -26,25 +26,25 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.Nullable;
 
-// Контроллер с музыкой
+/* Контроллер с музыкой */
 public class MusicController extends Controller {
     @BindView(R.id.musicRecycler)
     public RecyclerView musicRecycler;
     private MusicAdapter musicAdapter;
 
-    private SharedPreferences sp;
     private boolean bottomIsGone = false;
 
+    private SharedPreferences sp;
+
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public MusicController() {
 
     }
-
     public MusicController(boolean bottomIsGone) {
         this(new BundleBuilder(new Bundle())
                 .putBoolean("bottomIsGone", bottomIsGone)
                 .build());
     }
-
     public MusicController(@Nullable Bundle args) {
         super(args);
         assert args != null;
@@ -58,22 +58,28 @@ public class MusicController extends Controller {
         View view = inflater.inflate(R.layout.music_controller, container, false);
         ButterKnife.bind(this, view);
 
+        // Получаем музыку
         getMusic();
         return view;
     }
 
+    /* Метод, получающий нужную музыку с сервера */
     private void getMusic() {
+        // Настраиваем RecyclerView
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         musicRecycler.setLayoutManager(mLayoutManager);
         musicRecycler.setItemAnimator(new DefaultItemAnimator());
+        // Присваиваем адаптер
         musicAdapter = new MusicAdapter(new ArrayList<>());
         musicRecycler.setAdapter(musicAdapter);
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);

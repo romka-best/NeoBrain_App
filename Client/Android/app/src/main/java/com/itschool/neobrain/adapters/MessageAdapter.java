@@ -36,12 +36,13 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Адаптер сообщений
+/* Адаптер сообщений */
 public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "MessageAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_MESSAGE_INCOMING = 1;
     private static final int VIEW_TYPE_MESSAGE_OUTGOING = 2;
+	// Этот тип сообщения для вывода даты по центру RecyclerView
     private static final int VIEW_TYPE_HELPER_MESSAGE = 3;
     private User user;
     private Integer userId;
@@ -75,6 +76,7 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Collections.sort(mMessageList, Message.COMPARE_BY_TIME);
+		// Определяем тип сообщения
         switch (viewType) {
             case VIEW_TYPE_MESSAGE_INCOMING:
                 return new IncomingMessageViewHolder(
@@ -202,9 +204,6 @@ public class MessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
                 time.setText(new TimeFormatter(mMessage.getCreatedDate()).timeForMessageHolder());
             }
-            itemView.setOnClickListener(v -> {
-                // Сделать что-нибудь
-            });
             itemView.setOnLongClickListener(v -> {
                 long mills = 100L;
                 Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);

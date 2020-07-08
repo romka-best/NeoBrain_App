@@ -607,7 +607,7 @@ public class ProfileController extends Controller {
                     Snackbar.make(getView(), R.string.errors_with_size, Snackbar.LENGTH_LONG).show();
                 }
                 break;
-            // Запрос к выборе фото для аватара из уже существующих
+            // Запрос к выбору фото для аватара из уже существующих
             case PICK_IMAGE:
                 if (resultCode == RESULT_OK) {
                     try {

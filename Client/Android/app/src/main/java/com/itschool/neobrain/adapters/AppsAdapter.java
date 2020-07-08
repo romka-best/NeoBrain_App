@@ -41,6 +41,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
+/* Адптер для приложений */
 public class AppsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "AppsAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

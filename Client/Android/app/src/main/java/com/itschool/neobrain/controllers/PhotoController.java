@@ -31,9 +31,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// Контроллер для показа фотографии
+/* Контроллер для работы с фото, которое является аватаром */
 @SuppressLint("ValidController")
 public class PhotoController extends Controller {
+    // Настраиваем специальный слой, для работы с конкретной фотографией (по свайпу убирается)
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         public void onDragDismissed() {
             overridePopHandler(new ScaleFadeChangeHandler());
@@ -64,10 +65,12 @@ public class PhotoController extends Controller {
         onViewBound(view);
         photo = view.findViewById(R.id.photo);
         textView = view.findViewById(R.id.title);
+        // Получаем фото
         getPhoto();
         return view;
     }
 
+    /* Получаем нужное фото, обращаясь к нашему серверу */
     private void getPhoto() {
         Call<Photo> photoCall = DataManager.getInstance().getPhoto(photoId);
         photoCall.enqueue(new Callback<Photo>() {
@@ -89,14 +92,17 @@ public class PhotoController extends Controller {
         });
     }
 
+    /* Метод, вызываемый при связывании с View */
     private void onViewBound(@NonNull View view) {
+        // Добавляем слушатель для слоя с фото
         ((ElasticDragDismissFrameLayout) view).addListener(dragDismissListener);
     }
 
+    /* Метод, вызываем при уничтожении привязанного View */
     @Override
     protected void onDestroyView(@NonNull View view) {
         super.onDestroyView(view);
-
+        // Удаляем слушатель для слоя с фото
         ((ElasticDragDismissFrameLayout) view).removeListener(dragDismissListener);
     }
 }

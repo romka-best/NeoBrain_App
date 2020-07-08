@@ -52,7 +52,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Адаптер постов
+/* Адаптер для постов */
 public class PostAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PostAdapter";
     private static final int VIEW_TYPE_EMPTY = 0;

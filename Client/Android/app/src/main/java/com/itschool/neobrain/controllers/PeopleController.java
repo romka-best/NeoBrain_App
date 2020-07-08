@@ -45,7 +45,7 @@ import retrofit2.Response;
 
 import static com.itschool.neobrain.MainActivity.MY_SETTINGS;
 
-// Контроллер с людьми (Друзьями, подписчиками)
+/* Контроллер с людьми (Друзьями, подписчиками) */
 public class PeopleController extends Controller {
     @BindView(R.id.peopleRecycler)
     public RecyclerView peopleRecycler;
@@ -56,10 +56,10 @@ public class PeopleController extends Controller {
     private boolean isFromChat = false;
     private int userId;
 
+    // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public PeopleController() {
 
     }
-
     public PeopleController(int userId, boolean bottomIsGone, boolean isFromChat) {
         this(new BundleBuilder(new Bundle())
                 .putInt("userId", userId)
@@ -67,7 +67,6 @@ public class PeopleController extends Controller {
                 .putBoolean("isFromChat", isFromChat)
                 .build());
     }
-
     public PeopleController(@Nullable Bundle args) {
         super(args);
         assert args != null;
@@ -84,12 +83,13 @@ public class PeopleController extends Controller {
 
         sp = Objects.requireNonNull(getApplicationContext()).getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-
+        // Настраиваем RecyclerView
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         peopleRecycler.setLayoutManager(mLayoutManager);
         peopleRecycler.setItemAnimator(new DefaultItemAnimator());
 
+        // Устанавливаем обработчик нажатия на кнопку поиска
         ImageButton searchButton = view.findViewById(R.id.search_people_button);
         searchButton.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
@@ -99,10 +99,12 @@ public class PeopleController extends Controller {
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
 
+        // Получаем и выводим нужных людей
         getPeople();
         return view;
     }
 
+    /* Метод, получающий и выводящий нужных людей (друзей/подписчиков) путём обращения к серверу*/
     private void getPeople() {
         Call<People> call = DataManager.getInstance().getPeople(userId);
         call.enqueue(new Callback<People>() {
@@ -158,24 +160,30 @@ public class PeopleController extends Controller {
         });
     }
 
+    /* Если все люди нашлись и запрос к серверу окончен */
     private void allPeopleSearched() {
         if (mUsers.size() >= 2) {
             Collections.sort(mUsers, User.COMPARE_BY_SURNAME);
         }
+        // Устанавливаем нужный адаптер
         peopleAdapter = new PeopleAdapter(mUsers, getApplicationContext(), getRouter(), isFromChat);
         peopleRecycler.setAdapter(peopleAdapter);
     }
 
+    /* Метод, определяющий поведение при нажатии на кнопку "назад" на устройстве */
     @Override
     public boolean handleBack() {
+        // Показываем BottomNavigationView
         BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
         return super.handleBack();
     }
 
+    /* Вызывается, когда контроллер связывается с активностью */
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        // Пробуем скрыть BottomNavigationView, если уже скрыта, ставим заглушку
         try {
             if (bottomIsGone) {
                 BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
