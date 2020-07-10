@@ -25,6 +25,7 @@ import com.itschool.neobrain.API.models.Apps;
 import com.itschool.neobrain.API.models.Chat;
 import com.itschool.neobrain.API.models.ChatUsers;
 import com.itschool.neobrain.API.models.Chats;
+import com.itschool.neobrain.API.models.PhotoModel;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.API.models.Users;
@@ -81,22 +82,22 @@ public class SearchController extends Controller {
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
                     switch (position) {
+//                        case 0:
+//                            router.setRoot(RouterTransaction.with(new SearchAllController()));
+//                            break;
                         case 0:
-                            router.setRoot(RouterTransaction.with(new SearchAllController()));
-                            break;
-                        case 1:
                             router.setRoot(RouterTransaction.with(new SearchPeopleController()));
                             break;
-                        case 2:
-                            router.setRoot(RouterTransaction.with(new SearchGroupsController()));
-                            break;
-                        case 3:
+//                        case 2:
+//                            router.setRoot(RouterTransaction.with(new SearchGroupsController()));
+//                            break;
+                        case 1:
                             router.setRoot(RouterTransaction.with(new SearchChatsController()));
                             break;
-                        case 4:
-                            router.setRoot(RouterTransaction.with(new SearchMusicController()));
-                            break;
-                        case 5:
+//                        case 4:
+//                            router.setRoot(RouterTransaction.with(new SearchMusicController()));
+//                            break;
+                        case 2:
                             router.setRoot(RouterTransaction.with(new SearchAppsController()));
                             break;
                     }
@@ -105,24 +106,24 @@ public class SearchController extends Controller {
 
             @Override
             public int getCount() {
-                return 6;
+                return 3;
             }
 
             /* Метод, определяющий названия под контроллеров поиска у пользователя */
             @Override
             public CharSequence getPageTitle(int position) {
                 switch (position) {
+//                    case 0:
+//                        return Objects.requireNonNull(getResources()).getString(R.string.all);
                     case 0:
-                        return Objects.requireNonNull(getResources()).getString(R.string.all);
-                    case 1:
                         return Objects.requireNonNull(getResources()).getString(R.string.people);
-                    case 2:
-                        return Objects.requireNonNull(getResources()).getString(R.string.groups);
-                    case 3:
+//                    case 2:
+//                        return Objects.requireNonNull(getResources()).getString(R.string.groups);
+                    case 1:
                         return Objects.requireNonNull(getResources()).getString(R.string.chats);
-                    case 4:
-                        return Objects.requireNonNull(getResources()).getString(R.string.music);
-                    case 5:
+//                    case 4:
+//                        return Objects.requireNonNull(getResources()).getString(R.string.music);
+                    case 2:
                         return Objects.requireNonNull(getResources()).getString(R.string.apps);
                     default:
                         return "Page " + position;
@@ -139,22 +140,22 @@ public class SearchController extends Controller {
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
                     switch (position) {
+//                        case 0:
+//                            router.setRoot(RouterTransaction.with(new SearchAllController()));
+//                            break;
                         case 0:
-                            router.setRoot(RouterTransaction.with(new SearchAllController()));
-                            break;
-                        case 1:
                             router.setRoot(RouterTransaction.with(new SearchPeopleController()));
                             break;
-                        case 2:
-                            router.setRoot(RouterTransaction.with(new SearchGroupsController()));
-                            break;
-                        case 3:
+//                        case 2:
+//                            router.setRoot(RouterTransaction.with(new SearchGroupsController()));
+//                            break;
+                        case 1:
                             router.setRoot(RouterTransaction.with(new SearchChatsController()));
                             break;
-                        case 4:
-                            router.setRoot(RouterTransaction.with(new SearchMusicController()));
-                            break;
-                        case 5:
+//                        case 4:
+//                            router.setRoot(RouterTransaction.with(new SearchMusicController()));
+//                            break;
+                        case 2:
                             router.setRoot(RouterTransaction.with(new SearchAppsController()));
                             break;
                     }
@@ -163,23 +164,23 @@ public class SearchController extends Controller {
 
             @Override
             public int getCount() {
-                return 6;
+                return 3;
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
                 switch (position) {
+//                    case 0:
+//                        return Objects.requireNonNull(getResources()).getString(R.string.all);
                     case 0:
-                        return Objects.requireNonNull(getResources()).getString(R.string.all);
-                    case 1:
                         return Objects.requireNonNull(getResources()).getString(R.string.people);
-                    case 2:
-                        return Objects.requireNonNull(getResources()).getString(R.string.groups);
-                    case 3:
+//                    case 2:
+//                        return Objects.requireNonNull(getResources()).getString(R.string.groups);
+                    case 1:
                         return Objects.requireNonNull(getResources()).getString(R.string.chats);
-                    case 4:
-                        return Objects.requireNonNull(getResources()).getString(R.string.music);
-                    case 5:
+//                    case 4:
+//                        return Objects.requireNonNull(getResources()).getString(R.string.music);
+                    case 2:
                         return Objects.requireNonNull(getResources()).getString(R.string.apps);
                     default:
                         return "Page " + position;
@@ -243,9 +244,9 @@ public class SearchController extends Controller {
             protected void subscribeActual(Observer<? super String> observer) {
                 String[] s = query.toLowerCase().trim().split(" ");
                 switch (viewPager.getCurrentItem()) {
+//                    case 0:
+//                        break;
                     case 0:
-                        break;
-                    case 1:
                         List<String> strings = Arrays.asList(s);
                         StringJoiner joiner = new StringJoiner("&");
                         if (strings.size() >= 2) {
@@ -264,7 +265,7 @@ public class SearchController extends Controller {
                                 for (User user : users) {
                                     mUsers.add(new User(user.getId(), user.getPhotoId(), user.getName(), user.getSurname(), user.getRepublic(), user.getCity(), user.getAge(), user.getGender(), user.getNickname()));
                                 }
-                                Objects.requireNonNull(pagerAdapter.getRouter(1)).setRoot(RouterTransaction.with(new SearchPeopleController(mUsers, getRouter(), users.size() != 0)));
+                                Objects.requireNonNull(pagerAdapter.getRouter(0)).setRoot(RouterTransaction.with(new SearchPeopleController(mUsers, getRouter(), users.size() != 0)));
                             }
 
                             @Override
@@ -273,9 +274,9 @@ public class SearchController extends Controller {
                             }
                         });
                         break;
-                    case 2:
-                        break;
-                    case 3:
+//                    case 2:
+//                        break;
+                    case 1:
                         Integer userIdSP = sp.getInt("userId", -1);
                         mChats = new ArrayList<>();
                         Call<Chats> chatsCall = DataManager.getInstance().getChats(userIdSP);
@@ -287,7 +288,7 @@ public class SearchController extends Controller {
                                     final List<Chat> chats = response.body().getChats();
                                     if (chats.size() == 0) {
                                         String chatString = String.join(" ", s);
-                                        Objects.requireNonNull(pagerAdapter.getRouter(3)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
+                                        Objects.requireNonNull(pagerAdapter.getRouter(1)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
                                         return;
                                     }
                                     for (Chat chat : chats) {
@@ -310,8 +311,16 @@ public class SearchController extends Controller {
                                                                     if (response.isSuccessful()) {
                                                                         assert response.body() != null;
                                                                         User user = response.body().getUser();
+                                                                        ArrayList<PhotoModel> photos = (ArrayList<PhotoModel>) response.body().getPhotos();
                                                                         String curNameChat = user.getName() + " " + user.getSurname();
-                                                                        Integer curPhotoId = user.getPhotoId();
+                                                                        Integer curPhotoId = -1;
+                                                                        for (PhotoModel photo : photos) {
+                                                                            if (photo.getPhoto().getAvatar()) {
+                                                                                // Загружаем фото пользователя
+                                                                                curPhotoId = photo.getPhoto().getId();
+                                                                                break;
+                                                                            }
+                                                                        }
                                                                         for (Chat queueChat : mChats) {
                                                                             if (queueChat.getId().equals(chat.getId())) {
                                                                                 return;
@@ -320,7 +329,7 @@ public class SearchController extends Controller {
                                                                         mChats.add(new Chat(chat.getId(), chat.getLastMessage(), chat.getLastTimeMessage(), curNameChat, curPhotoId));
                                                                         if (chats.size() == mChats.size()) {
                                                                             String chatString = String.join(" ", s);
-                                                                            Objects.requireNonNull(pagerAdapter.getRouter(3)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
+                                                                            Objects.requireNonNull(pagerAdapter.getRouter(1)).setRoot(RouterTransaction.with(new SearchChatsController(mChats, chatString, getRouter())));
                                                                         }
                                                                     }
                                                                 }
@@ -353,9 +362,9 @@ public class SearchController extends Controller {
                             }
                         });
                         break;
-                    case 4:
-                        break;
-                    case 5:
+//                    case 4:
+//                        break;
+                    case 2:
                         Call<Apps> appsCall = DataManager.getInstance().searchApp(String.join(" ", s));
                         ArrayList<App> mApps = new ArrayList<>();
                         appsCall.enqueue(new Callback<Apps>() {
@@ -366,7 +375,7 @@ public class SearchController extends Controller {
                                 for (App app : apps) {
                                     mApps.add(new App(app.getId(), app.getTitle(), app.getSecondaryText(), app.getDescription(), app.getLinkAndroid(), app.getPhotoId(), false));
                                 }
-                                Objects.requireNonNull(pagerAdapter.getRouter(5)).setRoot(RouterTransaction.with(new SearchAppsController(mApps, getRouter(), apps.size() != 0)));
+                                Objects.requireNonNull(pagerAdapter.getRouter(2)).setRoot(RouterTransaction.with(new SearchAppsController(mApps, getRouter(), apps.size() != 0)));
                             }
 
                             @Override

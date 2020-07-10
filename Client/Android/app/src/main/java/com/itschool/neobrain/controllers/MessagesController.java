@@ -2,12 +2,16 @@ package com.itschool.neobrain.controllers;
 
 // Импортируем нужные библиотеки
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -23,6 +27,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +47,7 @@ import com.itschool.neobrain.API.models.Status;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.DataManager;
+import com.itschool.neobrain.MainActivity;
 import com.itschool.neobrain.R;
 import com.itschool.neobrain.adapters.MessageAdapter;
 import com.itschool.neobrain.utils.SpacesItemDecoration;
@@ -102,6 +109,7 @@ public class MessagesController extends Controller {
     private boolean space = false;
     private boolean isLoaded = false;
     private int curPosition = 0;
+    private String numberPhone;
     private Disposable disposable;
 
     private SharedPreferences sp;
@@ -109,9 +117,11 @@ public class MessagesController extends Controller {
     // Несколько конструкторов для передачи необходимых значений в разных ситуациях
     public MessagesController() {
     }
+
     public MessagesController(Chat chat) {
         this.chat = chat;
     }
+
     public MessagesController(Chat chat, int userId) {
         this.chat = chat;
         this.userId = userId;
@@ -177,17 +187,27 @@ public class MessagesController extends Controller {
             }
         });
 
-        attachButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
+//        attachButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                // Запрашиваем доступ к звонкам
+                int permissionStatusCall = ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.CALL_PHONE);
+
+                if (permissionStatusCall == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse("tel: " + numberPhone));
+                    startActivity(intent);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE},
+                            MainActivity.PERMISSION_REQUEST_CODE);
+                }
             }
         });
 
@@ -255,6 +275,10 @@ public class MessagesController extends Controller {
                     } else {
                         textStatus.setText(Objects.requireNonNull(getResources()).getString(R.string.online));
                         textStatus.setTextColor(getResources().getColor(R.color.colorText, Objects.requireNonNull(getActivity()).getTheme()));
+                    }
+                    if (user.getNumber() != null) {
+                        callButton.setVisibility(View.VISIBLE);
+                        numberPhone = user.getNumber();
                     }
                 }
             }

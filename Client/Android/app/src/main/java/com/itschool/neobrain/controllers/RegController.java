@@ -379,10 +379,8 @@ public class RegController extends Controller {
 
     /* Метод, проверяющий никнейм на валидность */
     private boolean isNicknameValid(String nickname) {
-        final String regex1 = "[a-zA-Z]{6,15}";
-        final String regex2 = "(.*)(\\s)(.*)";
-        return Pattern.matches(regex1, nickname) &
-                !Pattern.matches(regex2, nickname);
+        final String regex1 = "^(?!.*\\.\\.)(?!\\.)(?!.*\\.$)(?!\\d+$)[a-zA-Z0-9.]{5,15}$";
+        return Pattern.matches(regex1, nickname);
     }
 
     /* Метод, проверяющий почту на валидность */

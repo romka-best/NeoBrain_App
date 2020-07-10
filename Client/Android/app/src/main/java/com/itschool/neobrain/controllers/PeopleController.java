@@ -94,7 +94,7 @@ public class PeopleController extends Controller {
         searchButton.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
-            getRouter().pushController(RouterTransaction.with(new SearchController((short) 1))
+            getRouter().pushController(RouterTransaction.with(new SearchController((short) 0))
                     .popChangeHandler(new HorizontalChangeHandler())
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });

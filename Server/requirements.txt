@@ -1,6 +1,9 @@
 wtforms
 sqlalchemy
 werkzeug
+JWT
+PyJWT
+certifi
 requests
 flask
 flask-login

@@ -59,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 Context.MODE_PRIVATE);
         contextOfApplication = getApplicationContext();
 
-//        Intent intent = new Intent(MainActivity.getContextOfApplication(), NeoIntro.class);
-//        startActivity(intent);
-
         requestMultiplePermissions();
 
+        // Проводим тур для пользователя если он не видел его
+        if (!sp.getBoolean("watchedIntro", false)) {
+            Intent intent = new Intent(MainActivity.getContextOfApplication(), NeoIntro.class);
+            startActivity(intent);
+        }
         // Инициализируем роутер
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
@@ -150,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static Context getContextOfApplication(){
+    public static Context getContextOfApplication() {
         return contextOfApplication;
     }
 }

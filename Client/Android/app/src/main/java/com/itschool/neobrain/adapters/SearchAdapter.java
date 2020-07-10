@@ -32,6 +32,7 @@ import com.itschool.neobrain.API.models.Chat;
 import com.itschool.neobrain.API.models.ChatModel;
 import com.itschool.neobrain.API.models.Music;
 import com.itschool.neobrain.API.models.Photo;
+import com.itschool.neobrain.API.models.PhotoModel;
 import com.itschool.neobrain.API.models.Status;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserApp;

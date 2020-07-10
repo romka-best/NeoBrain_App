@@ -153,7 +153,22 @@
     <string name="full_gender_w">Female</string>
     <string name="incorrectName">Name entered incorrectly!</string>
     <string name="incorrectSurname">Surname entered incorrectly!</string>
-    <string name="incorrectNicknameError">The nickname must be from 6 to 15 characters long and
-        consist only of Latin characters, and must not contain whitespace character</string>
+    <string name="incorrectNicknameError">The nickname must be from 5 to 15
+        characters long and consist only of Latin characters, and you can not use only numbers, a dot, and you can not use a dot at the beginning or end, two dots in a row</string>
     <string name="incorrectNickname">Nickname entered incorrectly!</string>
+    <string name="neohello">NeoHello</string>
+    <string name="neodescription">Welcome to the social network for development! 😻    Now spetsilno for You we will have a tour of our application 😊 If you are already a Neoman and know what to do-feel free to click the pass on the bottom left 🧐</string>
+    <string name="step_registration">To start, You will need to register 😮      To do this, we will need Your data 🙃 (Do not be afraid, we try to monitor the protection of our social network 🤨)     We will only ask you to enter honest data 🤗</string>
+    <string name="profile_for_intro">Profile (5 tab)</string>
+    <string name="step_profile">Here you can upload your photo. Edit your information.         Watch photos, people, music, achievements, videos.</string>
+    <string name="apps_for_intro">Apps (4 tab)</string>
+    <string name="step_apps">Here you can view the apps that we recommend installing in addition to our own for development      Add them to yourself so that you don\'t forget them</string>
+    <string name="chats_for_intro">Chat rooms (3 tab)</string>
+    <string name="step_chats">This tab will contain your chats with like-minded people.  Follow The NeoRules: Treat others the way You want to be treated  Observe the etiquette. Smart people don\'t use profanity!</string>
+    <string name="covid_for_intro">Covid-19 (2 tab)</string>
+    <string name="step_covid">This tab contains up-to-date information about coronovirus.      Be careful! The NeoTeam team values and loves You!</string>
+    <string name="lenta_for_intro">Feed (1 tab)</string>
+    <string name="step_lenta">Here You will see the posts of your like-minded people, as well as evaluate them</string>
+    <string name="finish_intro">Финиш</string>
+    <string name="step_finish">Now you are ready to become a NeoHuman being. We are sincerely happy to see you ❤❤❤</string>
 </resources>

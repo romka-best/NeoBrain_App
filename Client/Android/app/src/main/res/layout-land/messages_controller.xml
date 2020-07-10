@@ -82,6 +82,7 @@
             android:layout_marginEnd="20dp"
             android:background="?selectableItemBackgroundBorderless"
             android:gravity="end"
+            android:visibility="gone"
             android:src="@drawable/ic_phone" />
 
     </LinearLayout>
@@ -126,6 +127,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="0"
+            android:visibility="gone"
             android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/ic_add" />
 

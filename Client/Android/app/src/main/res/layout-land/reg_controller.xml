@@ -125,6 +125,7 @@
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/password"
+        app:endIconMode="password_toggle"
         app:startIconDrawable="@drawable/ic_lock"
         app:startIconTint="@color/colorText">
 
@@ -151,6 +152,7 @@
         app:layout_constraintEnd_toEndOf="@+id/nickname"
         app:layout_constraintStart_toStartOf="@+id/nickname"
         app:layout_constraintTop_toBottomOf="@+id/nickname"
+        app:endIconMode="password_toggle"
         app:startIconDrawable="@drawable/ic_lock"
         app:startIconTint="@color/colorText">
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -20,12 +21,14 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.itschool.neobrain.API.models.Chat;
 import com.itschool.neobrain.API.models.ChatUsers;
 import com.itschool.neobrain.API.models.Chats;
 import com.itschool.neobrain.API.models.PhotoModel;
+import com.itschool.neobrain.API.models.Status;
 import com.itschool.neobrain.API.models.User;
 import com.itschool.neobrain.API.models.UserModel;
 import com.itschool.neobrain.DataManager;
@@ -101,7 +104,7 @@ public class ChatController extends Controller {
         searchChatsButton.setOnClickListener(v -> {
             BottomNavigationView bottomNavigationView = Objects.requireNonNull(getRouter().getActivity()).findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
-            getRouter().pushController(RouterTransaction.with(new SearchController((short) 3))
+            getRouter().pushController(RouterTransaction.with(new SearchController((short) 1))
                     .popChangeHandler(new HorizontalChangeHandler())
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
@@ -119,11 +122,16 @@ public class ChatController extends Controller {
             }
         });
 
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
+        filterButton.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(getActivity(), filterButton);
+            popupMenu.inflate(R.menu.chat_menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.withPeople) {
+                    return true;
+                }
+                return false;
+            });
+            popupMenu.show();
         });
         // Получаем и выводим чаты
         getChats();

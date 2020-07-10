@@ -74,6 +74,7 @@
         app:layout_constraintEnd_toEndOf="@+id/login"
         app:layout_constraintStart_toStartOf="@+id/login"
         app:layout_constraintTop_toBottomOf="@+id/login"
+        app:endIconMode="password_toggle"
         app:startIconDrawable="@drawable/ic_lock"
         app:startIconTint="@color/colorText">
 

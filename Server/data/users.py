@@ -3,6 +3,8 @@ import datetime
 import re
 import base64
 import os
+from time import time
+import jwt
 
 import sqlalchemy
 from flask_login import UserMixin
@@ -11,6 +13,7 @@ from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db_session import SqlAlchemyBase
+from data import db_session
 
 
 # Для проверки пароля
@@ -171,7 +174,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     def revoke_token(self):
         # Отзыв токена (Время истечения изменяется на текущее - 1 секунда)
-        self.token_expiration = datetime.datetime.now() - datetime.timedelta(seconds=1)
+        self.token_expiration = datetime.datetime.now() - datetime.timedelta(seconds=100)
 
     # Для установки пароля
     def set_password(self, password):
@@ -184,3 +187,20 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     # Возвращаем id пользователя
     def get_id(self):
         return self.id
+
+    # Возвращаем токен сброса пароля
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            'NeoBrainKey', algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, 'NeoBrainKey',
+                            algorithms=['HS256'])['reset_password']
+        except Exception:
+            return
+        session = db_session.create_session()
+        user = session.query(User).get(id)
+        return user

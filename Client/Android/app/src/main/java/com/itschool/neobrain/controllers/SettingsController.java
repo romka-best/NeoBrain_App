@@ -2,6 +2,7 @@ package com.itschool.neobrain.controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.wifi.hotspot2.pps.Credential;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Credentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,12 +69,28 @@ public class SettingsController extends Controller {
                     SharedPreferences.Editor e = sp.edit();
                     e.putBoolean("hasAuthed", false);
                     e.apply();
-                    for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
-                        routerTransaction.controller().getRouter().popCurrentController();
-                    }
-                    getRouter().setRoot(RouterTransaction.with(new AuthController())
-                            .popChangeHandler(new FlipChangeHandler())
-                            .pushChangeHandler(new FlipChangeHandler()));
+                    Call<Status> revokeTokenCall = DataManager.getInstance().logout("Bearer " + sp.getString("token", ""));
+                    revokeTokenCall.enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Status> call, @NotNull Response<Status> response) {
+                            if(response.isSuccessful()){
+                                e.putString("login", "");
+                                e.putString("password", "");
+                                e.apply();
+                                for (RouterTransaction routerTransaction : getRouter().getBackstack()) {
+                                    routerTransaction.controller().getRouter().popCurrentController();
+                                }
+                                getRouter().setRoot(RouterTransaction.with(new AuthController())
+                                        .popChangeHandler(new FlipChangeHandler())
+                                        .pushChangeHandler(new FlipChangeHandler()));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<Status> call, @NotNull Throwable t) {
+
+                        }
+                    });
                 }
             }
 
