@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Настройка данных сети, для корректной работы приложения -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://neobrain.herokuapp.com/</domain>
+        <base-config cleartextTrafficPermitted="true" />
+    </domain-config>
+</network-security-config>

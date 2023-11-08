@@ -1,0 +1,16 @@
+wtforms
+sqlalchemy
+werkzeug
+JWT
+PyJWT
+certifi
+requests
+flask
+flask-login
+flask-mail
+flask-restful
+Flask-HTTPAuth
+sqlalchemy_serializer
+alembic
+flask_wtf
+APScheduler

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="photo_array">
+        <item>Загрузить с устройства</item>
+        <item>Сделать снимок</item>
+        <item>Открыть</item>
+        <item>Удалить</item>
+    </string-array>
+</resources>

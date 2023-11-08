@@ -1,0 +1,184 @@
+<resources>
+    <string name="app_name" translatable="false">NeoBrain</string>
+    <string name="auth">Авторизация</string>
+    <string name="hint_username">Никнейм/Эл. почта</string>
+    <string name="hint_password">Пароль</string>
+    <string name="entry">Войти</string>
+    <string name="reg">Регистрация</string>
+    <string name="reg2">Зарегистрироваться</string>
+    <string name="hint_name">Имя</string>
+    <string name="hint_surname">Фамилия</string>
+    <string name="hint_nickname">Никнейм</string>
+    <string name="hint_password_repeat">Повторение пароля</string>
+    <string name="hint_number">Номер телефона</string>
+    <string name="password_forget">Забыли пароль?</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete_question">Удалить фотографию?</string>
+    <string name="delete_post">Удалить пост?</string>
+    <string name="messages">Сообщения</string>
+    <string name="achievements">Достижения</string>
+    <string name="apps">Приложения</string>
+    <string name="images">Фотографии</string>
+    <string name="lenta">Лента</string>
+    <string name="music">Музыка</string>
+    <string name="navigation">Обзор</string>
+    <string name="people">Люди</string>
+    <string name="videos">Видео</string>
+    <string name="empty_posts">Постов пока нет</string>
+    <string name="empty_screen">Тут пока что ничего нет!</string>
+    <string name="btn_retry">Обновить</string>
+    <string name="email">Почта</string>
+    <string name="pass_not_same">Пароли отличаются!</string>
+    <string name="pass_not_corr">Пароль некорректен! Пароль должен содержать в себе как минимум одну заглавную букву, одну нижнего регистра, одну цифру и состоять из минимум 8-ми символов</string>
+    <string name="not_correct">Некорректно!</string>
+    <string name="email_not_correct">Такой почты не существует!</string>
+    <string name="empty_name">Имя не введено!</string>
+    <string name="empty_surname">Фамилия не введена!</string>
+    <string name="empty_nickname">Никнейм не введен!</string>
+    <string name="undo">Убрать</string>
+    <string name="errors_with_connection">Проблемы с интернет соединением</string>
+    <string name="errors_with_size" translatable="false">Слишком большой размер файла</string>
+    <string name="loading">Идёт загрузка</string>
+    <string name="new_post">Новый пост</string>
+    <string name="empty_chat">На данный момент у вас нет чатов. Напишите кому-нибудь</string>
+    <string name="empty_lenta">Лента пустая. Подпишитесь на кого-то или на что-то</string>
+    <string name="empty_apps">Приложений пока нет</string>
+    <string name="your_apps">Ваши</string>
+    <string name="recommended_apps">Рекомендуемые</string>
+    <string name="followers">Подписчиков</string>
+    <string name="subscribers">Подписок</string>
+    <string name="detailed_information">Подробная информация</string>
+    <string name="edit_information">Редактировать инвормацию</string>
+    <string name="gender_w">Ж</string>
+    <string name="full_gender_w">Женский</string>
+    <string name="gender_m">М</string>
+    <string name="full_gender_m">Мужской</string>
+    <string name="full_gender_not_defined">Не определён</string>
+    <string name="empty_people">Подписок нет</string>
+    <string name="empty_photos">Здесь ещё нет фотографий</string>
+    <string name="empty_videos">Здесь ещё нет видео</string>
+    <string name="empty_music">Здесь ещё нет музыки</string>
+    <string name="empty_achievements">Раздел достижений в разработке</string>
+    <string name="empty_navigation">Раздел \"Обзор\" в разработке</string>
+    <string name="empty_messages">Начните чат первым</string>
+    <string name="empty">Пусто</string>
+    <string name="all">Все</string>
+    <string name="groups">Группы</string>
+    <string name="chats">Чаты</string>
+    <string name="less_than_one_minute">Меньше 1 минуты назад</string>
+    <string name="n_minutes_before"> мин. назад</string>
+    <string name="n_hours_before"> час. назад</string>
+    <string name="n_days_before"> дн. назад</string>
+    <string name="n_years_before"> года назад</string>
+    <string name="m_years_before"> лет назад</string>
+    <string name="week_before">Неделю назад</string>
+    <string name="Mn">Пн</string>
+    <string name="Tu">Вт</string>
+    <string name="Wd">Ср</string>
+    <string name="Th">Чт</string>
+    <string name="Fr">Пт</string>
+    <string name="Su">Сб</string>
+    <string name="St">Вс</string>
+    <string name="error_in_date">Что-то не так!</string>
+    <string name="photo">Фотография</string>
+    <string name="load_device">Загрузить с устройства</string>
+    <string name="do_photo">Сделать снимок</string>
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
+    <string name="write_message">Написать сообщение</string>
+    <string name="in_development">Данный раздел в разработке</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string name="online">Онлайн</string>
+    <string name="offline">Оффлайн</string>
+    <string name="error">Ошибка</string>
+    <string name="error_with_password">Пароль некорректен</string>
+    <string name="empty_field">Поле не может быть пустым</string>
+    <string name="invalid_password_or_username">Неверный логин или пароль</string>
+    <string name="invalid_password">Неверный пароль</string>
+    <string name="invalid_code">Код неверный</string>
+    <string name="nickname_already_exists">Никнейм уже существует</string>
+    <string name="email_already_exists">Емайл уже занят</string>
+    <string name="phone_already_exists">Телефон уже занят</string>
+    <string name="check_code">Введите код, который пришёл вам на почту</string>
+    <string name="code">Шестизначный код</string>
+    <string name="accept">Подтвердить</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+    <string name="statement">Требование</string>
+    <string name="advice">Совет</string>
+    <string name="add">Добавить</string>
+    <string name="save">Сохранить</string>
+    <string name="save_successful">Данные успешно сохранены</string>
+    <string name="problems_with_server">Проблемы с сервером. Мы уже их решаем</string>
+    <string name="emoji_rule">Пост можно выложить с тремя оценками максимум</string>
+    <string name="not_found">Не найдено</string>
+    <string name="empty_search">Начните вводить нужные слова в поле поиска</string>
+    <string name="country">Страна</string>
+    <string name="republic">Республика (Область)</string>
+    <string name="city">Город</string>
+    <string name="education">Образование</string>
+    <string name="birthday">День рождения</string>
+    <string name="gender">Пол</string>
+    <string name="setting_soon">Скоро здесь будут настройки</string>
+    <string name="empty_profile_info">Пользователь ещё не заполнил данные о себе</string>
+    <string name="not_correct_gender">Такого пола не существует</string>
+    <string name="be_careful">Будьте осторожны! Команда NeoTeam любит и ценит пользователей</string>
+    <string name="neohello">NeoПривет</string>
+    <string name="neodescription">Рады приветствовать в социальной сети для развития! 😻\n
+    Сейчас специльно для Вас мы проведём тур по нашему приложению 😊\nЕсли Вы уже NeoЧеловек и знаете что делать - смело нажимайте пропуск слева снизу 🧐</string>
+    <string name="step_registration">Для начала Вам нужно будет зарегистрироваться 😮\n
+    Для этого нам нужны будут Ваши данные 🙃 (Не бойтесь, мы стараемся следить за защитой нашей социальной сети 🤨)
+    А Вас лишь попросим вводить честные данные 🤗</string>
+    <string name="profile_for_intro">Профиль (5 вкладка)</string>
+    <string name="step_profile">Здесь Вы можете выложить свою фотографию. Редактировать свою информацию.
+        Смотреть фотографии, людей, музыку, достижения, видео.</string>
+    <string name="apps_for_intro">Приложения (4 вкладка)</string>
+    <string name="step_apps">Здесь Вы можете смотреть приложения которые мы рекомендуем установить помимо нашего для развития\n
+    Добавлять их к себе, чтобы не забыть</string>
+    <string name="chats_for_intro">Чаты (3 вкладка)</string>
+    <string name="step_chats">В этой вкладке будут Ваши чаты с единомышленниками.\n
+    Соблюдайте NeoПравила:\nОтноситесь к другим так, как Вы хотите, чтобы относились к Вам\n
+    Соблюдайте этикет. Умные люди не используют ненормативную лексику!</string>
+    <string name="covid_for_intro">Covid-19 (2 вкладка)</string>
+    <string name="step_covid">В этой вкладке актуальная информация о короновирусе.\n
+    Будьте осторожны! Команда NeoTeam ценит и любит Вас!</string>
+    <string name="lenta_for_intro">Лента (1 вкладка)</string>
+    <string name="step_lenta">Здесь Вы будете видеть посты ваших единомышленников, а также оценивать их</string>
+    <string name="finish_intro">Финиш</string>
+    <string name="step_finish">Теперь Вы готовы стать NeoЧеловеком. Мы искренне рады видеть Вас ❤❤❤</string>
+    <string-array name="advices_list">
+        <item>Находите время, чтобы прислушаться к внутреннему голосу</item>
+        <item>Помните: контроль над мыслями — ваша главная сила</item>
+        <item>Осознавайте личный опыт в глобальной перспективе</item>
+        <item>Сохраняйте ясность разума с помощью медитативных практик</item>
+        <item>Пересматривайте свои основные ценности каждую неделю</item>
+        <item>Не ищите коротких путей</item>
+        <item>Исследуйте, размышляйте, экспериментируйте</item>
+        <item>Счастье - как поцелуй: чтобы насладиться им, его нужно с кем-то разделить.</item>
+        <item>Цените людей, которые приходят в те моменты, когда плохо не им, а вам.</item>
+        <item>Нет никакого смысла пытаться помочь людям, которые не помогают себе сами. Человека невозможно заставить подниматься по лестнице, если он сам не желает подниматься.</item>
+    </string-array>
+    <string name="covid" translatable="false">Covid-19</string>
+    <string name="inRussia">В России</string>
+    <string name="inOtherCountries">Во всем мире</string>
+    <string name="new_admitted">Подтверждено новых</string>
+    <string name="all_admitted">Всего подтверждено</string>
+    <string name="new_deaths">Новых смертей</string>
+    <string name="all_deaths">Всего смертей</string>
+    <string name="tests_count">Проведено тестов</string>
+    <string name="all_recovered">Всего выздоровевших</string>
+    <string name="deathsPerOneMillion">Смертей на миллион</string>
+    <string name="casesPerOneMillion">Случаев заражения на миллион</string>
+    <string name="activePerOneMillion">Переносят на миллион</string>
+    <string name="recoveredPerOneMillion">Излеченных на миллион</string>
+    <string name="updated">Обновлено: </string>
+    <string name="county_name">Страна/регион</string>
+    <string name="incorrectName">Имя введено некорректно!</string>
+    <string name="incorrectSurname">Фамилия введена некорректно!</string>
+    <string name="incorrectNicknameError">Никнейм должен быть от 5 до 15
+        символов длиной и состоять только из латинских символов, а также нельзя использовать только цифры, точку, ровно также нельзя точку в начале или конце, две точки подряд</string>
+    <string name="incorrectNickname">Никнейм введён некорректно!</string>
+</resources>

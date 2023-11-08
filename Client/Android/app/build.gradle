@@ -1,0 +1,100 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+    defaultConfig {
+        applicationId "com.itschool.neobrain"
+        minSdkVersion 22
+        targetSdkVersion 29
+        versionCode 3
+        versionName "2.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // Swipe Refresh Layout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    //Google play service
+    implementation 'com.google.android.gms:play-services-ads:19.2.0'
+
+    // CardView
+    implementation 'androidx.core:core-ktx:1.3.0'
+
+    // RoundedImageView
+    implementation 'com.joooonho:selectableroundedimageview:1.0.1'
+
+    // Room
+    def room_version = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    testImplementation "android.arch.persistence.room:testing:$room_version"
+
+    // ButterKnife
+    def butterKnife_version = "10.2.1"
+    implementation "com.jakewharton:butterknife:$butterKnife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnife_version"
+
+    // Материал Дизайн
+    def materialDesign_version = "1.2.0-alpha04"
+    //noinspection GradleDependency
+    implementation "com.google.android.material:material:$materialDesign_version"
+
+    // Retrofit
+    def retrofit_version = "2.7.2"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
+    // Conductor
+    def conductor_version = "3.0.0-rc1"
+    implementation "com.bluelinelabs:conductor:$conductor_version"
+    implementation "com.bluelinelabs:conductor-support:$conductor_version"
+    implementation "com.bluelinelabs:conductor-rxlifecycle:$conductor_version"
+    implementation "com.bluelinelabs:conductor-rxlifecycle2:$conductor_version"
+    implementation "com.bluelinelabs:conductor-autodispose:$conductor_version"
+    implementation "com.bluelinelabs:conductor-archlifecycle:$conductor_version"
+
+    // Picasso
+    def picasso_version = "2.71828"
+    implementation "com.squareup.picasso:picasso:$picasso_version"
+    // Glide for image loading
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    // Shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
+
+    // App Intro
+    implementation 'com.heinrichreimersoftware:material-intro:2.0.0'
+
+    // RXJava and RXAndroid
+    def rxjava_version = "2.1.9"
+    def rxandroid_version = "2.0.1"
+    def rxadapter_version = "2.3.0"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rxadapter_version"
+
+}
